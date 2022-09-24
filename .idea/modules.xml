@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/.idea/LSA_2.0.iml" filepath="$PROJECT_DIR$/.idea/LSA_2.0.iml" />
+      <module fileurl="file://$PROJECT_DIR$/LSA_2_0/LSA_2_0.iml" filepath="$PROJECT_DIR$/LSA_2_0/LSA_2_0.iml" />
+      <module fileurl="file://$PROJECT_DIR$/LSA_2_0/event_service/event_service.iml" filepath="$PROJECT_DIR$/LSA_2_0/event_service/event_service.iml" />
+      <module fileurl="file://$PROJECT_DIR$/LSA_2_0/gateway_service/gateway_service.iml" filepath="$PROJECT_DIR$/LSA_2_0/gateway_service/gateway_service.iml" />
+    </modules>
+  </component>
+</project>
