@@ -1,10 +1,17 @@
 package com.noslen.event_service.controller;
 
+import com.noslen.event_service.EventServiceApplication;
 import com.noslen.event_service.model.LessonEvent;
 import com.noslen.event_service.repository.LessonRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.oauth2.jwt.Jwt;
+import org.springframework.security.oauth2.server.resource.authentication.BearerTokenAuthentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -13,8 +20,20 @@ import java.util.Optional;
 
 @RefreshScope
 @RestController
-@CrossOrigin
+//@CrossOrigin("http://locahost:3000")
 public class LessonController {
+
+    private static final Logger LOG = LoggerFactory.getLogger(EventServiceApplication.class);
+
+//    @GetMapping("/api/lesson/token")
+//    public String resource(BearerTokenAuthentication auth) {
+//        LOG.trace("***** Credentials: {}", auth.getCredentials().toString());
+//        LOG.trace("***** JWT Claims: {}", auth.getToken().getTokenValue());
+////        return String.format("Resource accessed by: %s (with subjectId: %s)" ,
+////                auth.get
+////                jwt.getSubject());
+//        return LOG.getName();
+//    }
 
 //    @GetMapping("/api/lesson/token")
 //    public String getToken(BearerTokenAuthentication auth ) {
@@ -53,7 +72,8 @@ public class LessonController {
     }
 
     //CREATE NEW LESSON
-    @PostMapping("/api/lesson")
+    @PostMapping(path = "/api/lesson/", consumes = MediaType.APPLICATION_JSON_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
 //    @PreAuthorize("hasAnyAuthority('SCOPE_event-service-write')")
     public LessonEvent createLesson(@RequestBody  LessonEvent lesson ) throws Exception {

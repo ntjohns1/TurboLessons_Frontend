@@ -73,7 +73,7 @@ public class LessonControllerTests {
         when(lessonRepo.save(lesson1)).thenReturn(lesson1);
 
         mockMvc.perform(
-                        post("/api/lesson")
+                        post("/api/lesson/")
                                 .content(inputJson)
                                 .contentType(MediaType.APPLICATION_JSON)
                 )
@@ -98,7 +98,7 @@ public class LessonControllerTests {
 
         when(lessonRepo.findAll()).thenReturn(lessonList);
 
-        mockMvc.perform(get("/api/lesson"))
+        mockMvc.perform(get("/api/lesson/"))
                 .andExpect(status().isOk())
                 .andExpect(content().json(lessonListJson));
     }
