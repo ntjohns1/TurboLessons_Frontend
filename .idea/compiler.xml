@@ -6,13 +6,13 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <module name="event_service" />
-        <module name="gateway_service" />
+        <module name="lesson-schedule-service" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
       <module name="event_service" target="17" />
       <module name="gateway_service" target="17" />
+      <module name="lesson-schedule-service" target="17" />
       <module name="LSA_2_0" target="1.5" />
       <module name="test-event" target="17" />
     </bytecodeTargetLevel>
@@ -22,6 +22,7 @@
       <module name="LSA_2_0" options="" />
       <module name="event_service" options="-parameters" />
       <module name="gateway_service" options="-parameters" />
+      <module name="lesson-schedule-service" options="-parameters" />
       <module name="test-event" options="-parameters" />
     </option>
   </component>
