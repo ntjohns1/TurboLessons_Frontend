@@ -73,7 +73,9 @@ public class SecurityConfig extends AbstractHttpConfigurer<SecurityConfig, HttpS
         httpSecurity.authorizeRequests()
                 .antMatchers("/authenticate").permitAll()
                 .antMatchers(HttpMethod.POST, "/refresh_token").authenticated()
-                .antMatchers("/say_hi_private").hasAuthority("ROLE_MANAGER")
+                .antMatchers("/api/postlesson").hasAuthority("ROLE_TEACHER")
+                .antMatchers("/api/lesson/*").hasAuthority("ROLE_TEACHER")
+                .antMatchers("/api/lesson").hasAuthority("ROLE_TEACHER")
                 .antMatchers("/say_hi_public").permitAll()
                 .and()
                 .sessionManagement()
@@ -82,21 +84,7 @@ public class SecurityConfig extends AbstractHttpConfigurer<SecurityConfig, HttpS
 //        Applying CustomDsl
         httpSecurity.apply(customDsl());
 
-//                 httpSecurity.authorizeRequests()
-//                 .mvcMatchers("/loggedin").authenticated()
-//                 .mvcMatchers(HttpMethod.GET, "/needsRole").hasAuthority("ROLE_MANAGER")
-//                 .mvcMatchers(HttpMethod.POST, "/needsRole").hasAuthority("ROLE_ADMIN")
-//                 .anyRequest().permitAll();
-
-//                 httpSecurity
-//                .logout()
-//                .clearAuthentication(true)
-//                .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
-//                .logoutSuccessUrl("/allDone").deleteCookies("JSESSIONID").deleteCookies("XSRF-TOKEN")
-//                .invalidateHttpSession(true);
-//
-////        httpSecurity.csrf().csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse());
-//
+//        TODO: Logout (See /Users/noslen/DevProjects/03-spring-security-lesson/activities/02-stu-spring-security-tutorial/solved)
 
         return httpSecurity.build();
     }
