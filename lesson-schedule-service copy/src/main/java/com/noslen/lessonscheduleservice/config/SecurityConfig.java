@@ -12,8 +12,8 @@ import static org.springframework.security.oauth2.client.web.OAuth2Authorization
 @Configuration
 public class SecurityConfig {
 
-    private ClientRegistrationRepository clientRegistrationRepository;
-    private Environment env;
+    private final ClientRegistrationRepository clientRegistrationRepository;
+    private final Environment env;
 
     public SecurityConfig(ClientRegistrationRepository clientRegistrationRepository, Environment env) {
         this.clientRegistrationRepository = clientRegistrationRepository;
@@ -29,7 +29,7 @@ public class SecurityConfig {
             .anyRequest()
             .fullyAuthenticated();
 
-        if (Boolean.valueOf(env.getProperty("okta.oauth2.pkce-always"))) {
+        if (Boolean.parseBoolean(env.getProperty("okta.oauth2.pkce-always"))) {
             http
                 .oauth2Login()
                 .authorizationEndpoint()
@@ -38,6 +38,6 @@ public class SecurityConfig {
                 ));
         }
 
-        return  http.build();
+        return http.build();
     }
 }

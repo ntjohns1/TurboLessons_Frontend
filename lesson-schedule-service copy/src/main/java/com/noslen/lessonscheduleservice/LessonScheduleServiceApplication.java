@@ -14,15 +14,4 @@ public class LessonScheduleServiceApplication {
         SpringApplication.run(LessonScheduleServiceApplication.class, args);
     }
 
-//    @Configuration
-//    static class OktaOAuth2WebSecurityConfigurerAdapter {
-//
-//        @Bean
-//        protected SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-//            http
-//                    .authorizeRequests().anyRequest().authenticated()
-//                    .and().oauth2ResourceServer().jwt();
-//            return http.build();
-//        }
-//    }
 }
