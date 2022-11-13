@@ -1,61 +1,52 @@
 import React from "react";
 import { useOktaAuth } from '@okta/okta-react';
-
-const Nav = () => {
+import { Navbar, Nav } from 'react-bootstrap';
+import { Link } from 'react-router-dom'
+const HomeNav = () => {
 
   const { authState, oktaAuth } = useOktaAuth();
   const login = async () => oktaAuth.signInWithRedirect();
   const logout = async () => oktaAuth.signOut();
 
   return (
-    <div>
-      <div className="top-0 w-full flex flex-wrap">
-        <section className="x-auto">
-          <nav className="flex justify-between bg-gray-200 text-blue-800 w-screen">
-            <div className="px-5 xl:px-12 py-6 flex w-full items-center">
-              <h1 className="text-3xl font-bold font-heading">
-                Okta React AUTH.
-              </h1>
-              <ul className="hidden md:flex px-4 mx-auto font-semibold font-heading space-x-12">
-                <li>
-                  <a className="hover:text-blue-800" href="/">
-                    Home
-                  </a>
-                </li>
-                <li>
-                  <a className="hover:text-blue-800" href="/secured">
-                    Secured Page
-                  </a>
-                </li>
-              </ul>
-              <div className="hidden xl:flex items-center space-x-5">
-                <div className="hover:text-gray-200">
-
-                  <button
-                    type="button"
-                    className="text-blue-800"
-                    onClick={login}
-                  >
-                    Login
-                  </button>
-
-
-                  <button
-                    type="button"
-                    className="text-blue-800"
-                    onClick={logout}
-                  >
-                    Logout
-                  </button>
-
-                </div>
-              </div>
-            </div>
-          </nav>
-        </section>
-      </div>
-    </div>
+    <>
+      <Navbar
+        collapseOnSelect
+        sticky='top'
+        expand='lg'
+        variant='dark'
+        className='mb-3'
+        style={{ backgroundColor: '#00334E' }}>
+        <Navbar.Brand className='header-nav px-3'>
+          Lesson Schedule Service
+        </Navbar.Brand>
+        <Navbar.Toggle aria-controls='responsive-navbar-nav' />
+        <Navbar.Collapse id='responsive-navbar-nav'>
+          <Nav
+            className='ms-auto px-3'>
+            <Nav.Link style={{ color: 'white' }} as={Link} to='/'>
+              Home
+            </Nav.Link>
+            {!oktaAuth.isAuthenticated && (
+              <Nav.Link style={{ color: 'white' }} onClick={login}>
+                Login
+              </Nav.Link>
+            )}
+            {oktaAuth.isAuthenticated && (
+              <Nav.Link style={{ color: 'white' }} onClick={logout}>
+                Logout
+              </Nav.Link>
+            )}
+            {oktaAuth.isAuthenticated && (
+              <Nav.Link style={{ color: 'white' }} as={Link} to='/secured'>
+                Secured Page
+              </Nav.Link>
+            )}
+          </Nav>
+        </Navbar.Collapse>
+      </Navbar>
+    </>
   );
 };
 
-export default Nav;
+export default HomeNav;

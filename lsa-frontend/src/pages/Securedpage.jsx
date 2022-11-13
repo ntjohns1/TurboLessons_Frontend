@@ -43,24 +43,34 @@ const Secured = () => {
       headers: {
         'Authorization': `Bearer ${accessToken}`,
         'Accept': 'application/json',
-        'Content-Type': 'application/json',
-        'Access-Control-Allow-Credentials': true
+        'Content-Type': 'application/json'
       },
       body: JSON.stringify(formState),
-      // credentials: 'include'
-    });
+    })
+      .then(response => {
+        if (response.status === 201) {
+          return response.json();
+        }
+        return Promise.reject('Didn\'t receive expected status: 201');
+      })
+      .then(() => {
+        alert('Successfully Added Lesson Event');
+      })
+      .catch((error) => {
+        console.error('Error:', error);
+      });
 
   };
   if (authState && authState.isAuthenticated) {
     return (
-      <Container className='p-4 my-4'>
+      <Container>
         <Card>
           <Card.Header>
             <h4>Add New Student</h4>
           </Card.Header>
           <Card.Body className="p-3">
             <Form onSubmit={handleFormSubmit} className="mb-3 px-3">
-              <Form.Group className="mb-3 px-3" controlId="studentId">
+              <Form.Group className="mx-3 px-3" controlId="studentId">
                 <Form.Label>studentId</Form.Label>
                 <Form.Control
                   type="text"
