@@ -15,5 +15,6 @@ export default {
   },
   resourceServer: {
     messagesUrl: 'http://localhost:8080/api/lesson',
+    userAdminUrl: 'http://localhost:8080/api/users',
   },
 };

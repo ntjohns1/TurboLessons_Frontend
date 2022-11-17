@@ -2,10 +2,10 @@ import React from "react";
 import { useOktaAuth } from '@okta/okta-react';
 import { Navbar, Nav } from 'react-bootstrap';
 import { Link } from 'react-router-dom'
+
 const HomeNav = () => {
 
   const { authState, oktaAuth } = useOktaAuth();
-  const login = async () => oktaAuth.signInWithRedirect();
   const logout = async () => oktaAuth.signOut();
 
   return (
@@ -27,11 +27,6 @@ const HomeNav = () => {
             <Nav.Link style={{ color: 'white' }} as={Link} to='/'>
               Home
             </Nav.Link>
-            {!oktaAuth.isAuthenticated && (
-              <Nav.Link style={{ color: 'white' }} onClick={login}>
-                Login
-              </Nav.Link>
-            )}
             {oktaAuth.isAuthenticated && (
               <Nav.Link style={{ color: 'white' }} onClick={logout}>
                 Logout

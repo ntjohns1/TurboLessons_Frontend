@@ -1,15 +1,28 @@
 import React from 'react';
-import { Container, Col, Row } from "react-bootstrap";
+import { useOktaAuth } from '@okta/okta-react';
+import { Container, Card, Button } from "react-bootstrap";
+import PortalNav from '../components/PortalNav';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 
 
-
-const Home = () => {
-
- return (
-   <div>
-     <h1 className="text-green-800 text-4xl">Welcome to the Homepage</h1>
-   </div>
- );
+export default function Home() {
+  const { authState, oktaAuth } = useOktaAuth();
+  const loggedStatus = oktaAuth.isAuthenticated();
+  const login = async () => oktaAuth.signInWithRedirect();
+  return (
+    <Container>
+      {loggedStatus && (
+        <PortalNav />
+      )}
+      <Card.Body>
+        <h1 className="text-center">Welcome to <FontAwesomeIcon icon={"play-circle"} /> Music Notes</h1>
+        <p className="text-center">An interactive platform for music teachers and students to communicate helpful information.</p>
+        {!loggedStatus && (
+          <Button variant="primary" size="lg" onClick={login}>
+            Sign In
+          </Button>
+        )}
+      </Card.Body>
+    </Container>
+  )
 };
-
-export default Home;

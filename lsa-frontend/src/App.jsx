@@ -22,8 +22,13 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import HomeNav from "./components/Nav";
 import WelcomePage from "./pages/Homepage";
 import SecuredPage from "./pages/Securedpage";
+import Portal from "./pages/Portal"
+import Students from "./pages/Students"
 import { RequiredAuth } from "./helpers/SecureRoute";
+import { library } from '@fortawesome/fontawesome-svg-core'
+import { fas } from '@fortawesome/free-solid-svg-icons'
 
+library.add(fas);
 
 const oktaAuth = new OktaAuth(config.oidc);
 
@@ -42,6 +47,12 @@ const App = () => {
           <Route path="" element={<SecuredPage />} />
         </Route>
         <Route path="login/callback" element={<LoginCallback loadingElement={<Loading />} />} />
+        <Route path="/portal" element={<RequiredAuth />}>
+          <Route path="" element={<Portal />} />
+        </Route>
+        <Route path="/students" element={<RequiredAuth />}>
+          <Route path="" element={<Students />} />
+        </Route>
       </Routes>
     </Security>
   );
