@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useOktaAuth } from '@okta/okta-react';
-import { Container } from 'react-bootstrap';
+import { Container, Form, Row, Col, InputGroup, Card, Toast } from 'react-bootstrap';
+
 import config from '../../config';
 import StudentList from './StudentList';
 
@@ -24,10 +25,12 @@ export default function StudentTable() {
                     return response.json();
                 })
                 .then((data) => {
+                    console.log(data);
                     const res = data.map((s) => {
                         return {
-                            displayName: s.displayName,
-                            email: s.email
+                            id: s.id,
+                            displayName: s.profile.displayName,
+                            email: s.profile.email
                         };
                     });
                     setStudents(res);
@@ -39,17 +42,25 @@ export default function StudentTable() {
     }, [authState, oktaAuth]);
 
     console.log(students);
+
+    function goToStudent(studentId) {
+        document.location.replace(`/students/${studentId}`);
+    }
+
     return (
-        <Container>
-            <h3 className='text-center'>Welcome to Student Management!</h3>
-            <h4 className='my-4 text-center'>View Current Students</h4>
-            <div className='p-4 my-4 d-flex justify-content-center'>
-                <div>
-                    {students && students.map((student) => (
-                        <StudentList students={student} key={student.email} />
-                    ))}
-                </div>
-            </div>
+        <Container className='d-flex justify-content-center'>
+            <Card>
+                <Card.Header>
+                    <h4>Students</h4>
+                </Card.Header>
+                {students && students.map((student) => (
+                    <Toast onClick={() => goToStudent(student.id)} key={student.id}>
+                        <Toast.Header closeButton={false}>
+                            <strong className="me-auto">{student.displayName}</strong>
+                        </Toast.Header>
+                    </Toast>
+                ))}
+            </Card>
         </Container>
     )
 }
