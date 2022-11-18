@@ -32,11 +32,6 @@ const HomeNav = () => {
                 Logout
               </Nav.Link>
             )}
-            {oktaAuth.isAuthenticated && (
-              <Nav.Link style={{ color: 'white' }} as={Link} to='/secured'>
-                Secured Page
-              </Nav.Link>
-            )}
           </Nav>
         </Navbar.Collapse>
       </Navbar>

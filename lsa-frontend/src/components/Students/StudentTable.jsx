@@ -1,16 +1,19 @@
 import React, { useEffect, useState } from 'react';
 import { useOktaAuth } from '@okta/okta-react';
-import { Container, Form, Row, Col, InputGroup, Card, Toast } from 'react-bootstrap';
-
+import { Container, Card, Toast, Spinner } from 'react-bootstrap';
 import config from '../../config';
-import StudentList from './StudentList';
+import Loading from '../../helpers/Loading';
+
 
 export default function StudentTable() {
     // populate table with list of students
     const { authState, oktaAuth } = useOktaAuth();
     const [students, setStudents] = useState([]);
+    const [studentFetchFailed, setStudentFetchFailed] = useState(false);
+    const [fetching, setFetching] = useState(false);
 
     useEffect(() => {
+        setFetching(true);
         if (authState && authState.isAuthenticated) {
             const accessToken = oktaAuth.getAccessToken();
             fetch(config.resourceServer.userAdminUrl, {
@@ -25,7 +28,6 @@ export default function StudentTable() {
                     return response.json();
                 })
                 .then((data) => {
-                    console.log(data);
                     const res = data.map((s) => {
                         return {
                             id: s.id,
@@ -34,33 +36,47 @@ export default function StudentTable() {
                         };
                     });
                     setStudents(res);
+                    setStudentFetchFailed(false);
                 })
                 .catch((err) => {
+                    setStudentFetchFailed(true);
                     console.error(err);
                 });
         }
+        setFetching(false);
     }, [authState, oktaAuth]);
 
     console.log(students);
+    console.log(fetching);
 
     function goToStudent(studentId) {
         document.location.replace(`/students/${studentId}`);
     }
 
+    if (fetching) {
+        return (
+            <Loading />
+        );
+    }
+
     return (
         <Container className='d-flex justify-content-center'>
-            <Card>
-                <Card.Header>
-                    <h4>Students</h4>
-                </Card.Header>
-                {students && students.map((student) => (
-                    <Toast onClick={() => goToStudent(student.id)} key={student.id}>
-                        <Toast.Header closeButton={false}>
-                            <strong className="me-auto">{student.displayName}</strong>
-                        </Toast.Header>
-                    </Toast>
-                ))}
-            </Card>
+            {students.length != 0 ? (
+                <Card>
+                    <Card.Header>
+                        <h4>Students</h4>
+                    </Card.Header>
+                    {students && students.map((student) => (
+                        <Toast onClick={() => goToStudent(student.id)} key={student.id}>
+                            <Toast.Header closeButton={false}>
+                                <strong className="me-auto">{student.displayName}</strong>
+                            </Toast.Header>
+                        </Toast>
+                    ))}
+                </Card>
+            ) : (
+                <Loading />
+            )}
         </Container>
     )
 }

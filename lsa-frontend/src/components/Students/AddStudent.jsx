@@ -55,9 +55,6 @@ export default function AddStudent() {
                     <h4>Add New Student</h4>
                 </Card.Header>
                 <Card.Body className="p-3">
-                    <p>Please note that when creating a student, their lastName is randomly generated. The lastName, which you
-                        will need to write down and share with your student, will appear in a pop up window.</p>
-                    <p>The student will need the email address and the generated lastName to log in.</p>
                     <Form onSubmit={handleFormSubmit} className="mb-3 px-3">
                         <Form.Group className="mb-3 px-3" controlId="firstName">
                             <Form.Label>Student First Name</Form.Label>

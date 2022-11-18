@@ -18,10 +18,10 @@ import { Security } from '@okta/okta-react';
 import { LoginCallback } from '@okta/okta-react';
 import Loading from './helpers/Loading';
 import config from './config';
-import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { Route, Routes } from "react-router-dom";
 import HomeNav from "./components/Nav";
 import WelcomePage from "./pages/Homepage";
-import SecuredPage from "./pages/Securedpage";
+import SecuredPage from "./components/Lessons/Securedpage"
 import Portal from "./pages/Portal"
 import Students from "./pages/Students"
 import { RequiredAuth } from "./helpers/SecureRoute";
