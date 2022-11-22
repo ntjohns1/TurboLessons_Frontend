@@ -10,10 +10,8 @@ export default function StudentTable() {
     const { authState, oktaAuth } = useOktaAuth();
     const [students, setStudents] = useState([]);
     const [studentFetchFailed, setStudentFetchFailed] = useState(false);
-    const [fetching, setFetching] = useState(false);
 
     useEffect(() => {
-        setFetching(true);
         if (authState && authState.isAuthenticated) {
             const accessToken = oktaAuth.getAccessToken();
             fetch(config.resourceServer.userAdminUrl, {
@@ -43,20 +41,10 @@ export default function StudentTable() {
                     console.error(err);
                 });
         }
-        setFetching(false);
     }, [authState, oktaAuth]);
-
-    console.log(students);
-    console.log(fetching);
 
     function goToStudent(studentId) {
         document.location.replace(`/students/${studentId}`);
-    }
-
-    if (fetching) {
-        return (
-            <Loading />
-        );
     }
 
     return (

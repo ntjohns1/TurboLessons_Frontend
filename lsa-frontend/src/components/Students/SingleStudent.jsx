@@ -1,31 +1,38 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
+import { useOktaAuth } from '@okta/okta-react';
 import { Card, Container, Form, Button, Row, Col } from 'react-bootstrap';
-import Sidebar from '../Sidebar';
+import config from '../../config';
 
-export default function SingleCustomer() {
-    const id = useParams().customerId;
+export default function SingleStudent() {
+    const { authState, oktaAuth } = useOktaAuth();
 
-    const [customer, setCustomer] = useState({});
+    const id = useParams().id;
+
+    const [student, setStudent] = useState({});
 
     useEffect(() => {
-        fetch(`http://localhost:7979/customers/${id}`)
+        const accessToken = oktaAuth.getAccessToken();
+
+        fetch(`http://localhost:8080/api/users/profile/${id}`, {
+            headers: {
+                Authorization: `Bearer ${accessToken}`,
+            },
+        })
             .then(response => response.json())
             .then(result =>
-                setCustomer(result))
+                setStudent(result))
             .catch(console.log)
     }, [id]);
     useEffect(() => {
         setFormState({
-            ...customer,
-            ...customer.address,
+            ...student,
         })
-    }, [customer]);
+    }, [student]);
 
-    // form input to update Customer
+    // form input to update Student
     const [formState, setFormState] = useState({
-        ...customer,
-        ...customer.address,
+        ...student,
     });
 
     // update state based on form input changes
@@ -38,54 +45,55 @@ export default function SingleCustomer() {
         });
     };
 
-    function handleSubmit(evt) {
-        evt.preventDefault();
+    console.log(formState);
+    // function handleSubmit(evt) {
+    //     evt.preventDefault();
 
-        const url = `http://localhost:7979/customers/${id}`;
-        const method = "PUT";
+    //     const url = `http://localhost:7979/students/${id}`;
+    //     const method = "PUT";
 
-        const init = {
-            method,
-            headers: {
-                "Content-Type": "application/json",
-                "Accept": "application/json"
-            },
-            body: JSON.stringify(
-                {
-                    "id": id,
-                    "firstName": formState.firstName,
-                    "lastName": formState.lastName,
-                    "email": formState.email,
-                    "phone": formState.phone,
-                    "address": {
-                        "street1": formState.street1,
-                        "street2": formState.street2,
-                        "city": formState.city,
-                        "state": formState.state,
-                        "zipcode": formState.zipcode
-                    },
-                    "vip": formState.vip
-                }
-            )
-        };
+    //     const init = {
+    //         method,
+    //         headers: {
+    //             "Content-Type": "application/json",
+    //             "Accept": "application/json"
+    //         },
+    //         body: JSON.stringify(
+    //             {
+    //                 "id": id,
+    //                 "firstName": formState.firstName,
+    //                 "lastName": formState.lastName,
+    //                 "email": formState.email,
+    //                 "phone": formState.phone,
+    //                 "address": {
+    //                     "street1": formState.street1,
+    //                     "street2": formState.street2,
+    //                     "city": formState.city,
+    //                     "state": formState.state,
+    //                     "zipcode": formState.zipcode
+    //                 },
+    //                 "vip": formState.vip
+    //             }
+    //         )
+    //     };
 
-        fetch(url, init)
-            .then(() => { return formState; })
-            .then((data) => {
-                console.log('/updateCustomer: ', data);
-                alert(`${data.firstName} successfully updated`);
-            })
-            .catch((error) => {
-                console.error('Error:', error);
-            });
-    }
+    //     fetch(url, init)
+    //         .then(() => { return formState; })
+    //         .then((data) => {
+    //             console.log('/updateStudent: ', data);
+    //             alert(`${data.firstName} successfully updated`);
+    //         })
+    //         .catch((error) => {
+    //             console.error('Error:', error);
+    //         });
+    // }
 
-    function handleDelete() {
-        fetch(`http://localhost:7979/customers/${id}`, { method: "DELETE" })
-            .then(() => alert(`${customer.firstName} Deleted`))
-            .then(goBack())
-            .catch(error => console.log(error));
-    }
+    // function handleDelete() {
+    //     fetch(`http://localhost:7979/students/${id}`, { method: "DELETE" })
+    //         .then(() => alert(`${student.firstName} Deleted`))
+    //         .then(goBack())
+    //         .catch(error => console.log(error));
+    // }
 
     function goBack() {
         document.location.replace(`/`);
@@ -93,9 +101,7 @@ export default function SingleCustomer() {
     return (
         <Container fluid>
             <Row >
-                <Col md="1">
-                    <Sidebar />
-                </Col>
+
                 <Col md="11">
                     <Row className='m-3'>
                         <Col md="4">
@@ -107,7 +113,7 @@ export default function SingleCustomer() {
                                             className="avatar border-gray"
                                             src={"http://placecorgi.com/260/180"}
                                         />
-                                        <h5 className="title">{formState.firstName} {formState.lastName}</h5>
+                                        <h5 className="title">{student.displayName}</h5>
                                     </div>
                                 </Card.Body>
                             </Card>
@@ -115,26 +121,23 @@ export default function SingleCustomer() {
                         <Col md="8">
                             <Card className="card-user">
                                 <Card.Header>
-                                    <Card.Title tag="h5">{formState.firstName} {formState.lastName}</Card.Title>
+                                    <Card.Title tag="h5">{student.displayName}</Card.Title>
                                 </Card.Header>
                                 <Card.Body>
-                                    <Form onSubmit={handleSubmit}>
-                                        <Row>
-                                            <Col className="pl-1" md="6">
-                                                <Form.Group>
-                                                    <label htmlFor="exampleInputEmail1">
-                                                        Email address
-                                                    </label>
-                                                    <Form.Control
-                                                        name="email"
-                                                        value={formState.email ?? ""}
-                                                        onChange={handleChange}
-                                                        type="email" />
-                                                </Form.Group>
-                                            </Col>
-                                        </Row>
-                                        <Row>
-                                            <Col className="pr-1" md="6">
+                                    {/* <Form onSubmit={handleSubmit}> */}
+                                    <Form>
+                                        <Form.Group>
+                                            <label htmlFor="exampleInputEmail1">
+                                                Email address
+                                            </label>
+                                            <Form.Control
+                                                name="email"
+                                                value={formState.email ?? ""}
+                                                onChange={handleChange}
+                                                type="email" />
+                                        </Form.Group>
+                                        <Row className="pr-1">
+                                            <Col md="6">
                                                 <Form.Group>
                                                     <label>First Name</label>
                                                     <Form.Control
@@ -145,7 +148,7 @@ export default function SingleCustomer() {
                                                     />
                                                 </Form.Group>
                                             </Col>
-                                            <Col className="pl-1" md="6">
+                                            <Col md="6">
                                                 <Form.Group>
                                                     <label>Last Name</label>
                                                     <Form.Control
@@ -157,90 +160,51 @@ export default function SingleCustomer() {
                                                 </Form.Group>
                                             </Col>
                                         </Row>
-                                        <Row>
-                                            <Col md="12">
-                                                <Form.Group>
-                                                    <label>Address</label>
-                                                    <Form.Control
-                                                        name="street1"
-                                                        value={formState.street1 ?? ""}
-                                                        onChange={handleChange}
-                                                        type="text"
-                                                    />
-                                                </Form.Group>
-                                            </Col>
-                                        </Row>
-                                        <Row>
-                                            <Col md="12">
-                                                <Form.Group>
-                                                    <label>Address 2</label>
-                                                    <Form.Control
-                                                        name="street2"
-                                                        value={formState.street2 ?? ""}
-                                                        onChange={handleChange}
-                                                        type="text"
-                                                    />
-                                                </Form.Group>
-                                            </Col>
-                                        </Row>
-                                        <Row>
-                                            <Col className="pr-1" md="4">
-                                                <Form.Group>
-                                                    <label>City</label>
-                                                    <Form.Control
-                                                        name="city"
-                                                        value={formState.city ?? ""}
-                                                        onChange={handleChange}
-                                                        type="text"
-                                                    />
-                                                </Form.Group>
-                                            </Col>
-                                            <Col className="px-1" md="4">
-                                                <Form.Group>
-                                                    <label>State</label>
-                                                    <Form.Control
-                                                        name="state"
-                                                        value={formState.state ?? ""}
-                                                        onChange={handleChange}
-                                                        type="text"
-                                                    />
-                                                </Form.Group>
-                                            </Col>
-                                            <Col className="pl-1" md="4">
-                                                <Form.Group>
-                                                    <label>Zip Code</label>
-                                                    <Form.Control
-                                                        name="zipcode"
-                                                        value={formState.zipcode ?? ""}
-                                                        onChange={handleChange}
-                                                        type="text" />
-                                                </Form.Group>
-                                            </Col>
-                                        </Row>
-                                        <Row>
-                                            <Col md="6">
-                                                <Form.Group>
-                                                    <label>Phone</label>
-                                                    <Form.Control
-                                                        name="phone"
-                                                        value={formState.phone ?? ""}
-                                                        onChange={handleChange}
-                                                        type="text"
-                                                    />
-                                                </Form.Group>
-                                            </Col>
-                                            <Col md="6">
-                                                <Form.Group>
-                                                    <label>VIP Status</label>
-                                                    <Form.Control
-                                                        name="vip"
-                                                        value={formState.vip ?? ""}
-                                                        onChange={handleChange}
-                                                        type="text"
-                                                    />
-                                                </Form.Group>
-                                            </Col>
-                                        </Row>
+
+                                        <Form.Group>
+                                            <label>Address</label>
+                                            <Form.Control
+                                                name="street1"
+                                                value={formState.street1 ?? ""}
+                                                onChange={handleChange}
+                                                type="text"
+                                            />
+                                        </Form.Group>
+                                        <Form.Group>
+                                            <label>City</label>
+                                            <Form.Control
+                                                name="city"
+                                                value={formState.city ?? ""}
+                                                onChange={handleChange}
+                                                type="text"
+                                            />
+                                        </Form.Group>
+                                        <Form.Group>
+                                            <label>State</label>
+                                            <Form.Control
+                                                name="state"
+                                                value={formState.state ?? ""}
+                                                onChange={handleChange}
+                                                type="text"
+                                            />
+                                        </Form.Group>
+                                        <Form.Group>
+                                            <label>Zip Code</label>
+                                            <Form.Control
+                                                name="zipcode"
+                                                value={formState.zipcode ?? ""}
+                                                onChange={handleChange}
+                                                type="text" />
+                                        </Form.Group>
+                                        <Form.Group>
+                                            <label>Phone</label>
+                                            <Form.Control
+                                                name="phone"
+                                                value={formState.phone ?? ""}
+                                                onChange={handleChange}
+                                                type="text"
+                                            />
+                                        </Form.Group>
                                         <Row className='my-3'>
                                             <div>
                                                 <Button
@@ -248,14 +212,14 @@ export default function SingleCustomer() {
                                                     color="primary"
                                                     type="submit"
                                                 >
-                                                    Update Customer
+                                                    Update Student
                                                 </Button>
                                                 <Button
                                                     className="btn-round mx-3"
                                                     variant="danger"
-                                                    onClick={() => handleDelete()}
+                                                // onClick={() => handleDelete()}
                                                 >
-                                                    Delete Customer
+                                                    Delete Student
                                                 </Button>
                                                 <Button
                                                     className="btn-round ml-3"
@@ -272,7 +236,7 @@ export default function SingleCustomer() {
                         </Col>
                     </Row>
                 </Col>
-            </Row>
-        </Container>
+            </Row >
+        </Container >
     )
 };
