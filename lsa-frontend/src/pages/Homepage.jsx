@@ -19,7 +19,7 @@ export default function Home() {
         <p className="text-center">An interactive platform for music teachers and students to communicate helpful information.</p>
         {!loggedStatus && (
           <Button variant="primary" size="lg" onClick={login}>
-            Sign In
+            Login
           </Button>
         )}
       </Card.Body>

@@ -27,6 +27,7 @@ const env = {};
 export default defineConfig({
   plugins: [react()],
   define: {
+    global: {},
     'process.env': env
   },
   resolve: {

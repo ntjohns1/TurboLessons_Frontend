@@ -48,7 +48,7 @@ const Secured = () => {
       body: JSON.stringify(formState),
     })
       .then(response => {
-        if (response.status === 201) {
+        if (response.status === 200 || response.status === 204) {
           return response.json();
         }
         return Promise.reject('Didn\'t receive expected status: 201');
