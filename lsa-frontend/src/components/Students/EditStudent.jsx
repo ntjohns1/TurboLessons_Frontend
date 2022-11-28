@@ -237,7 +237,7 @@ export default function EditStudent({ student, formState, setStudent, setIsUpdat
                 </Form>
             </Card.Body>
             <Card.Footer className='p-2 d-flex justify-content-center'>
-                <DeletUserBtn oktaAuth = {oktaAuth} id={id} setIsUpdate={setIsUpdate}/>
+                <DeletUserBtn oktaAuth = {oktaAuth} id={id} setIsUpdate={setIsUpdate} student={student}/>
             </Card.Footer>
         </Card>
     )

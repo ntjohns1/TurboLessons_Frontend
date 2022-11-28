@@ -1,8 +1,31 @@
-import React, { useState } from 'react';
-import { Button, Alert } from 'react-bootstrap';
+import React, { useState, useEffect } from 'react';
+import { Button, Modal, Form, Row } from 'react-bootstrap';
 
-export default function DeletUserBtn({ oktaAuth, id, setIsUpdate }) {
+export default function DeletUserBtn({ oktaAuth, id, student }) {
+    const [valid, setValid] = useState(false);
+    const [inputTxt, setInputTxt] = useState({
+        inputTxt: ''
+    });
     const [show, setShow] = useState(false);
+    const handleClose = () => setShow(false);
+    const handleShow = () => setShow(true);
+    console.log(student);
+    const studentName = student.firstName + " " + student.lastName;
+    const handleChange = (event) => {
+        const { name, value } = event.target;
+
+        if (value === studentName) {
+            setValid(true);
+        }
+
+        setInputTxt({
+            ...inputTxt,
+            [name]: value,
+        });
+        console.log(value);
+    };
+
+
     const handleDelete = async (e) => {
         // e.preventDefault();
         const accessToken = oktaAuth.getAccessToken();
@@ -15,29 +38,58 @@ export default function DeletUserBtn({ oktaAuth, id, setIsUpdate }) {
                     "Accept": "application/json"
                 }
             })
-                .then(() => alert(`Student Deleted`))
-                .then(() => setIsUpdate(false))
+                .then(() => alert(`${studentName} Deleted`))
+                .then(() => goBack())
                 .catch(error => console.log(error));
         }
         catch (err) {
             return console.error(err);
         }
     };
+
+
+    function goBack() {
+        document.location.replace(`/students`);
+    }
     return (
         <>
-            <Alert show={show} variant="danger">
-                <Alert.Heading>Are You Sure??</Alert.Heading>
-                <div className="d-flex justify-content-end">
-                    <Button onClick={() => handleDelete()} variant="outline-danger">
+
+            <Button onClick={handleShow} variant="danger">Delete Student</Button>
+            <Modal
+                show={show}
+                onHide={handleClose}
+                backdrop="static"
+                keyboard={false}
+            >
+                <Modal.Header closeButton>
+                    <Modal.Title>Modal title</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    <Form>
+                        <Form.Group as={Row} className="mb-3" controlId="formPlaininputTxtEmail">
+                            <Form.Label >
+                                Retype the Users's First and Last Name to Continue: {studentName}
+                            </Form.Label>
+
+                            <Form.Control
+                                name="inputTxt"
+                                onChange={handleChange}
+                                value={inputTxt.inputTxt}
+                                type="text"
+                            />
+                        </Form.Group>
+                    </Form>
+                </Modal.Body>
+                <Modal.Footer className="d-flex justify-content-end">
+                    <Button onClick={() => handleDelete()} variant="outline-danger" disabled={!valid}>
                         Confirm
                     </Button>
-                    <Button onClick={() => setShow(false)} variant="outline-danger">
+                    <Button onClick={handleClose} variant="outline-danger">
                         Cancel
                     </Button>
-                </div>
-            </Alert>
+                </Modal.Footer>
 
-            {!show && <Button onClick={() => setShow(true)} variant="danger">Delete Student</Button>}
+            </Modal>
         </>
     )
 }
