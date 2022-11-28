@@ -5,8 +5,14 @@ import { FaEdit } from "react-icons/fa";
 import { Card, Container, Form, Button, Row, Col } from 'react-bootstrap';
 
 
-export default function StudentList({ student, setIsUpdate }) {
+export default function StudentList({ student, formState, setFormState, setIsUpdate }) {
 
+    useEffect(() => {
+        setFormState({
+            ...student,
+        })
+    }, []);
+    
     return (
 
         <Card className="card-user">

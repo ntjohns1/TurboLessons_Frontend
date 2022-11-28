@@ -4,6 +4,7 @@ import { Card, Container, Form, Button } from 'react-bootstrap';
 import config from '../../config';
 
 export default function AddStudent() {
+    const { authState, oktaAuth } = useOktaAuth();
     // form input to add student
     const [formState, setFormState] = useState({
         firstName: '',
@@ -22,34 +23,35 @@ export default function AddStudent() {
         });
     };
 
-    // submit form
     const handleFormSubmit = async (event) => {
         event.preventDefault();
-        const {
-            firstName,
-            lastName,
-            email
-        } = formState;
-        try {
-            await addUser({
-                variables: {
-                    firstName: firstName,
-                    lastName: lastName,
-                    email: email
-                },
-            });
-            alert("You Did It!");
-        } catch (e) {
-            console.error(e);
-        }
-        setFormState({
-            firstName: '',
-            lastName: '',
-            email: '',
-        });
-    };
+        const url = "http://localhost:8080/api/users";
+        const accessToken = oktaAuth.getAccessToken();
+        await fetch(url, {
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${accessToken}`,
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(formState),
+        })
+          .then(response => {
+            if (response.status === 200 || response.status === 204) {
+              return response.json();
+            }
+            return Promise.reject('Didn\'t receive expected status: 201');
+          })
+          .then((data) => {
+            alert(`Successfully Added User: ${data.displayName}`);
+          })
+          .catch((error) => {
+            console.error('Error:', error);
+          });
+    
+      };
     return (
-        <Container className='p-4 my-4'>
+        <Container className='d-flex justify-content-center'>
             <Card>
                 <Card.Header>
                     <h4>Add New Student</h4>

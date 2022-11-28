@@ -24,6 +24,7 @@ import WelcomePage from "./pages/Homepage";
 import SecuredPage from "./components/Lessons/Securedpage"
 import Portal from "./pages/Portal"
 import Students from "./pages/Students"
+import AddStudent from "./components/Students/AddStudent"
 import { RequiredAuth } from "./helpers/SecureRoute";
 import { library } from '@fortawesome/fontawesome-svg-core'
 import { fas } from '@fortawesome/free-solid-svg-icons'
@@ -57,6 +58,9 @@ const App = () => {
         </Route>
         <Route path="/students/:id" element={<RequiredAuth />}>
           <Route path="" element={<SingleStudent />} />
+        </Route>
+        <Route path="/addStudent" element={<RequiredAuth />}>
+          <Route path="" element={<AddStudent />} />
         </Route>
         <Route path="/messenger" element={<RequiredAuth />}>
           <Route path="" element={<Messenger />} />

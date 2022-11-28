@@ -4,8 +4,9 @@ import { useOktaAuth } from '@okta/okta-react';
 import { Card, Container, Form, Button, Row, Col } from 'react-bootstrap';
 import { FaRegWindowClose } from "react-icons/fa";
 import config from '../../config';
+import DeletUserBtn from './DeleteUserBtn';
 
-export default function EditStudent({ student, formState, setIsUpdate, setFormState, oktaAuth, id }) {
+export default function EditStudent({ student, formState, setStudent, setIsUpdate, setFormState, oktaAuth, id }) {
 
     useEffect(() => {
         setFormState({
@@ -23,7 +24,6 @@ export default function EditStudent({ student, formState, setIsUpdate, setFormSt
         });
     };
 
-    console.log(formState);
     function handleSubmit(evt) {
         evt.preventDefault();
 
@@ -58,11 +58,15 @@ export default function EditStudent({ student, formState, setIsUpdate, setFormSt
         };
 
         fetch(url, init)
-            .then(() => { return formState; })
+            .then(() => {
+                setStudent({ ...formState })
+                return formState;
+            })
             .then((data) => {
                 console.log('/updateStudent: ', data);
-                alert(`${data.firstName} successfully updated`);
+                alert(`${data.displayName} successfully updated`);
             })
+            .then(() => setIsUpdate(false))
             .catch((error) => {
                 console.error('Error:', error);
             });
@@ -74,50 +78,6 @@ export default function EditStudent({ student, formState, setIsUpdate, setFormSt
     //         .then(goBack())
     //         .catch(error => console.log(error));
     // }
-
-    // const handleSubmit = async (event) => {
-    //     event.preventDefault();
-    //     const url = `http://localhost:8080/api/users/${id}`;
-    //     const accessToken = oktaAuth.getAccessToken();
-    //     await fetch(url, {
-    //         method: 'PUT',
-    //         headers: {
-    //             'Authorization': `Bearer ${accessToken}`,
-    //             'Accept': 'application/json',
-    //             'Content-Type': 'application/json'
-    //         },
-    //         body: JSON.stringify(
-    //             {
-    //                 "login": formState.login,
-    //                 "displayName": formState.displayName,
-    //                 "firstName": formState.firstName,
-    //                 "middleName": formState.middleName,
-    //                 "lastName": formState.lastName,
-    //                 "email": formState.email,
-    //                 "mobilePhone": formState.mobilePhone,
-    //                 "primaryPhone": formState.primaryPhone,
-    //                 "streetAddress": formState.streetAddress,
-    //                 "city": formState.city,
-    //                 "state": formState.state,
-    //                 "zipCode": formState.zipCode,
-    //                 "userType": formState.userType
-    //             }
-    //         )
-    //     })
-    //         .then(response => {
-    //             if (response.status === 204 || response.status === 200) {
-    //                 return response.json();
-    //             }
-    //             return Promise.reject(`Didn\'t receive expected status: 204, status received: ${response.status}`);
-    //         })
-    //         .then(() => {
-    //             alert('Successfully Updated Lesson Event');
-    //         })
-    //         .catch((error) => {
-    //             console.error('Error:', error);
-    //         });
-
-    // };
 
     return (
         <Card className="card-user">
@@ -276,6 +236,9 @@ export default function EditStudent({ student, formState, setIsUpdate, setFormSt
                     />
                 </Form>
             </Card.Body>
+            <Card.Footer className='p-2 d-flex justify-content-center'>
+                <DeletUserBtn oktaAuth = {oktaAuth} id={id} setIsUpdate={setIsUpdate}/>
+            </Card.Footer>
         </Card>
     )
 };

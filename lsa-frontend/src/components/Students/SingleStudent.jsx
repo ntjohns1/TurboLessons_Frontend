@@ -10,7 +10,7 @@ import config from '../../config';
 
 export default function SingleStudent() {
     const { authState, oktaAuth } = useOktaAuth();
-    const [isUpdate, setIsUpdate] = useState(true);
+    const [isUpdate, setIsUpdate] = useState(false);
 
     const id = useParams().id;
 
@@ -62,6 +62,7 @@ export default function SingleStudent() {
                                 <EditStudent
                                     id={id}
                                     student={student}
+                                    setStudent={setStudent}
                                     formState={formState}
                                     setFormState={setFormState}
                                     setIsUpdate={setIsUpdate}
@@ -71,7 +72,11 @@ export default function SingleStudent() {
 
                         ) : (
                             <Col md="8">
-                                <StudentList student={student} setIsUpdate={setIsUpdate} />
+                                <StudentList
+                                    student={student}
+                                    formState={setFormState}
+                                    setFormState={setFormState}
+                                    setIsUpdate={setIsUpdate} />
                             </Col>
                         )}
                     </Row>
