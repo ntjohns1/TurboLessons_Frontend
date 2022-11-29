@@ -28,28 +28,32 @@ export default function AddStudent() {
         const url = "http://localhost:8080/api/users";
         const accessToken = oktaAuth.getAccessToken();
         await fetch(url, {
-          method: 'POST',
-          headers: {
-            'Authorization': `Bearer ${accessToken}`,
-            'Accept': 'application/json',
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify(formState),
+            method: 'POST',
+            headers: {
+                'Authorization': `Bearer ${accessToken}`,
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(formState),
         })
-          .then(response => {
-            if (response.status === 200 || response.status === 204) {
-              return response.json();
-            }
-            return Promise.reject('Didn\'t receive expected status: 201');
-          })
-          .then((data) => {
-            alert(`Successfully Added User: ${data.displayName}`);
-          })
-          .catch((error) => {
-            console.error('Error:', error);
-          });
-    
-      };
+            .then(response => {
+                if (response.status === 200 || response.status === 201) {
+                    return response.json();
+                }
+                return Promise.reject('Didn\'t receive expected status: 201');
+            })
+            .then((data) => {
+                console.log(data);
+                alert(`Successfully Added Account for: ${formState.firstName} ${formState.lastName}`);
+            })
+            .then(()=> goBack())
+            .catch((error) => {
+                console.error('Error:', error);
+            });
+    };
+    function goBack() {
+        document.location.replace(`/students`);
+    }
     return (
         <Container className='d-flex justify-content-center'>
             <Card>
@@ -59,7 +63,7 @@ export default function AddStudent() {
                 <Card.Body className="p-3">
                     <Form onSubmit={handleFormSubmit} className="mb-3 px-3">
                         <Form.Group className="mb-3 px-3" controlId="firstName">
-                            <Form.Label>Student First Name</Form.Label>
+                            <Form.Label>First Name</Form.Label>
                             <Form.Control
                                 type="text"
                                 name="firstName"
@@ -68,7 +72,7 @@ export default function AddStudent() {
                             />
                         </Form.Group>
                         <Form.Group className="mb-3 px-3" controlId="studentFirstName">
-                            <Form.Label>lastName</Form.Label>
+                            <Form.Label>Last Name</Form.Label>
                             <Form.Control
                                 type="text"
                                 name="lastName"
@@ -77,13 +81,12 @@ export default function AddStudent() {
                             />
                         </Form.Group>
                         <Form.Group className="mb-3 px-3" controlId="email">
-                            <Form.Label>Student Email</Form.Label>
+                            <Form.Label>Email</Form.Label>
                             <Form.Control
                                 type="email"
                                 name="email"
                                 value={formState.email}
                                 onChange={handleChange}
-
                             />
                         </Form.Group>
                         <Button

@@ -164,13 +164,13 @@ export default function EditStudent({ student, formState, setStudent, setIsUpdat
                             />
                         </Col>
                     </Form.Group>
-                    <Form.Group as={Row} className="mb-3" controlId="formPlaintextEmail">
+                    <Form.Group as={Row} className="mb-3" controlId="formPlaintextPhone">
                         <Form.Label column sm="4">
                             Home Phone
                         </Form.Label>
                         <Col sm="8">
                             <Form.Control
-                                name="homePhone"
+                                name="primaryPhone"
                                 value={formState.primaryPhone ?? ""}
                                 onChange={handleChange}
                                 type="text"
