@@ -22,6 +22,7 @@ export default function StudentTable() {
             })
                 .then((response) => {
                     if (!response.ok) {
+                        setStudentFetchFailed(true);
                         return Promise.reject();
                     }
                     return response.json();
@@ -50,6 +51,7 @@ export default function StudentTable() {
 
     return (
         <Container className='d-flex justify-content-center'>
+            {studentFetchFailed && <Alert>Failed to fetch student</Alert>}
             {students.length != 0 ? (
                 <Card>
                     <Card.Header>
