@@ -2,10 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { InputGroup, Form } from "react-bootstrap";
 import { useOktaAuth } from '@okta/okta-react';
 import config from '../../config';
-
-
 import AddMessage from './AddMessage';
-import MessageHistory from './MessageHistory';
+import Messages from './Messages';
 export default function SelectStudent() {
 
     const { authState, oktaAuth } = useOktaAuth();
@@ -66,8 +64,8 @@ export default function SelectStudent() {
                     ))}
                 </Form.Control>
             </InputGroup>
-            <MessageHistory studentId={studentId} setStudentId={setStudentId}/>
-            <AddMessage studentId={studentId} setStudentId={setStudentId}/>
+            <Messages studentId={studentId} setStudentId={setStudentId}/>
+            {/* <AddMessage studentId={studentId} setStudentId={setStudentId}/> */}
         </>
     )
 }
