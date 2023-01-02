@@ -19,12 +19,12 @@ export default function Messages({ studentId, setStudentId }) {
     text: ''
   });
   const [messages, setMessages] = useState([]);
-  // const messagesEndRef = useRef(null);
-  // const scrollToBottom = () => {
-  //   messagesEndRef.current.scrollIntoView({ behavior: "smooth" });
-  // };
+  const messagesEndRef = useRef(null);
+  const scrollToBottom = () => {
+    messagesEndRef.current.scrollIntoView({ behavior: "smooth" });
+  };
 
-  
+
   useEffect(() => {
     const ws = new WebSocket('ws://localhost:8080/chat');
     const stompClient = Stomp.over(ws);
@@ -33,18 +33,27 @@ export default function Messages({ studentId, setStudentId }) {
       console.log('Connected: ' + frame);
       setClient(stompClient);
       stompClient.subscribe('/topic/messages', function (m) {
-        console.log(JSON.parse(m.body));
-        setMessages(...messages, JSON.parse(m.body));
+        let msg = JSON.parse(m.body);
+        console.log(messages);
+        setMessages(prevMessages => [
+          ...prevMessages,
+          { sender: msg.sender, text: msg.text, time: msg.time }
+        ]);
+        
       });
     });
   }, []);
 
-  // useEffect(scrollToBottom, [messages.length]);
+  useEffect(scrollToBottom, [messages.length]);
 
 
   const sendMessage = (event, msg) => {
     event.preventDefault();
-    client.send("/app/chat", {}, JSON.stringify({'sender': msg.sender, 'text': msg.text}));
+    client.send("/app/chat", {}, JSON.stringify({ 'sender': msg.sender, 'text': msg.text }));
+    setMessage({
+      ...message,
+      text: ''
+    })
   }
 
   const handleInput = (e) => {
@@ -57,7 +66,7 @@ export default function Messages({ studentId, setStudentId }) {
   }
 
   return (
-<Container className='my-3'>
+    <Container className='my-3'>
       <Card>
         <Card.Body
           style={{
@@ -65,20 +74,20 @@ export default function Messages({ studentId, setStudentId }) {
             overflowY: 'auto'
           }}
         >
-          {/* {messages.map((msg) => (
-            <Toast key={msg.id} className='my-3'>
+          {messages.map((msg, index) => (
+            <Toast key={index} className='my-3'>
               <Toast.Header closeButton={false}>
                 <img
                   className="rounded me-2"
                   alt=""
                 />
                 <strong className="me-auto">{msg.sender}</strong>
-                <small>{msg.timestamp}</small>
+                <small>{msg.time}</small>
               </Toast.Header>
-              <Toast.Body>{msg.msg}</Toast.Body>
+              <Toast.Body>{msg.text}</Toast.Body>
             </Toast>
-          ))} */}
-          {/* <div ref={messagesEndRef} /> */}
+          ))}
+          <div ref={messagesEndRef} />
         </Card.Body>
       </Card>
       <Form onSubmit={e => sendMessage(e, message)}>
