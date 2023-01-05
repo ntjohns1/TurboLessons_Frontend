@@ -15,7 +15,8 @@ export default function Messages({ studentId, setStudentId }) {
   const principle = authState.idToken.claims.name;
   const principleId = authState.idToken.claims.sub;
   const [message, setMessage] = useState({
-    sender: principle,
+    sender: 'nelsontjohns@gmail.com',
+    to: 'nelsontjohns@gmail.com',
     text: ''
   });
   const [messages, setMessages] = useState([]);
@@ -26,20 +27,21 @@ export default function Messages({ studentId, setStudentId }) {
 
 
   useEffect(() => {
-    const ws = new WebSocket('ws://localhost:8080/chat');
+    const ws = new WebSocket(`ws://localhost:8080/chat/${message.to}`);
     const stompClient = Stomp.over(ws);
 
     stompClient.connect({ "X-Authorization": "Bearer " + accessToken }, function (frame) {
       console.log('Connected: ' + frame);
       setClient(stompClient);
-      stompClient.subscribe('/topic/messages', function (m) {
+
+      stompClient.subscribe(`/user/${message.sender}/msg`, function (m) {
+        console.log(m);
         let msg = JSON.parse(m.body);
         console.log(messages);
         setMessages(prevMessages => [
           ...prevMessages,
-          { sender: msg.sender, text: msg.text, time: msg.time }
+          { sender: msg.sender, to: msg.to, text: msg.text, time: msg.time }
         ]);
-        
       });
     });
   }, []);
@@ -49,7 +51,7 @@ export default function Messages({ studentId, setStudentId }) {
 
   const sendMessage = (event, msg) => {
     event.preventDefault();
-    client.send("/app/chat", {}, JSON.stringify({ 'sender': msg.sender, 'text': msg.text }));
+    client.send(`/app/chat/${msg.to}`, {}, JSON.stringify({ 'sender': msg.sender,'to': msg.to, 'text': msg.text }));
     setMessage({
       ...message,
       text: ''
