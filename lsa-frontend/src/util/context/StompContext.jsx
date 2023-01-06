@@ -11,7 +11,6 @@ export function useStomp() {
 export const StompProvider = ({ children }) => {
   const [client, setClient] = useState(null);
   const { authState, oktaAuth } = useOktaAuth();
-  console.log(authState);
   const accessToken = oktaAuth.getAccessToken();
   const [chatUserList, setChatUserList] = useState([]);
   const principle = authState && authState.idToken && authState.idToken.claims.preferred_username;

@@ -8,7 +8,7 @@ import Stomp from 'stompjs';
 // TODO: Query to find get Student's messages to teacher
 // Students will only be able to send messages to the teacher, so really we'll be querying our own messages and filtering by messageAuthor
 
-export default function Messages({ client, uaerList, inMessage }) {
+export default function Messages({ client, chatUserList, inMessage }) {
   const { authState, oktaAuth } = useOktaAuth();
   const accessToken = oktaAuth.getAccessToken();
   const principle = authState.idToken.claims.name;
