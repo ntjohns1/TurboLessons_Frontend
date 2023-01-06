@@ -1,6 +1,7 @@
 import { Container } from "react-bootstrap";
 import PortalNav from "../components/PortalNav";
 export default function Portal() {
+
     return (
         <Container>
             <PortalNav />
