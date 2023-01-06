@@ -11,9 +11,9 @@ export default function Messenger() {
         <Container>
             <PortalNav />
             <Card>
-                {/* <h3>Student Messenger</h3>
-                <SelectStudent /> */}
-                <Messages />
+                <h3>Student Messenger</h3>
+                <SelectStudent />
+                {/* <Messages /> */}
             </Card>
             <Card>
             </Card>

@@ -8,13 +8,12 @@ import Stomp from 'stompjs';
 // TODO: Query to find get Student's messages to teacher
 // Students will only be able to send messages to the teacher, so really we'll be querying our own messages and filtering by messageAuthor
 
-export default function Messages({ studentId, setStudentId }) {
-  const [client, setClient] = useState(null);
+export default function Messages({ client, uaerList, inMessage }) {
   const { authState, oktaAuth } = useOktaAuth();
   const accessToken = oktaAuth.getAccessToken();
   const principle = authState.idToken.claims.name;
   const principleId = authState.idToken.claims.sub;
-  const [message, setMessage] = useState({
+  const [outMessage, setOutMessage] = useState({
     sender: 'nelsontjohns@gmail.com',
     to: 'nelsontjohns@gmail.com',
     text: ''
@@ -25,35 +24,14 @@ export default function Messages({ studentId, setStudentId }) {
     messagesEndRef.current.scrollIntoView({ behavior: "smooth" });
   };
 
-
-  useEffect(() => {
-    const ws = new WebSocket(`ws://localhost:8080/chat/${message.to}`);
-    const stompClient = Stomp.over(ws);
-
-    stompClient.connect({ "X-Authorization": "Bearer " + accessToken }, function (frame) {
-      console.log('Connected: ' + frame);
-      setClient(stompClient);
-
-      stompClient.subscribe(`/user/${message.sender}/msg`, function (m) {
-        console.log(m);
-        let msg = JSON.parse(m.body);
-        console.log(messages);
-        setMessages(prevMessages => [
-          ...prevMessages,
-          { sender: msg.sender, to: msg.to, text: msg.text, time: msg.time }
-        ]);
-      });
-    });
-  }, []);
-
   useEffect(scrollToBottom, [messages.length]);
 
 
   const sendMessage = (event, msg) => {
     event.preventDefault();
     client.send(`/app/chat/${msg.to}`, {}, JSON.stringify({ 'sender': msg.sender,'to': msg.to, 'text': msg.text }));
-    setMessage({
-      ...message,
+    setOutMessage({
+      ...outMessage,
       text: ''
     })
   }
@@ -61,8 +39,8 @@ export default function Messages({ studentId, setStudentId }) {
   const handleInput = (e) => {
     let { name, value } = e.target;
 
-    setMessage({
-      ...message,
+    setOutMessage({
+      ...outMessage,
       [name]: value
     });
   }
@@ -92,13 +70,13 @@ export default function Messages({ studentId, setStudentId }) {
           <div ref={messagesEndRef} />
         </Card.Body>
       </Card>
-      <Form onSubmit={e => sendMessage(e, message)}>
+      <Form onSubmit={e => sendMessage(e, outMessage)}>
         <Form.Group id="addMessage">
           <Form.Label></Form.Label>
           <Form.Control
             as="textarea"
             name='text'
-            value={message.text}
+            value={outMessage.text}
             onChange={handleInput}
             style={{ height: '100px' }}
           />

@@ -18,6 +18,7 @@ import { Security } from '@okta/okta-react';
 import { LoginCallback } from '@okta/okta-react';
 import Loading from './helpers/Loading';
 import config from './config';
+import { StompProvider } from './util/context/StompProvider';
 import { Route, Routes } from "react-router-dom";
 import HomeNav from "./components/Nav";
 import WelcomePage from "./pages/Homepage";
@@ -43,29 +44,31 @@ const App = () => {
 
   return (
     <Security oktaAuth={oktaAuth} restoreOriginalUri={restoreOriginalUri}>
-      <HomeNav />
-      <Routes>
-        <Route exact path="/" element={<WelcomePage />} />
-        <Route path="/secured" element={<RequiredAuth />}>
-          <Route path="" element={<SecuredPage />} />
-        </Route>
-        <Route path="login/callback" element={<LoginCallback loadingElement={<Loading />} />} />
-        <Route path="/portal" element={<RequiredAuth />}>
-          <Route path="" element={<Portal />} />
-        </Route>
-        <Route path="/students" element={<RequiredAuth />}>
-          <Route path="" element={<Students />} />
-        </Route>
-        <Route path="/students/:id" element={<RequiredAuth />}>
-          <Route path="" element={<SingleStudent />} />
-        </Route>
-        <Route path="/addStudent" element={<RequiredAuth />}>
-          <Route path="" element={<AddStudent />} />
-        </Route>
-        <Route path="/messenger" element={<RequiredAuth />}>
-          <Route path="" element={<Messenger />} />
-        </Route>
-      </Routes>
+      <StompProvider>
+        <HomeNav />
+        <Routes>
+          <Route exact path="/" element={<WelcomePage />} />
+          <Route path="/secured" element={<RequiredAuth />}>
+            <Route path="" element={<SecuredPage />} />
+          </Route>
+          <Route path="login/callback" element={<LoginCallback loadingElement={<Loading />} />} />
+          <Route path="/portal" element={<RequiredAuth />}>
+            <Route path="" element={<Portal />} />
+          </Route>
+          <Route path="/students" element={<RequiredAuth />}>
+            <Route path="" element={<Students />} />
+          </Route>
+          <Route path="/students/:id" element={<RequiredAuth />}>
+            <Route path="" element={<SingleStudent />} />
+          </Route>
+          <Route path="/addStudent" element={<RequiredAuth />}>
+            <Route path="" element={<AddStudent />} />
+          </Route>
+          <Route path="/messenger" element={<RequiredAuth />}>
+            <Route path="" element={<Messenger />} />
+          </Route>
+        </Routes>
+      </StompProvider>
     </Security>
   );
 };
