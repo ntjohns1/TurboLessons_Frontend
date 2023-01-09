@@ -1,12 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useOktaAuth } from '@okta/okta-react';
-import config from '../../config';
 import { Button, Card, Form, Container, Toast } from "react-bootstrap";
-import Stomp from 'stompjs';
-
-
-// TODO: Query to find get Student's messages to teacher
-// Students will only be able to send messages to the teacher, so really we'll be querying our own messages and filtering by messageAuthor
 
 export default function Messages({ client, chatUserList, inMessage }) {
   const { authState, oktaAuth } = useOktaAuth();

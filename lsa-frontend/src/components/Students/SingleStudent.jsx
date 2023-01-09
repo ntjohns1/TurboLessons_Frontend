@@ -1,12 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { useOktaAuth } from '@okta/okta-react';
-import { Card, Container, Form, Button, Row, Col } from 'react-bootstrap';
+import { Card, Container, Row, Col } from 'react-bootstrap';
 import EditStudent from './EditStudent';
 import StudentList from './StudentList';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { FaEdit } from "react-icons/fa";
-import config from '../../config';
 
 export default function SingleStudent() {
     const { authState, oktaAuth } = useOktaAuth();

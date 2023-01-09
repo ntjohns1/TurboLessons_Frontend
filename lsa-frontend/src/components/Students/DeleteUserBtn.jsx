@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Button, Modal, Form, Row } from 'react-bootstrap';
 
 export default function DeletUserBtn({ oktaAuth, id, student }) {
@@ -9,7 +9,6 @@ export default function DeletUserBtn({ oktaAuth, id, student }) {
     const [show, setShow] = useState(false);
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
-    console.log(student);
     const studentName = student.firstName + " " + student.lastName;
     const handleChange = (event) => {
         const { name, value } = event.target;
@@ -22,7 +21,6 @@ export default function DeletUserBtn({ oktaAuth, id, student }) {
             ...inputTxt,
             [name]: value,
         });
-        console.log(value);
     };
 
 

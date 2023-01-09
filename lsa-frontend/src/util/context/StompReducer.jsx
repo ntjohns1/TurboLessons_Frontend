@@ -1,13 +1,18 @@
-import { CONNECT, DISCONNECT } from './actions';
+import { ADD_USER, REMOVE_USER } from './actions.js';
 
-// define the reducer to handle updates to the stompClient state
-// export function stompClientReducer(state, action) {
-//   switch (action.type) {
-//     case CONNECT:
-//       return action.payload;
-//     case DISCONNECT:
-//       return null;
-//     default:
-//       throw new Error(`Unhandled action type: ${action.type}`);
-//   }
-// }
+export function stompClientReducer(state, action) {
+    switch (action.type) {
+        case ADD_USER:
+            return {
+                ...state,
+                chatUserList: [...state.chatUserList, action.user]
+            };
+        case REMOVE_USER:
+            return {
+                ...state,
+                chatUserList: state.chatUserList.filter(user => user !== action.user)
+            };
+        default:
+            return state;
+    }
+}

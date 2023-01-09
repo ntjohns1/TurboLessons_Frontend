@@ -1,9 +1,6 @@
-import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
-import { useOktaAuth } from '@okta/okta-react';
-import { Card, Container, Form, Button, Row, Col } from 'react-bootstrap';
+import React, { useEffect } from 'react';
+import { Card, Form, Button, Row, Col } from 'react-bootstrap';
 import { FaRegWindowClose } from "react-icons/fa";
-import config from '../../config';
 import DeletUserBtn from './DeleteUserBtn';
 
 export default function EditStudent({ student, formState, setStudent, setIsUpdate, setFormState, oktaAuth, id }) {

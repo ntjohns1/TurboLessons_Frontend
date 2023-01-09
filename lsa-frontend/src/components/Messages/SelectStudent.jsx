@@ -1,21 +1,23 @@
-import React, { useState, useEffect, useContext } from 'react';
-import { InputGroup, Form, Card, Toast } from "react-bootstrap";
+import React from 'react';
+import { Card, Toast, Button } from "react-bootstrap";
 import { useOktaAuth } from '@okta/okta-react';
-import config from '../../config';
-import AddMessage from './AddMessage';
 import Messages from './Messages';
 import { useStomp } from '../../util/context/StompContext';
 export default function SelectStudent() {
 
     // const [client, setClient] = useState(null);
-    const { client, chatUserList, inMessage } = useStomp();
+    const { 
+        sClient, 
+        chatUserList, 
+        connectStomp,
+        disconnect,
+        inMessage, 
+        principle,
+        stompSubscribe,
+        stompClientSendMessage } = useStomp();
     const { authState, oktaAuth } = useOktaAuth();
     const accessToken = oktaAuth.getAccessToken();
-    const principle = authState.idToken.claims.preferred_username;
     const principleId = authState.idToken.claims.sub;
-
-
-
 
     return (
         <>
@@ -33,6 +35,10 @@ export default function SelectStudent() {
                         </Toast>
                     ))}
                 </Card.Body>
+                <Card.Footer>
+                    <Button className='m-3' onClick={()=>connectStomp()}>connect To Chat</Button>
+                    <Button className='m-3' onClick={()=>stompClientSendMessage(client, '/app/register', principle)}>register</Button>
+                </Card.Footer>
             </Card>
             <Messages client={client} chatUserList={chatUserList} inMessage={inMessage} />
             {/* <AddMessage studentId={studentId} setStudentId={setStudentId}/> */}

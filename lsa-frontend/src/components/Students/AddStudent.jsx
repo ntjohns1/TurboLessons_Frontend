@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useOktaAuth } from '@okta/okta-react';
 import { Card, Container, Form, Button } from 'react-bootstrap';
-import config from '../../config';
 
 export default function AddStudent() {
     const { authState, oktaAuth } = useOktaAuth();

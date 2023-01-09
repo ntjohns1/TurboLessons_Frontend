@@ -1,11 +1,9 @@
-import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
-import { useOktaAuth } from '@okta/okta-react';
+import React, { useEffect } from 'react';
 import { FaEdit } from "react-icons/fa";
-import { Card, Container, Form, Button, Row, Col } from 'react-bootstrap';
+import { Button, Card, Col, Form, Row } from 'react-bootstrap';
 
 
-export default function StudentList({ student, formState, setFormState, setIsUpdate }) {
+export default function StudentList({ student, setFormState, setIsUpdate }) {
 
     useEffect(() => {
         setFormState({

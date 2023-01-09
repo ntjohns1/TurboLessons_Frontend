@@ -2,11 +2,16 @@ import React from "react";
 import { useOktaAuth } from '@okta/okta-react';
 import { Navbar, Nav } from 'react-bootstrap';
 import { Link } from 'react-router-dom'
+import { useStomp } from "../util/context/StompContext";
 
 const HomeNav = () => {
 
   const { authState, oktaAuth } = useOktaAuth();
-  const logout = async () => oktaAuth.signOut();
+  const { client, principle, disconnect } = useStomp();
+  const logout = async () => {
+    disconnect(client,principle);
+    oktaAuth.signOut();
+  };
 
   return (
     <>

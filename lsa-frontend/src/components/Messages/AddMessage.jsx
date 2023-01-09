@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useOktaAuth } from '@okta/okta-react';
 import { Form, Button } from "react-bootstrap";
 
-export default function AddMessage({ studentId, setStudentId }) {
+export default function AddMessage() {
 
   const { authState, oktaAuth } = useOktaAuth();
   const [inputText, setInputText] = useState('');
