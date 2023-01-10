@@ -7,9 +7,9 @@ import { useStomp } from "../util/context/StompContext";
 const HomeNav = () => {
 
   const { authState, oktaAuth } = useOktaAuth();
-  const { client, principle, disconnect } = useStomp();
+  const { sClient, principle, disconnect } = useStomp();
   const logout = async () => {
-    disconnect(client,principle);
+    disconnect(sClient,principle);
     oktaAuth.signOut();
   };
 

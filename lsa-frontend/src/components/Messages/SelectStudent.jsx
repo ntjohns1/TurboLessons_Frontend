@@ -36,11 +36,10 @@ export default function SelectStudent() {
                     ))}
                 </Card.Body>
                 <Card.Footer>
-                    <Button className='m-3' onClick={()=>connectStomp()}>connect To Chat</Button>
-                    <Button className='m-3' onClick={()=>stompClientSendMessage(client, '/app/register', principle)}>register</Button>
+                    <Button className='m-3' onClick={()=>connectStomp()}>connect</Button>
                 </Card.Footer>
             </Card>
-            <Messages client={client} chatUserList={chatUserList} inMessage={inMessage} />
+            <Messages chatUserList={chatUserList} inMessage={inMessage} />
             {/* <AddMessage studentId={studentId} setStudentId={setStudentId}/> */}
         </>
     )

@@ -54,10 +54,10 @@ export const StompProvider = ({ children }) => {
           ])
           console.log("/topic/newMember: \n" + data.body);
         }))
-        // .then(() => {
-        //   stompClientSendMessage(stompClient, '/app/register', username);
-        //   return stompClient;
-        // })
+        .then(() => {
+          stompClientSendMessage(stompClient, '/app/newMember', username);
+          return stompClient;
+        })
         .then(() => stompSubscribe(stompClient, '/topic/disconnectedUser', (data) => {
           const userWhoLeft = data.body;
           // chatUsersList = chatUsersList.filter(x => x != userWhoLeft);
@@ -65,10 +65,9 @@ export const StompProvider = ({ children }) => {
           console.log(`User [${userWhoLeft}] left the chat room!!!`, "bg-success")
         }))
         .then(() => stompSubscribe(stompClient, `/user/${username}/msg`, (data) => {
-          console.log(data.body);
           setInMessage(JSON.parse(data.body))
+          setConnected(true);
         }))
-
       // Send unregister message and disconnect STOMP client when component unmounts
     };
 
@@ -79,6 +78,7 @@ export const StompProvider = ({ children }) => {
       const ws = new WebSocket('ws://localhost:8080/chat');
       const stompClient = Stomp.over(ws);
       stompClient.connect({ "X-Authorization": "Bearer " + accessToken }, (frame) => {
+        console.log("Stomp Connected: \n" + frame);
         resolve(stompClient);
         setSClient(stompClient);
       });
