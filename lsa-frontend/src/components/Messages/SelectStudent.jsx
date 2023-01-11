@@ -9,7 +9,7 @@ export default function SelectStudent() {
     const { 
         sClient, 
         chatUserList, 
-        connectStomp,
+        // connectStomp,
         disconnect,
         inMessage, 
         principle,
@@ -36,7 +36,8 @@ export default function SelectStudent() {
                     ))}
                 </Card.Body>
                 <Card.Footer>
-                    <Button className='m-3' onClick={()=>connectStomp()}>connect</Button>
+                    {/* <Button className='m-3' onClick={()=>connectStomp()}>connect</Button> */}
+                    <Button className='m-3' onClick={()=>disconnect(sClient,principle)}>connect</Button>
                 </Card.Footer>
             </Card>
             <Messages chatUserList={chatUserList} inMessage={inMessage} />
