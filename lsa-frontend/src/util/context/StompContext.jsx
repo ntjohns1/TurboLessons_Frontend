@@ -20,6 +20,10 @@ export const StompProvider = ({ children }) => {
     to: '',
     text: ''
   });
+  const headers = {
+    "X-Authorization": "Bearer " + accessToken,
+    "username": principle
+  };
 
 
   function stompSubscribe(stompClient, endpoint, callback) {
@@ -33,73 +37,63 @@ export const StompProvider = ({ children }) => {
 
   useEffect(() => {
     if (authState && authState.isAuthenticated) {
-
-      
-      // function connectStomp() {
-        let stompClient;
-        let tempUserList = [];
-        if (authState && authState.isAuthenticated) {
-          const username = authState.idToken.claims.preferred_username;
-          connect(username)
-          .then((client) => {
-            
-            stompClient = client;
-            stompSubscribe(stompClient, '/user/queue/newMember', (data) => {
-              console.log("/queue/newMember: \n" + data.body);
-              tempUserList = JSON.parse(data.body)
-              if (tempUserList.length > 0) {
-                setChatUserList(tempUserList.filter(x => x != username))
-              } else {
-                alert("Username already exists!!!", "bg-danger")
-              }
-            })
+      let stompClient;
+      let tempUserList = [];
+      const username = principle;
+      connect(username)
+        .then((client) => {
+          stompClient = client;
+          stompSubscribe(stompClient, '/user/queue/newMember', (data) => {
+            console.log("/queue/newMember: \n" + data.body);
+            tempUserList = JSON.parse(data.body)
+            if (tempUserList.length > 0) {
+              setChatUserList(tempUserList.filter(x => x != username))
+            } else {
+              alert("Username already exists!!!", "bg-danger")
+            }
           })
-          .then(() => stompSubscribe(stompClient, '/topic/newMember', (data) => {
-            setChatUserList(users => [
-              ...users,
-              data.body
-            ])
-            console.log("/topic/newMember: \n" + data.body);
-          }))
-          // .then(() => {
-            //   stompClientSendMessage(stompClient, '/app/register', username);
-            //   return stompClient;
-            // })
-            .then(() => stompSubscribe(stompClient, '/topic/disconnectedUser', (data) => {
-              const userWhoLeft = data.body;
-              // chatUsersList = chatUsersList.filter(x => x != userWhoLeft);
-              setChatUserList(chatUserList.filter(x => x != userWhoLeft));
-              console.log(`User [${userWhoLeft}] left the chat room!!!`, "bg-success")
-            }))
-            .then(() => stompSubscribe(stompClient, `/user/${username}/msg`, (data) => {
-              setInMessage(JSON.parse(data.body))
-              setConnected(true);
-            }))
-            .then(() => useHeartbeat(stompClient, '/app/heartbeat', 10000))
-            // Send unregister message and disconnect STOMP client when component unmounts
-            // return () => {
-              //   window.removeEventListener("beforeunload", this.handleWindowUnload);
-              // }
-            };
-            
-            // };
-          }
-        }, [authState]);
-        if (authState && authState.isAuthenticated) {
-          
-        }
-        
-        
-      function connect(username) {
-      return new Promise((resolve, reject) => {
+        })
+        .then(() => stompSubscribe(stompClient, '/topic/newMember', (data) => {
+          setChatUserList(users => [
+            ...users,
+            data.body
+          ])
+          console.log("/topic/newMember: \n" + data.body);
+        }))
+        .then(() => stompSubscribe(stompClient, '/topic/disconnectedUser', (data) => {
+          const userWhoLeft = data.body;
+          setChatUserList(chatUserList.filter(x => x != userWhoLeft));
+          console.log(`User [${userWhoLeft}] left the chat room!!!`, "bg-success")
+        }))
+        .then(() => stompSubscribe(stompClient, `/user/${username}/msg`, (data) => {
+          setInMessage(JSON.parse(data.body))
+          setConnected(true);
+        }));
+
+      return () => {
+        stompClient.disconnect(headers)
+      }
+
+      // };
+    }
+  }, [authState]);
+
+
+  function connect(username) {
+    return new Promise((resolve, reject) => {
       const ws = new WebSocket('ws://localhost:8080/chat');
       const stompClient = Stomp.over(ws);
-      stompClient.connect({ "X-Authorization": "Bearer " + accessToken }, (frame) => {
-        console.log("Stomp Connected: \n" + frame);
+
+      stompClient.connect(headers, (frame) => {
+        console.log("Stomp Connected: \n" + frame.body);
         resolve(stompClient);
         setSClient(stompClient);
         console.log(stompClient);
       });
+      stompClient.heartbeat.outgoing = 4000;
+      stompClient.heartbeat.incoming = 10000;
+      console.log(stompClient.body);
+
     });
   }
 
