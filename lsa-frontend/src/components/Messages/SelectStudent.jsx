@@ -1,23 +1,25 @@
-import React from 'react';
-import { Card, Toast, Button } from "react-bootstrap";
+import React, { useState } from 'react';
+import { Card, Toast, Form } from "react-bootstrap";
 import { useOktaAuth } from '@okta/okta-react';
 import Messages from './Messages';
 import { useStomp } from '../../util/context/StompContext';
 export default function SelectStudent() {
 
     // const [client, setClient] = useState(null);
-    const { 
-        sClient, 
-        chatUserList, 
-        // connectStomp,
+    const {
+        sClient,
+        chatUserList,
         disconnect,
-        inMessage, 
-        principle,
-        stompSubscribe,
-        stompClientSendMessage } = useStomp();
+        inMessage,
+        principle } = useStomp();
     const { authState, oktaAuth } = useOktaAuth();
     const accessToken = oktaAuth.getAccessToken();
     const principleId = authState.idToken.claims.sub;
+    const [sendTo, setSendTo] = useState('');
+
+    const handleChange = async (e) => {
+        setSendTo(e.target.value)
+    };
 
     return (
         <>
@@ -35,12 +37,25 @@ export default function SelectStudent() {
                         </Toast>
                     ))}
                 </Card.Body>
-                <Card.Footer>
-                    {/* <Button className='m-3' onClick={()=>connectStomp()}>connect</Button> */}
-                    <Button className='m-3' onClick={()=>disconnect(sClient,principle)}>connect</Button>
-                </Card.Footer>
             </Card>
-            <Messages chatUserList={chatUserList} inMessage={inMessage} />
+            <Form.Group>
+                <Form.Group className='mb-3'>
+                    <Form.Control
+                        as="select"
+                        name='selectStudent'
+                        value={sendTo}
+                        onChange={handleChange}
+                    >
+                    </Form.Control>
+                    <Form.Select>
+                        <option value=''> Select a Student </option>
+                        {chatUserList && chatUserList.map((option, index) => (
+                            <option value={option} key={index}>{option}</option>
+                        ))}
+                    </Form.Select>
+                </Form.Group>
+            </Form.Group>
+            <Messages sendTo={sendTo}/>
             {/* <AddMessage studentId={studentId} setStudentId={setStudentId}/> */}
         </>
     )

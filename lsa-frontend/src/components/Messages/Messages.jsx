@@ -1,15 +1,17 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useOktaAuth } from '@okta/okta-react';
 import { Button, Card, Form, Container, Toast } from "react-bootstrap";
+import { useStomp } from '../../util/context/StompContext';
 
-export default function Messages({ client, chatUserList, inMessage }) {
+export default function Messages({ sendTo }) {
   const { authState, oktaAuth } = useOktaAuth();
   const accessToken = oktaAuth.getAccessToken();
-  const principle = authState.idToken.claims.name;
-  const principleId = authState.idToken.claims.sub;
+  
+  // const principleId = authState.idToken.claims.sub;
+  const { sClient, inMessage, principle } = useStomp();
   const [outMessage, setOutMessage] = useState({
-    sender: 'nelsontjohns@gmail.com',
-    to: 'nelsontjohns@gmail.com',
+    sender: principle,
+    to: sendTo ? sendTo : '',
     text: ''
   });
   const [messages, setMessages] = useState([]);
@@ -18,12 +20,17 @@ export default function Messages({ client, chatUserList, inMessage }) {
     messagesEndRef.current.scrollIntoView({ behavior: "smooth" });
   };
 
+  useEffect(() => {
+    setMessages([...messages, inMessage])
+  }, [inMessage]);
+
   useEffect(scrollToBottom, [messages.length]);
 
 
   const sendMessage = (event, msg) => {
     event.preventDefault();
-    client.send(`/app/chat/${msg.to}`, {}, JSON.stringify({ 'sender': msg.sender,'to': msg.to, 'text': msg.text }));
+    sClient.send('/app/message', {}, JSON.stringify({ 'sender': msg.sender,'to': msg.to, 'text': msg.text }));
+    setMessages([...messages, outMessage])
     setOutMessage({
       ...outMessage,
       text: ''
@@ -48,7 +55,7 @@ export default function Messages({ client, chatUserList, inMessage }) {
             overflowY: 'auto'
           }}
         >
-          {messages.map((msg, index) => (
+          {messages && messages.map((msg, index) => (
             <Toast key={index} className='my-3'>
               <Toast.Header closeButton={false}>
                 <img

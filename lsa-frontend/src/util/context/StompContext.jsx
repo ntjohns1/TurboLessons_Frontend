@@ -1,7 +1,6 @@
 import React, { useState, useEffect, createContext, useContext } from 'react';
 import { useOktaAuth } from '@okta/okta-react';
 import Stomp from 'stompjs';
-import { useHeartbeat } from '../UseHeartbeat';
 const StompContext = createContext(null);
 
 export function useStomp() {
@@ -10,11 +9,10 @@ export function useStomp() {
 
 export const StompProvider = ({ children }) => {
   const [sClient, setSClient] = useState(null);
-  const [session, setSession] = useState(null);
   const { authState, oktaAuth } = useOktaAuth();
   const accessToken = oktaAuth.getAccessToken();
   const [chatUserList, setChatUserList] = useState([]);
-  const principle = authState && authState.idToken && authState.idToken.claims.preferred_username;
+  const principle = authState && authState.idToken && authState.idToken.claims.name;
   const [inMessage, setInMessage] = useState({
     sender: '',
     to: '',
@@ -67,11 +65,10 @@ export const StompProvider = ({ children }) => {
         }))
         .then(() => stompSubscribe(stompClient, `/user/${username}/msg`, (data) => {
           setInMessage(JSON.parse(data.body))
-          setConnected(true);
         }));
 
       return () => {
-        stompClient.disconnect(headers)
+        disconnect(sClient,principle);
       }
 
       // };
@@ -89,7 +86,7 @@ export const StompProvider = ({ children }) => {
         resolve(stompClient);
         setSClient(stompClient);
         console.log(stompClient);
-      });
+      }, errorCallback);
       stompClient.heartbeat.outgoing = 4000;
       stompClient.heartbeat.incoming = 10000;
       console.log(stompClient.body);
@@ -97,6 +94,12 @@ export const StompProvider = ({ children }) => {
     });
   }
 
+ 
+
+  var errorCallback = (error) => {
+    // display the error's message header:
+    console.error(error.headers.message);
+  };
   function stompClientSendMessage(stompClient, endpoint, message) {
     stompClient.send(endpoint, {}, message);
   }
