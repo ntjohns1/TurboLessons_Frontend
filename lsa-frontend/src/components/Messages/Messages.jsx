@@ -1,14 +1,14 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useOktaAuth } from '@okta/okta-react';
 import { Button, Card, Form, Container, Toast } from "react-bootstrap";
-import { useStomp } from '../../util/context/StompContext';
+import { useSocket } from '../../util/context/WebSocketContext';
 
 export default function Messages({ sendTo }) {
   const { authState, oktaAuth } = useOktaAuth();
   const accessToken = oktaAuth.getAccessToken();
   
   // const principleId = authState.idToken.claims.sub;
-  const { sClient, inMessage, principle } = useStomp();
+  const { inMessage, principle } = useSocket();
   const [outMessage, setOutMessage] = useState({
     sender: principle,
     to: sendTo ? sendTo : '',
@@ -29,12 +29,6 @@ export default function Messages({ sendTo }) {
 
   const sendMessage = (event, msg) => {
     event.preventDefault();
-    sClient.send('/app/message', {}, JSON.stringify({ 'sender': msg.sender,'to': msg.to, 'text': msg.text }));
-    setMessages([...messages, outMessage])
-    setOutMessage({
-      ...outMessage,
-      text: ''
-    })
   }
 
   const handleInput = (e) => {
