@@ -7,15 +7,15 @@ export default function AddMessage() {
   const { authState, oktaAuth } = useOktaAuth();
   const [inputText, setInputText] = useState('');
   const [message, setMessage] = useState({
-    sender: 'Nelson J.',
-    senderId: '12345678',
+    sender: '00u7521b6vgEM4m8U5d7',
+    senderId: '00u75cn4yauHU7bl55d7',
     msg: 'Test'
   });
   const [isLoading, setIsLoading] = useState(false);
 
   const handleFormSubmit = async (event) => {
     event.preventDefault();
-    const url = "http://localhost:8080/api/messages";
+    const url = "http://localhost:8080/api/messages/00u75cn4yauHU7bl55d7";
     const accessToken = oktaAuth.getAccessToken();
     await fetch(url, {
       method: 'POST',
