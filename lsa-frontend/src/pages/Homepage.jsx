@@ -3,7 +3,7 @@ import { useOktaAuth } from '@okta/okta-react';
 import { Container, Card, Button } from "react-bootstrap";
 import PortalNav from '../components/PortalNav';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { useSocket } from '../util/context/WebSocketContext';
+import { useStomp } from '../util/context/StompContext';
 
 
 export default function Home() {
