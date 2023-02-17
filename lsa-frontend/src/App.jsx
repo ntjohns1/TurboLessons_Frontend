@@ -6,7 +6,7 @@ import { Security } from '@okta/okta-react';
 import { LoginCallback } from '@okta/okta-react';
 import Loading from './helpers/Loading';
 import config from './config';
-import { StompProvider } from "./util/context/StompContext.jsx";
+import { WebSocketProvider } from "./util/context/WebSocketContext.jsx";
 import { Route, Routes } from "react-router-dom";
 import HomeNav from "./components/Nav";
 import WelcomePage from "./pages/Homepage";
@@ -32,7 +32,7 @@ const App = () => {
 
   return (
     <Security oktaAuth={oktaAuth} restoreOriginalUri={restoreOriginalUri}>
-      <StompProvider>
+      <WebSocketProvider>
         <HomeNav />
         <Routes>
           <Route exact path="/" element={<WelcomePage />} />
@@ -56,7 +56,7 @@ const App = () => {
             <Route path="" element={<Messenger />} />
           </Route>
         </Routes>
-      </StompProvider>
+      </WebSocketProvider>
     </Security>
   );
 };
