@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Form } from "react-bootstrap";
 import { useOktaAuth } from '@okta/okta-react';
-// import Messages from './Messages';
-import AddMessage from './AddMessage';
+import Messages from './Messages';
 import { useStudentContext } from '../../util/context/StudentContext';
 export default function SelectStudent() {
 
@@ -14,13 +13,14 @@ export default function SelectStudent() {
 
     const handleChange = async (e) => {
         setSendTo(e.target.value);
+        console.log(sendTo);
     };
 
     return (
         <>
             <Form.Group>
                 <Form.Group className='mb-3'>
-                    <Form.Control
+                    {/* <Form.Control
                         as="select"
                         name='selectStudent'
                         value={sendTo}
@@ -32,11 +32,21 @@ export default function SelectStudent() {
                         {students && students.map((option, index) => (
                             <option value={option.id} key={index}>{option.displayName}</option>
                         ))}
+                    </Form.Select> */}
+                    <Form.Select
+                        name='selectStudent'
+                        value={sendTo}
+                        onChange={handleChange}
+                    >
+                        <option value=''> Select a Student </option>
+                        {students && students.map((option, index) => (
+                            <option value={option.id} key={index}>{option.displayName}</option>
+                        ))}
                     </Form.Select>
                 </Form.Group>
             </Form.Group>
-            {/* <Messages sendTo={sendTo} /> */}
-            <AddMessage/>
+            <Messages sendTo={sendTo} />
+            {/* <AddMessage/> */}
         </>
     )
 }
