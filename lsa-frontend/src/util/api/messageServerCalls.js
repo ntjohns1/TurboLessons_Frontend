@@ -75,6 +75,32 @@ export async function fetchMessagesBySender(senderId, accessToken) {
     return res;
 }
 
+export async function fetchMessagesBySenderAndReceiver(sender, receiver, accessToken) {
+
+    const response = await fetch(`http://localhost:8080/api/messages/${sender}/to/${receiver}`, {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${accessToken}`
+        }
+    });
+    if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    const data = await response.json();
+    const res = data.map((m) => {
+        return {
+            id: m.id,
+            sender: m.sender,
+            recipient: m.recipient,
+            msg: m.msg,
+            timestamp: m.timestamp
+        };
+    });
+    console.log(`http://localhost:8080/api/messages/${sender}/to/${receiver}`);
+    return res;
+}
+
 export async function sendMessage(sendTo, message, accessToken) {
 
     const response = await fetch(`http://localhost:8080/api/messages/${sendTo}`, {

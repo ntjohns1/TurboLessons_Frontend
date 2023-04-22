@@ -6,11 +6,11 @@ export default function SelectStudent() {
 
     const { students } = useStudentContext();
     const [sendTo, setSendTo] = useState('');
-
     const handleChange = async (e) => {
-        setSendTo(e.target.value);
-        console.log(sendTo);
+        const selectedId = e.target.value;
+        setSendTo(selectedId);
     };
+
 
     return (
         <>

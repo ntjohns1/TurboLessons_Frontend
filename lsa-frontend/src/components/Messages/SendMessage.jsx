@@ -2,7 +2,8 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useOktaAuth } from '@okta/okta-react';
 import { Button, Form, Container, Toast } from "react-bootstrap";
 import { useSocket } from '../../util/context/WebSocketContext';
-import { sendMessage } from '../../util/api/messengerFetches';
+import { sendMessage } from '../../util/api/messageServerCalls';
+import DisplayMessages from './DisplayMessages';
 
 export default function SendMessage({ sendTo }) {
   const { oktaAuth } = useOktaAuth();
@@ -34,11 +35,11 @@ export default function SendMessage({ sendTo }) {
       ...outMessage,
       [name]: value
     });
-    console.log(outMessage.msg);
   }
 
   return (
     <Container className='my-3'>
+      <DisplayMessages sendTo={sendTo}/>
       <Form onSubmit={handleFormSubmit}>
         <Form.Group id="addMessage">
           <Form.Label></Form.Label>
