@@ -5,7 +5,7 @@ import { useSocket } from '../../util/context/WebSocketContext';
 import { sendMessage } from '../../util/api/messageServerCalls';
 // import DisplayMessages from './DisplayMessages';
 
-export default function SendMessage({ sendTo, setUpdateOutMessage }) {
+export default function SendMessage({ sendTo, setUpdateOutMessages }) {
   const { oktaAuth } = useOktaAuth();
   const accessToken = oktaAuth.getAccessToken();
   const { principle } = useSocket();
@@ -27,7 +27,11 @@ export default function SendMessage({ sendTo, setUpdateOutMessage }) {
       return;
     }
     sendMessage(sendTo, outMessage, accessToken);
-    setUpdateOutMessage(outMessage);
+    setUpdateOutMessages(outMessage);
+    setOutMessage({
+      ...outMessage,
+      msg: ''
+    });
   };
 
   const handleInput = (e) => {

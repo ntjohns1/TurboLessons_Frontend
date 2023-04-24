@@ -19,10 +19,8 @@ export const WebSocketProvider = ({ children }) => {
       const socket = new WebSocket(`ws://localhost:8080/ws/messages?userId=${principle}`);
       webSocketRef.current = socket;
       socket.addEventListener('message', function (event) {
-        console.log("WebSocket message:", event);
-        // window.alert('message from server: ' + event.data);
-        const res = 
-        setInMessage
+        // console.log("WebSocket message:", event);
+        setInMessage(event.data)
       });
       socket.addEventListener("open", function (event) {
         console.log("WebSocket connection opened:", event);
@@ -42,7 +40,7 @@ export const WebSocketProvider = ({ children }) => {
   }, [authState]);
 
   const disconnect = () => webSocketRef.current.close();
-  
+
   return (
     <WebSocketContext.Provider value={{
       principle,

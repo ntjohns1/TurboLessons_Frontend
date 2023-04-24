@@ -7,7 +7,7 @@ import { useStudentContext } from '../../util/context/StudentContext';
 export default function SelectStudent() {
   const { students } = useStudentContext();
   const [sendTo, setSendTo] = useState('');
-  const [updtateOutMessages, setUpdtateOutMessages] = useState(false);
+  const [updateOutMessages, setUpdateOutMessages] = useState(false);
 
   const handleChange = async (e) => {
     const selectedId = e.target.value;
@@ -26,8 +26,8 @@ export default function SelectStudent() {
           </Form.Select>
         </Form.Group>
       </Form.Group>
-      <DisplayMessages sendTo={sendTo} updtateOutMessages={updtateOutMessages} />
-      <SendMessage sendTo={sendTo} setUpdtateOutMessages={setUpdtateOutMessages} />
+      <DisplayMessages sendTo={sendTo} updateOutMessages={updateOutMessages} />
+      <SendMessage sendTo={sendTo} setUpdateOutMessages={setUpdateOutMessages} />
     </>
   )
 }

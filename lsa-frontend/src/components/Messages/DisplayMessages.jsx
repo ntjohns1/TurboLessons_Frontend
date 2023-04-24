@@ -6,7 +6,7 @@ import { fetchMessagesBySenderAndReceiver } from '../../util/api/messageServerCa
 import './DisplayMessages.css';
 import { useStudentContext } from '../../util/context/StudentContext';
 
-export default function DisplayMessages({ sendTo, updtateOutMessages }) {
+export default function DisplayMessages({ sendTo, updateOutMessages }) {
   const { authState, oktaAuth } = useOktaAuth();
   const displayName = authState && authState.idToken && authState.idToken.claims.name;
   const accessToken = oktaAuth.getAccessToken();
@@ -42,8 +42,8 @@ export default function DisplayMessages({ sendTo, updtateOutMessages }) {
   }, [inMessage]);
 
   useEffect(() => {
-    setOutMessages([...outMessages, updtateOutMessages])
-  }, [updtateOutMessages]);
+    setOutMessages([...outMessages, updateOutMessages])
+  }, [updateOutMessages]);
 
   useEffect(scrollToBottom, [outMessages.length]);
 
