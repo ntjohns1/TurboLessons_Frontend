@@ -1,4 +1,4 @@
-import React, { useState, useEffect, createContext, useContext } from 'react';
+import React, { useState, useEffect, useRef, createContext, useContext } from 'react';
 import { useOktaAuth } from '@okta/okta-react';
 const WebSocketContext = createContext(null);
 
@@ -9,61 +9,44 @@ export function useSocket() {
 export const WebSocketProvider = ({ children }) => {
   const { authState, oktaAuth } = useOktaAuth();
   const accessToken = oktaAuth.getAccessToken();
-  const [chatUserList, setChatUserList] = useState([]);
   const principle = authState && authState.idToken && authState.idToken.claims.sub;
-  const [inMessage, setInMessage] = useState({
-    sender: '',
-    to: '',
-    text: ''
-  });
-  const headers = {
-    "X-Authorization": "Bearer " + accessToken,
-    "username": principle
-  };
+  const displayName = authState && authState.idToken && authState.idToken.claims.name;
+  const [inMessage, setInMessage] = useState({});
+  const webSocketRef = useRef(null);
 
   useEffect(() => {
     if (authState && authState.isAuthenticated) {
-      console.log(principle);
-      fetch("http://localhost:8080/api/messages", {
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-        },
-      })
-        .then((response) => {
-          if (!response.ok) {
-            return Promise.reject();
-          }
-          return response.json();
-        })
-        .then((data) => {
-          console.log(data)
-          // const res = data.map((s) => {
-          //   return {
-          //     id: s.id,
-          //     displayName: s.profile.displayName,
-          //     email: s.profile.email
-          //   };
-          // });
-        })
-        .catch((err) => {
-          console.error(err);
-        });
       const socket = new WebSocket(`ws://localhost:8080/ws/messages?userId=${principle}`);
-
+      webSocketRef.current = socket;
       socket.addEventListener('message', function (event) {
-        console.log(event.data);
-        window.alert('message from server: ' + event.data);
+        console.log("WebSocket message:", event);
+        // setInMessage(event.data)
+        setInMessage( JSON.parse(event.data));
       });
+      socket.addEventListener("open", function (event) {
+        console.log("WebSocket connection opened:", event);
+      });
+
+      socket.addEventListener("close", function (event) {
+        console.log("WebSocket connection closed:", event);
+      });
+
+      socket.addEventListener("error", function (event) {
+        console.error("WebSocket error:", event);
+      });
+      return () => {
+        socket.close();
+      }
     }
   }, [authState]);
 
+  const disconnect = () => webSocketRef.current.close();
+
   return (
     <WebSocketContext.Provider value={{
-      chatUserList,
-      setChatUserList,
+      principle,
       inMessage,
-      setInMessage,
-      principle
+      disconnect
     }}>
       {children}
     </WebSocketContext.Provider>

@@ -1,42 +1,35 @@
 import React, { useState } from 'react';
 import { Form } from "react-bootstrap";
-import { useOktaAuth } from '@okta/okta-react';
-// import Messages from './Messages';
-import AddMessage from './AddMessage';
-import { useSocket } from '../../util/context/WebSocketContext';
+import SendMessage from './SendMessage';
+import DisplayMessages from './DisplayMessages';
+import { useStudentContext } from '../../util/context/StudentContext';
+
 export default function SelectStudent() {
+  const { students } = useStudentContext();
+  const [sendTo, setSendTo] = useState('');
+  // const [updateOutMessages, setUpdateOutMessages] = useState(false);
+  const [updateOutMessages, setUpdateOutMessages] = useState({});
 
-    const { chatUserList } = useSocket();
-    const { authState, oktaAuth } = useOktaAuth();
-    const accessToken = oktaAuth.getAccessToken();
-    const principleId = authState.idToken.claims.sub;
-    const [sendTo, setSendTo] = useState('');
 
-    const handleChange = async (e) => {
-        setSendTo(e.target.value)
-    };
+  const handleChange = async (e) => {
+    const selectedId = e.target.value;
+    setSendTo(selectedId);
+  };
 
-    return (
-        <>
-            <Form.Group>
-                <Form.Group className='mb-3'>
-                    <Form.Control
-                        as="select"
-                        name='selectStudent'
-                        value={sendTo}
-                        onChange={handleChange}
-                    >
-                    </Form.Control>
-                    <Form.Select>
-                        <option value=''> Select a Student </option>
-                        {chatUserList && chatUserList.map((option, index) => (
-                            <option value={option} key={index}>{option}</option>
-                        ))}
-                    </Form.Select>
-                </Form.Group>
-            </Form.Group>
-            {/* <Messages sendTo={sendTo} /> */}
-            <AddMessage/>
-        </>
-    )
+  return (
+    <>
+      <Form.Group>
+        <Form.Group className='mb-3'>
+          <Form.Select name='selectStudent' value={sendTo} onChange={handleChange} >
+            <option value=''> Select a Student </option>
+            {students && students.map((option, index) => (
+              <option value={option.id} key={index}>{option.displayName}</option>
+            ))}
+          </Form.Select>
+        </Form.Group>
+      </Form.Group>
+      <DisplayMessages sendTo={sendTo} updateOutMessages={updateOutMessages} />
+      <SendMessage sendTo={sendTo} setUpdateOutMessages={setUpdateOutMessages} />
+    </>
+  )
 }
