@@ -46,10 +46,12 @@ export default function DisplayMessages({ sendTo, updateOutMessages }) {
 
 
   useEffect(() => {
-    if (updateOutMessages && updateOutMessages.to === sendTo) {
-      setAllMessages([...allMessages, updateOutMessages]);
+    if (updateOutMessages && updateOutMessages.receiver === sendTo) {
+      setAllMessages(prevAllMessages => [...prevAllMessages, updateOutMessages]);
     }
-  }, [updateOutMessages]);
+  }, [updateOutMessages, sendTo]);
+  
+
 
   useEffect(scrollToBottom, [allMessages.length]);
 

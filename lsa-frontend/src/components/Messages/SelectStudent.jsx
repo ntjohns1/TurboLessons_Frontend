@@ -7,7 +7,9 @@ import { useStudentContext } from '../../util/context/StudentContext';
 export default function SelectStudent() {
   const { students } = useStudentContext();
   const [sendTo, setSendTo] = useState('');
-  const [updateOutMessages, setUpdateOutMessages] = useState(false);
+  // const [updateOutMessages, setUpdateOutMessages] = useState(false);
+  const [updateOutMessages, setUpdateOutMessages] = useState({});
+
 
   const handleChange = async (e) => {
     const selectedId = e.target.value;

@@ -11,9 +11,17 @@ export default function SendMessage({ sendTo, setUpdateOutMessages }) {
   const { principle } = useSocket();
   const [outMessage, setOutMessage] = useState({
     sender: principle,
-    to: sendTo ? sendTo : '',
+    receiver: sendTo ? sendTo : '',
     msg: ''
   });
+
+  useEffect(() => {
+    setOutMessage((prevOutMessage) => ({
+      ...prevOutMessage,
+      receiver: sendTo,
+    }));
+  }, [sendTo]);
+  
 
   const handleFormSubmit = async (event) => {
     event.preventDefault();
@@ -26,12 +34,14 @@ export default function SendMessage({ sendTo, setUpdateOutMessages }) {
       console.log('Error: msg is blank or empty');
       return;
     }
-    sendMessage(sendTo, outMessage, accessToken);
+    const newTimestamp = new Date().toISOString().replace("T", " ").replace("Z", "");
+    const newOutMessage = { ...outMessage, timestamp: newTimestamp };
+    sendMessage(sendTo, newOutMessage, accessToken);
+    setUpdateOutMessages(newOutMessage);
     setOutMessage({
       ...outMessage,
       msg: ''
     });
-    setUpdateOutMessages(outMessage);
   };
 
   const handleInput = (e) => {
