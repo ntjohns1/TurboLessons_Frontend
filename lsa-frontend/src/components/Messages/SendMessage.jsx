@@ -27,11 +27,11 @@ export default function SendMessage({ sendTo, setUpdateOutMessages }) {
       return;
     }
     sendMessage(sendTo, outMessage, accessToken);
-    setUpdateOutMessages(outMessage);
     setOutMessage({
       ...outMessage,
       msg: ''
     });
+    setUpdateOutMessages(outMessage);
   };
 
   const handleInput = (e) => {

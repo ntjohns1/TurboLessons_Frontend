@@ -19,8 +19,9 @@ export const WebSocketProvider = ({ children }) => {
       const socket = new WebSocket(`ws://localhost:8080/ws/messages?userId=${principle}`);
       webSocketRef.current = socket;
       socket.addEventListener('message', function (event) {
-        // console.log("WebSocket message:", event);
-        setInMessage(event.data)
+        console.log("WebSocket message:", event);
+        // setInMessage(event.data)
+        setInMessage( JSON.parse(event.data));
       });
       socket.addEventListener("open", function (event) {
         console.log("WebSocket connection opened:", event);
