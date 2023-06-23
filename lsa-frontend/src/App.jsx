@@ -20,6 +20,8 @@ import { library } from '@fortawesome/fontawesome-svg-core'
 import { fas } from '@fortawesome/free-solid-svg-icons'
 import SingleStudent from './components/Students/SingleStudent';
 import Messenger from './pages/Messenger';
+import NewLesson from './components/Lessons/NewLesson';
+import Uploadvideo from './components/Videos/UploadVideo';
 
 library.add(fas);
 
@@ -56,6 +58,12 @@ const App = () => {
             </Route>
             <Route path="/messenger" element={<RequiredAuth />}>
               <Route path="" element={<Messenger />} />
+            </Route>
+            <Route path="/lessons" element={<RequiredAuth />}>
+              <Route path="" element={<NewLesson />} />
+            </Route>
+            <Route path="/videos" element={<RequiredAuth />}>
+              <Route path="" element={<Uploadvideo />} />
             </Route>
           </Routes>
         </WebSocketProvider>

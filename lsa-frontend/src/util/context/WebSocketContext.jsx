@@ -9,8 +9,9 @@ export function useSocket() {
 export const WebSocketProvider = ({ children }) => {
   const { authState, oktaAuth } = useOktaAuth();
   const accessToken = oktaAuth.getAccessToken();
-  const principle = authState && authState.idToken && authState.idToken.claims.sub;
-  const displayName = authState && authState.idToken && authState.idToken.claims.name;
+  const principle = authState && authState.idToken && authState.idToken.claims.name;
+  const claims = authState && authState.idToken && authState.idToken.claims;
+  console.log(claims);
   const [inMessage, setInMessage] = useState({});
   const webSocketRef = useRef(null);
 
