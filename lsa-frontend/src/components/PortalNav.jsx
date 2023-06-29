@@ -15,7 +15,7 @@ export default function PortalNav() {
         <Nav.Link as={Link} to='/lessons' eventKey='lessons'>Manage Schedule</Nav.Link>
         <Nav.Link as={Link} to='/calendar' eventKey='calendar'>Calendar</Nav.Link>
         <Nav.Link as={Link} to='/messenger' eventKey='messages'>Messages</Nav.Link>
-        <Nav.Link as={Link} to='/videos' eventKey='messages'>Videos</Nav.Link>
+        <Nav.Link as={Link} to='/videos' eventKey='videos'>Videos</Nav.Link>
     </Nav>
   )
 };

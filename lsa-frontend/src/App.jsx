@@ -22,6 +22,7 @@ import SingleStudent from './components/Students/SingleStudent';
 import Messenger from './pages/Messenger';
 import NewLesson from './components/Lessons/NewLesson';
 import Uploadvideo from './components/Videos/UploadVideo';
+import Videos from './pages/Videos';
 
 library.add(fas);
 
@@ -63,7 +64,7 @@ const App = () => {
               <Route path="" element={<NewLesson />} />
             </Route>
             <Route path="/videos" element={<RequiredAuth />}>
-              <Route path="" element={<Uploadvideo />} />
+              <Route path="" element={<Videos />} />
             </Route>
           </Routes>
         </WebSocketProvider>
