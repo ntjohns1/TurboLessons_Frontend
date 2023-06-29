@@ -12,8 +12,8 @@ export default function SelectStudent() {
 
 
   const handleChange = async (e) => {
-    const selectedId = e.target.value;
-    setSendTo(selectedId);
+    const selectedUser = e.target.value;
+    setSendTo(selectedUser);
   };
 
   return (
@@ -22,8 +22,8 @@ export default function SelectStudent() {
         <Form.Group className='mb-3'>
           <Form.Select name='selectStudent' value={sendTo} onChange={handleChange} >
             <option value=''> Select a Student </option>
-            {students && students.map((option, index) => (
-              <option value={option.id} key={index}>{option.displayName}</option>
+            {students && students.map((option) => (
+              <option value={option.displayName} key={option.id}>{option.displayName}</option>
             ))}
           </Form.Select>
         </Form.Group>
