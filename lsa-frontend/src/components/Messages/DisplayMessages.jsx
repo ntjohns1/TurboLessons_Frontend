@@ -12,8 +12,6 @@ export default function DisplayMessages({ sendTo, updateOutMessages }) {
   const accessToken = oktaAuth.getAccessToken();
   const { inMessage, principle } = useSocket();
   const { students } = useStudentContext();
-  // const [outMessages, setOutMessages] = useState([]);
-  // const [inMessages, setInMessages] = useState([]);
   const [allMessages, setAllMessages] = useState([]);
   const messagesEndRef = useRef(null);
   const scrollToBottom = () => {
@@ -29,7 +27,10 @@ export default function DisplayMessages({ sendTo, updateOutMessages }) {
       try {
         const resOutMsg = await fetchMessagesBySenderAndReceiver(principle, sendTo, accessToken);
         const resInMsg = await fetchMessagesBySenderAndReceiver(sendTo, principle, accessToken);
-        setAllMessages([...resOutMsg, ...resInMsg]);
+        const sortedMessages = [...resOutMsg, ...resInMsg].sort(
+          (a, b) => new Date(a.timestamp) - new Date(b.timestamp)
+        );
+        setAllMessages(sortedMessages);
       } catch (error) {
         console.log(error);
       }
@@ -37,21 +38,17 @@ export default function DisplayMessages({ sendTo, updateOutMessages }) {
     fetchData();
   }, [sendTo]);
 
-
   useEffect(() => {
     if (inMessage && inMessage.sender && inMessage.sender === sendTo) {
-      setAllMessages((allMessages) => [...allMessages, inMessage]);
+      setAllMessages(prevMessages => [...prevMessages, inMessage]);
     }
   }, [inMessage]);
 
-
   useEffect(() => {
     if (updateOutMessages && updateOutMessages.receiver === sendTo) {
-      setAllMessages(prevAllMessages => [...prevAllMessages, updateOutMessages]);
+      setAllMessages(prevMessages => [...prevMessages, updateOutMessages]);
     }
   }, [updateOutMessages, sendTo]);
-  
-
 
   useEffect(scrollToBottom, [allMessages.length]);
 
@@ -69,27 +66,24 @@ export default function DisplayMessages({ sendTo, updateOutMessages }) {
             overflowY: "auto",
           }}
         >
-          {allMessages
-            .sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp))
-            .map((msg, index) => (
-              <Toast
-                key={index}
-                className={`my-3 ${msg.sender === sendTo ? "toast-right" : ""}`}
-              >
-                <Toast.Header closeButton={false}>
-                  <img className="rounded me-2" alt="" />
-                  <strong className="me-auto">
-                    {msg.sender === sendTo ? findStudentDisplayName(sendTo) : displayName}
-                  </strong>
-                  <small>{msg.timestamp}</small>
-                </Toast.Header>
-                <Toast.Body>{msg.msg}</Toast.Body>
-              </Toast>
-            ))}
+          {allMessages.map((msg, index) => (
+            <Toast
+              key={index}
+              className={`my-3 ${msg.sender === sendTo ? "toast-right" : ""}`}
+            >
+              <Toast.Header closeButton={false}>
+                <img className="rounded me-2" alt="" />
+                <strong className="me-auto">
+                  {msg.sender === sendTo ? findStudentDisplayName(sendTo) : displayName}
+                </strong>
+                <small>{msg.timestamp}</small>
+              </Toast.Header>
+              <Toast.Body>{msg.msg}</Toast.Body>
+            </Toast>
+          ))}
           <div ref={messagesEndRef} />
         </Card.Body>
       </Card>
     </Container>
   );
-
 }
