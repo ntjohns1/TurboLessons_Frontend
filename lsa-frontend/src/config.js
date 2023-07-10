@@ -14,8 +14,9 @@ export default {
     disableHttpsCheck: OKTA_TESTING_DISABLEHTTPSCHECK,
   },
   resourceServer: {
-    eventsUrl: 'http://localhost:8080/api/lesson',
-    userAdminUrl: 'http://localhost:8080/api/users',
-    messagesUrl: 'http://localhost:8080/api/messages',
+    eventsUrl: 'http://www.turbolessons.com/api/lessons',
+    userAdminUrl: 'http://www.turbolessons.com/api/users',
+    messagesUrl: 'http://www.turbolessons.com/api/messages',
+    videoUrl: 'http://www.turbolessons.com/api/video'
   },
 };

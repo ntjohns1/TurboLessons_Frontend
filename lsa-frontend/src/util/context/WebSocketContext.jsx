@@ -17,7 +17,7 @@ export const WebSocketProvider = ({ children }) => {
 
   useEffect(() => {
     if (authState && authState.isAuthenticated) {
-      const socket = new WebSocket(`ws://localhost:8080/ws/messages?userId=${principle}`);
+      const socket = new WebSocket(`ws://www.turbolessons.com/ws/messages?userId=${principle}`);
       webSocketRef.current = socket;
       socket.addEventListener('message', function (event) {
         console.log("WebSocket message:", event);
