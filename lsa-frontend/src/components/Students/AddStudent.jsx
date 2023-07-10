@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useOktaAuth } from '@okta/okta-react';
 import { Card, Container, Form, Button } from 'react-bootstrap';
+import config from '../../config';
 
 export default function AddStudent() {
     const { authState, oktaAuth } = useOktaAuth();
@@ -24,9 +25,8 @@ export default function AddStudent() {
 
     const handleFormSubmit = async (event) => {
         event.preventDefault();
-        const url = "http://localhost:8080/api/users";
         const accessToken = oktaAuth.getAccessToken();
-        await fetch(url, {
+        await fetch(config.resourceServer.userAdminUrl, {
             method: 'POST',
             headers: {
                 'Authorization': `Bearer ${accessToken}`,

@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import { Card, Form, Button, Row, Col } from 'react-bootstrap';
 import { FaRegWindowClose } from "react-icons/fa";
 import DeletUserBtn from './DeleteUserBtn';
+import config from '../../config';
 
 export default function EditStudent({ student, formState, setStudent, setIsUpdate, setFormState, oktaAuth, id }) {
 
@@ -24,7 +25,7 @@ export default function EditStudent({ student, formState, setStudent, setIsUpdat
     function handleSubmit(evt) {
         evt.preventDefault();
 
-        const url = `http://localhost:8080/api/users/${id}`;
+        const url = `${config.resourceServer.userAdminUrl}/${id}`;
         const accessToken = oktaAuth.getAccessToken();
         const method = "PUT";
 
@@ -68,13 +69,6 @@ export default function EditStudent({ student, formState, setStudent, setIsUpdat
                 console.error('Error:', error);
             });
     }
-
-    // function handleDelete() {
-    //     fetch(`http://localhost:7979/students/${id}`, { method: "DELETE" })
-    //         .then(() => alert(`${student.firstName} Deleted`))
-    //         .then(goBack())
-    //         .catch(error => console.log(error));
-    // }
 
     return (
         <Card className="card-user">
@@ -234,7 +228,7 @@ export default function EditStudent({ student, formState, setStudent, setIsUpdat
                 </Form>
             </Card.Body>
             <Card.Footer className='p-2 d-flex justify-content-center'>
-                <DeletUserBtn oktaAuth = {oktaAuth} id={id} setIsUpdate={setIsUpdate} student={student}/>
+                <DeletUserBtn oktaAuth={oktaAuth} id={id} setIsUpdate={setIsUpdate} student={student} />
             </Card.Footer>
         </Card>
     )

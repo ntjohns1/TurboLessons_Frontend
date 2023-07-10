@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { useOktaAuth } from '@okta/okta-react';
 import { Container, Form, Card, Button } from 'react-bootstrap';
-
+import config from '../../config';
 
 
 const Secured = () => {
@@ -36,9 +36,8 @@ const Secured = () => {
   // submit form
   const handleFormSubmit = async (event) => {
     event.preventDefault();
-    const url = "http://localhost:8080/api/lesson";
     const accessToken = oktaAuth.getAccessToken();
-    await fetch(url, {
+    await fetch(config.resourceServer.eventsUrl, {
       method: 'POST',
       headers: {
         'Authorization': `Bearer ${accessToken}`,

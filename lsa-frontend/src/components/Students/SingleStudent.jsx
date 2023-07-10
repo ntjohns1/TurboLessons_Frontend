@@ -4,6 +4,7 @@ import { useOktaAuth } from '@okta/okta-react';
 import { Card, Container, Row, Col } from 'react-bootstrap';
 import EditStudent from './EditStudent';
 import StudentList from './StudentList';
+import config from '../../config';
 
 export default function SingleStudent() {
     const { authState, oktaAuth } = useOktaAuth();
@@ -16,7 +17,7 @@ export default function SingleStudent() {
     useEffect(() => {
         const accessToken = oktaAuth.getAccessToken();
 
-        fetch(`http://localhost:8080/api/users/profile/${id}`, {
+        fetch(`${config.resourceServer.userAdminUrl}/profile/${id}`, {
             headers: {
                 Authorization: `Bearer ${accessToken}`,
             },

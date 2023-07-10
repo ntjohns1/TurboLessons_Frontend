@@ -2,7 +2,7 @@ import config from '../../config'
 
 export async function fetchAllMessage(accessToken) {
 
-    const response = await fetch(`http://localhost:8080/api/messages`, {
+    const response = await fetch(config.resourceServer.messagesUrl, {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json',
@@ -27,7 +27,7 @@ export async function fetchAllMessage(accessToken) {
 
 export async function fetchMessagesByReceiver(receiverId, accessToken) {
 
-    const response = await fetch(`http://localhost:8080/api/messages/recipient/${receiverId}`, {
+    const response = await fetch(`${config.resourceServer.messagesUrl}/recipient/${receiverId}`, {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json',
@@ -52,7 +52,7 @@ export async function fetchMessagesByReceiver(receiverId, accessToken) {
 
 export async function fetchMessagesBySender(senderId, accessToken) {
 
-    const response = await fetch(`http://localhost:8080/api/messages/recipient/${senderId}`, {
+    const response = await fetch(`${config.resourceServer.messagesUrl}/recipient/${senderId}`, {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json',
@@ -77,7 +77,7 @@ export async function fetchMessagesBySender(senderId, accessToken) {
 
 export async function fetchMessagesBySenderAndReceiver(sender, receiver, accessToken) {
 
-    const response = await fetch(`http://localhost:8080/api/messages/${sender}/to/${receiver}`, {
+    const response = await fetch(`${config.resourceServer.messagesUrl}/${sender}/to/${receiver}`, {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json',
@@ -97,13 +97,13 @@ export async function fetchMessagesBySenderAndReceiver(sender, receiver, accessT
             timestamp: m.timestamp
         };
     });
-    console.log(`http://localhost:8080/api/messages/${sender}/to/${receiver}`);
+    console.log(`${config.resourceServer.messagesUrl}/${sender}/to/${receiver}`);
     return res;
 }
 
 export async function sendMessage(sendTo, message, accessToken) {
 
-    const response = await fetch(`http://localhost:8080/api/messages/${sendTo}`, {
+    const response = await fetch(`${config.resourceServer.messagesUrl}/${sendTo}`, {
         method: 'POST',
         headers: {
             'Authorization': `Bearer ${accessToken}`,
