@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Button, Modal, Form, Row } from 'react-bootstrap';
+import config from '../../config';
 
 export default function DeletUserBtn({ oktaAuth, id, student }) {
     const [valid, setValid] = useState(false);
@@ -28,7 +29,7 @@ export default function DeletUserBtn({ oktaAuth, id, student }) {
         // e.preventDefault();
         const accessToken = oktaAuth.getAccessToken();
         try {
-            fetch(`http://localhost:8080/api/users/${id}`, {
+            fetch(`${config.resourceServer.userAdminUrl}/${id}`, {
                 method: "DELETE",
                 headers: {
                     'Authorization': `Bearer ${accessToken}`,

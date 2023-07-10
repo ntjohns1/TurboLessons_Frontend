@@ -2,7 +2,6 @@ import React from 'react';
 import { useOktaAuth } from '@okta/okta-react';
 import { Container, Card, Button } from "react-bootstrap";
 import PortalNav from '../components/PortalNav';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 
 export default function Home() {
   const { authState, oktaAuth } = useOktaAuth();
@@ -15,8 +14,8 @@ export default function Home() {
         <PortalNav />
       )}
       <Card.Body>
-        <h1 className="text-center">Welcome to <FontAwesomeIcon icon={"play-circle"} /> Lesson Schedule Assistant</h1>
-        <p className="text-center">An interactive platform for music teachers and students to communicate helpful information.</p>
+        <h1 className="text-center">Welcome to TurboLessons!!!</h1>
+        <p className="text-center">Turbo Charge Your Lessons!!!</p>
       </Card.Body>
       {authState && !authState.isAuthenticated && (
         <Card.Footer className='text-center'>

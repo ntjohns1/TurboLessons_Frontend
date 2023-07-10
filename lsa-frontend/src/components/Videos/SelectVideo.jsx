@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Card, Toast } from "react-bootstrap";
 import { useOktaAuth } from '@okta/okta-react';
+import config from '../../config';
 
 export default function SelectVideo({ setSelected }) {
 
@@ -14,10 +15,9 @@ export default function SelectVideo({ setSelected }) {
     }
 
     useEffect(() => {
-        const url = "http://localhost:8080/api/video";
         const accessToken = oktaAuth.getAccessToken();
 
-        fetch(url, {
+        fetch(config.resourceServer.videoUrl, {
             method: 'GET',
             headers: {
                 'Authorization': `Bearer ${accessToken}`,

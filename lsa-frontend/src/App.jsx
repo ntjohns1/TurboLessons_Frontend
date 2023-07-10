@@ -16,15 +16,10 @@ import Portal from "./pages/Portal"
 import Students from "./pages/Students"
 import AddStudent from "./components/Students/AddStudent"
 import { RequiredAuth } from "./helpers/SecureRoute";
-import { library } from '@fortawesome/fontawesome-svg-core'
-import { fas } from '@fortawesome/free-solid-svg-icons'
 import SingleStudent from './components/Students/SingleStudent';
 import Messenger from './pages/Messenger';
 import NewLesson from './components/Lessons/NewLesson';
-import Uploadvideo from './components/Videos/UploadVideo';
 import Videos from './pages/Videos';
-
-library.add(fas);
 
 const oktaAuth = new OktaAuth(config.oidc);
 

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Button, Card, Container, Form } from "react-bootstrap";
 import { useOktaAuth } from '@okta/okta-react';
+import config from '../../config';
 
 
 export default function Uploadvideo() {
@@ -16,7 +17,6 @@ export default function Uploadvideo() {
     const handleSubmit = async (event) => {
         event.preventDefault();
 
-        const url = "http://localhost:8080/api/video";
         const accessToken = oktaAuth.getAccessToken();
 
         let formData = new FormData();
@@ -24,7 +24,7 @@ export default function Uploadvideo() {
 
         console.log('File Data:', formData.get('file'));
 
-        await fetch(url, {
+        await fetch(config.resourceServer.videoUrl, {
             method: 'POST',
             headers: {
                 'Authorization': `Bearer ${accessToken}`

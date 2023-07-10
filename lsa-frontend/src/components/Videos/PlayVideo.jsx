@@ -1,9 +1,10 @@
 import React, { useEffect, useRef } from 'react';
 import { useOktaAuth } from '@okta/okta-react';
+import config from '../../config';
 
 const PlayVideo = ({ selected }) => {
     const videoRef = useRef();
-    const videoSrc = `http://localhost:8080/api/video/${selected.name}`;
+    const videoSrc = `${config.resourceServer.videoUrl}/${selected.name}`;
     const { authState, oktaAuth } = useOktaAuth();
     const accessToken = oktaAuth.getAccessToken();
 

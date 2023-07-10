@@ -14,8 +14,9 @@ export default {
     disableHttpsCheck: OKTA_TESTING_DISABLEHTTPSCHECK,
   },
   resourceServer: {
-    eventsUrl: 'http://localhost:8080/api/lesson',
+    eventsUrl: 'http://localhost:8080/api/lessons',
     userAdminUrl: 'http://localhost:8080/api/users',
     messagesUrl: 'http://localhost:8080/api/messages',
+    videoUrl: 'http://localhost:8080/api/video',
   },
 };

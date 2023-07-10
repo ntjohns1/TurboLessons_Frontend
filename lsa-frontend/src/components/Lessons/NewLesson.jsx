@@ -3,6 +3,7 @@ import { Button, Card, Container, Form } from "react-bootstrap";
 import { useOktaAuth } from '@okta/okta-react';
 import { useStudentContext } from '../../util/context/StudentContext';
 import DatePicker from "react-datepicker";
+import config from '../../config';
 import "react-datepicker/dist/react-datepicker.css";
 
 export default function NewLesson() {
@@ -51,9 +52,8 @@ export default function NewLesson() {
     event.preventDefault();
     console.log("Request Payload:", JSON.stringify(formState)); // Log the request payload
 
-    const url = "http://localhost:8080/api/lessons";
     const accessToken = oktaAuth.getAccessToken();
-    await fetch(url, {
+    await fetch(config.resourceServer.eventsUrl, {
       method: 'POST',
       headers: {
         'Authorization': `Bearer ${accessToken}`,
