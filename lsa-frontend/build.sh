@@ -1,2 +1,2 @@
 echo "Building LSA-Frontend"
-docker build --tag lsa-frontend .
+docker build -t noslenj/lsa-frontend:lsa-frontend .
