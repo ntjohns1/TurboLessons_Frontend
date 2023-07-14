@@ -13,12 +13,14 @@ RUN npm ci
 # Copy the rest of the application files
 COPY . .
 
-# Copy the .okta.env file to the working directory
-COPY .okta.env .env
+# Copy the service worker file to the public directory
+COPY src/registerServiceWorker.js ./public/service-worker.js
 
 # Load environment variables from the .env file
-ARG env_file=.env
-RUN set -a && source $env_file && set +a
+ARG ISSUER
+ARG CLIENT_ID
+ENV REACT_APP_ISSUER=$ISSUER
+ENV REACT_APP_CLIENT_ID=$CLIENT_ID
 
 # Build the application
 RUN npm run build
@@ -31,9 +33,6 @@ COPY --from=build /app/dist /usr/share/nginx/html
 
 # Copy the Nginx configuration file
 COPY nginx.conf /etc/nginx/conf.d/default.conf
-
-# Copy the service worker file
-COPY src/registerServiceWorker.js /app/build/service-worker.js
 
 # Expose the desired port (default is 80)
 EXPOSE 80
