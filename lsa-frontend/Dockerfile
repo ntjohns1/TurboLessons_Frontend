@@ -11,7 +11,7 @@ COPY package*.json ./
 RUN npm ci
 
 # Copy the rest of the application files
-COPY . .
+COPY ./ /app/
 
 # Copy the service worker file to the public directory
 COPY src/registerServiceWorker.js ./public/service-worker.js
@@ -27,12 +27,13 @@ RUN npm run build
 
 # Use Nginx as the production server
 FROM nginx
+RUN rm /etc/nginx/nginx.conf /etc/nginx/conf.d/default.conf
 
 # Copy the built files to Nginx
 COPY --from=build /app/dist /usr/share/nginx/html
 
 # Copy the Nginx configuration file
-COPY ./nginx.conf /etc/nginx/conf.d/default.conf
+COPY /nginx.conf /etc/nginx
 
 # Expose the desired port (default is 80)
 EXPOSE 80
