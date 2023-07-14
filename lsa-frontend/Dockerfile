@@ -27,13 +27,13 @@ RUN npm run build
 
 # Use Nginx as the production server
 FROM nginx
-RUN rm /etc/nginx/nginx.conf /etc/nginx/conf.d/default.conf
+RUN rm /etc/nginx/nginx.conf 
 
 # Copy the built files to Nginx
 COPY --from=build /app/dist /usr/share/nginx/html
 
-# Copy the Nginx configuration file
-COPY nginx.conf /etc/nginx/nginx.conf
+# # Copy the Nginx configuration file
+# COPY nginx.conf /etc/nginx/nginx.conf
 
 # Expose the desired port (default is 80)
 EXPOSE 80
