@@ -13,12 +13,6 @@ RUN npm ci
 # Copy the rest of the application files
 COPY ./ /app/
 
-# Copy the service worker file to the public directory
-COPY src/registerServiceWorker.js ./public/service-worker.js
-
-# Copy the manifest file to the public directory
-COPY public/manifest.json ./public/manifest.webmanifest
-
 # Load environment variables from the .env file
 ARG ISSUER
 ARG CLIENT_ID
