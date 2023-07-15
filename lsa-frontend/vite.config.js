@@ -26,7 +26,14 @@ const env = {};
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  plugins: [react(), VitePWA()],
+    plugins: [
+    reactRefresh(),
+    VitePWA({
+      workbox: {
+        swDest: '/service-worker.js',
+      },
+    })
+  ],
   define: {
     global: {},
     'process.env': env
