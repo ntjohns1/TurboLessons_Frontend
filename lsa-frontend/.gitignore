@@ -13,3 +13,4 @@ yalc.lock
 .eslintcache
 .okta.env
 ./env
+reactBuild.sh
