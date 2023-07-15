@@ -24,7 +24,7 @@ const HomeNav = () => {
         className='mb-3'
         style={{ backgroundColor: '#00334E' }}>
         <Navbar.Brand className='header-nav px-3'>
-          Lesson Schedule Service
+          Turbo Lessons
         </Navbar.Brand>
         <Navbar.Toggle aria-controls='responsive-navbar-nav' />
         <Navbar.Collapse id='responsive-navbar-nav'>

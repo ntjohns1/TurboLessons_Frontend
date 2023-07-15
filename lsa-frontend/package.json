@@ -1,5 +1,5 @@
 {
-  "name": "okta-react-sample",
+  "name": "turbolessons",
   "version": "0.0.0",
   "private": true,
   "scripts": {
@@ -38,7 +38,8 @@
     "dotenv": "^16.0.3",
     "jest": "^29.6.1",
     "jest-environment-jsdom": "^29.1.2",
-    "vite": "^3.1.7"
+    "vite": "^3.1.7",
+    "vite-plugin-pwa": "^0.16.4"
   },
   "browserslist": {
     "production": [
