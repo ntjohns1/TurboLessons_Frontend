@@ -30,10 +30,10 @@ export default defineConfig({
     react(),
     VitePWA({
       workbox: {
-        swDest: 'service-worker.js',
+        swDest: path.resolve(__dirname, './dist/service-worker.js'),
       },
       registerType: 'autoUpdate'
-    })    
+    })   
   ],
   define: {
     global: {},
