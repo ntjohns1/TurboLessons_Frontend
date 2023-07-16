@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef, createContext, useContext } from 'react';
 import { useOktaAuth } from '@okta/okta-react';
+import config from '../../config';
 const WebSocketContext = createContext(null);
 
 export function useSocket() {
@@ -17,7 +18,7 @@ export const WebSocketProvider = ({ children }) => {
 
   useEffect(() => {
     if (authState && authState.isAuthenticated) {
-      const socket = new WebSocket(`wss://www.turbolessons.com/ws/messages?userId=${principle}`);
+      const socket = new WebSocket(config.resourceServer.socketUri + principle);
       webSocketRef.current = socket;
       socket.addEventListener('message', function (event) {
         console.log("WebSocket message:", event);
