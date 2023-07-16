@@ -17,6 +17,7 @@ export default {
     eventsUrl: 'https://www.turbolessons.com/api/lessons',
     userAdminUrl: 'https://www.turbolessons.com/api/users',
     messagesUrl: 'https://www.turbolessons.com/api/messages',
-    videoUrl: 'https://www.turbolessons.com/api/video'
+    videoUrl: 'https://www.turbolessons.com/api/video',
+    socketUri: 'wss://www.turbolessons.com/ws/messages?userId='
   },
 };
