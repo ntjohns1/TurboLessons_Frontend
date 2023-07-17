@@ -34,7 +34,7 @@ export default defineConfig({
         swDest: path.resolve(__dirname, './dist/service-worker.js'),
       },
       registerType: 'autoUpdate'
-    })   
+    })  
   ],
   define: {
     global: {},
