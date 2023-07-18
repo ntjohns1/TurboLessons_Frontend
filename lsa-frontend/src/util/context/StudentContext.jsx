@@ -21,12 +21,14 @@ export const StudentProvider = ({ children }) => {
 
     useEffect(() => {
         if (authState && authState.isAuthenticated) {
+            console.log('URL:', config.resourceServer.userAdminUrl);
             fetch(config.resourceServer.userAdminUrl, {
                 headers: {
                     Authorization: `Bearer ${accessToken}`,
                 },
             })
                 .then((response) => {
+                    console.log('Response status:', response.status);
                     if (!response.ok) {
                         setStudentFetchFailed(true);
                         return Promise.reject();
