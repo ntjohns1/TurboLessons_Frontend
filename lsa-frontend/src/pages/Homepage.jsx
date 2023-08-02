@@ -8,6 +8,12 @@ export default function Home() {
 
   const login = async () => oktaAuth.signInWithRedirect();
 
+  useEffect(() => {
+    if (authState && authState.isAuthenticated) {
+      console.log(oktaAuth.getAccessToken);
+    }
+  }, [authState, oktaAuth]);
+
   return (
     <Container>
       {authState && authState.isAuthenticated && (
