@@ -18,6 +18,6 @@ export default {
     userAdminUrl: 'https://www.turbolessons.com/api/users',
     messagesUrl: 'https://www.turbolessons.com/api/messages',
     videoUrl: 'https://www.turbolessons.com/api/video',
-    socketUri: 'ws://www.turbolessons.com/ws/messages?userId='
+    socketUri: 'wss://www.turbolessons.com/ws/messages?userId='
   },
 };
