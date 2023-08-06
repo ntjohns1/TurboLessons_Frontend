@@ -20,7 +20,7 @@ export default function Home() {
         <PortalNav />
       )}
       <Card.Body>
-        <h1 className="text-center">Welcome to TurboLessons!!!</h1>
+        <h1 className="text-center">Welcome to Turbo Lessons!!!</h1>
         <p className="text-center">Turbo Charge Your Lessons!!!</p>
       </Card.Body>
       {authState && !authState.isAuthenticated && (
