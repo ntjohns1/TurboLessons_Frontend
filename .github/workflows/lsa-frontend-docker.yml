@@ -30,3 +30,6 @@ jobs:
           context: ./lsa-frontend
           push: true
           tags: noslenj/lsa-frontend:latest
+          secrets: |
+            ISSUER=${{ secrets.ISSUER }}
+            CLIENT_ID=${{ secrets.CLIENT_ID }}
