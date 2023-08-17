@@ -18,8 +18,8 @@ export const WebSocketProvider = ({ children }) => {
 
   useEffect(() => {
     if (authState && authState.isAuthenticated) {
+      document.cookie = `token=${accessToken}; path=/; secure; samesite=strict`;
       const socket = new WebSocket(config.resourceServer.socketUri + principle);
-      socket.onopen = () => socket.send(accessToken);
       webSocketRef.current = socket;
       socket.addEventListener('message', function (event) {
         console.log("WebSocket message:", event);
