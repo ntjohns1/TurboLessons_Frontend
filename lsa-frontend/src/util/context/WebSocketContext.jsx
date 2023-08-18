@@ -30,9 +30,13 @@ export const WebSocketProvider = ({ children }) => {
       });
 
       socket.addEventListener("close", function (event) {
-        console.log("WebSocket connection closed:", event);
+        if (event.wasClean) {
+          console.log("WebSocket connection closed cleanly:", event);
+        } else {
+          console.error("WebSocket connection died:", event);
+        }
       });
-
+      
       socket.addEventListener("error", function (event) {
         console.error("WebSocket error:", event);
       });
