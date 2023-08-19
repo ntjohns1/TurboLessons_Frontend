@@ -46,6 +46,19 @@ export const WebSocketProvider = ({ children }) => {
     }
   }, [authState]);
 
+  useEffect(() => {
+    if (webSocketRef.current) {
+      const interval = setInterval(() => {
+        if (webSocketRef.current.readyState === WebSocket.OPEN) {
+          webSocketRef.current.send('ping');
+        }
+      }, 10000); 
+  
+      return () => clearInterval(interval);
+    }
+  }, []);
+  
+
   const disconnect = () => webSocketRef.current.close();
 
   return (
