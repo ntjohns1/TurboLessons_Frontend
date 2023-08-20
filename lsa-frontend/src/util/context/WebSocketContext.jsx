@@ -19,16 +19,16 @@ export const WebSocketProvider = ({ children }) => {
   useEffect(() => {
     if (authState && authState.isAuthenticated) {
       connectSocket();
-    }
-    return () => {
-      if (webSocketRef) {
-      disconnectSocket();
+      return () => {
+        if (webSocketRef) {
+          disconnectSocket();
+        }
       }
     }
   }, [authState]);
 
   const connectSocket = () => {
- 
+
     const socket = new WebSocket(config.resourceServer.socketUri + principle);
     webSocketRef.current = socket;
     socket.addEventListener('message', function (event) {
@@ -63,12 +63,12 @@ export const WebSocketProvider = ({ children }) => {
       setReconnecting(false);
       return;
     }
-  
+
     console.log(`Reconnect attempt ${attempt}`);
-  
+
     if (webSocketRef.current.readyState === WebSocket.CLOSED) {
-      connectSocket();  
-  
+      connectSocket();
+
       setTimeout(() => {
         if (webSocketRef.current.readyState === WebSocket.CLOSED) {
           reconnectSocket(attempt + 1);
@@ -80,13 +80,13 @@ export const WebSocketProvider = ({ children }) => {
       setReconnecting(false);
     }
   };
-  
+
   const disconnectSocket = () => {
     if (webSocketRef.current && webSocketRef.current.readyState < WebSocket.CLOSING) {
       webSocketRef.current.close();
     }
   };
-  
+
   return (
     <WebSocketContext.Provider value={{
       principle,
