@@ -81,8 +81,12 @@ export const WebSocketProvider = ({ children }) => {
     }
   };
   
-  const disconnectSocket = () => webSocketRef.current.close();
-
+  const disconnectSocket = () => {
+    if (webSocketRef.current && webSocketRef.current.readyState < WebSocket.CLOSING) {
+      webSocketRef.current.close();
+    }
+  };
+  
   return (
     <WebSocketContext.Provider value={{
       principle,
