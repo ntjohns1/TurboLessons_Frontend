@@ -21,7 +21,9 @@ export const WebSocketProvider = ({ children }) => {
       connectSocket();
     }
     return () => {
-      webSocketRef.current.close();
+      if (webSocketRef) {
+      disconnectSocket();
+      }
     }
   }, [authState]);
 
@@ -79,8 +81,6 @@ export const WebSocketProvider = ({ children }) => {
     }
   };
   
-
-
   const disconnectSocket = () => webSocketRef.current.close();
 
   return (
