@@ -21,7 +21,7 @@ export const WebSocketProvider = ({ children }) => {
       connectSocket();
     }
     return () => {
-      socket.close();
+      webSocketRef.current.close();
     }
   }, [authState]);
 
