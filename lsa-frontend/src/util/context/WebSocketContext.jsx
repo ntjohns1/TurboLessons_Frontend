@@ -19,11 +19,7 @@ export const WebSocketProvider = ({ children }) => {
   useEffect(() => {
     if (authState && authState.isAuthenticated) {
       connectSocket();
-      return () => {
-        if (webSocketRef) {
-          disconnectSocket();
-        }
-      }
+      return () => disconnectSocket();
     }
   }, [authState]);
 
@@ -55,7 +51,6 @@ export const WebSocketProvider = ({ children }) => {
       console.error("WebSocket error:", event);
     });
   }
-
 
   const reconnectSocket = (attempt = 1) => {
     if (attempt > maxReconnectAttempts) {
