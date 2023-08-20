@@ -47,14 +47,14 @@ export const WebSocketProvider = ({ children }) => {
   }, [authState]);
 
   useEffect(() => {
-    if (webSocketRef.current) {
-      const interval = setInterval(() => {
+    if (webSocketRef.current && authState && authState.isAuthenticated) {
+      // const interval = setInterval(() => {
         if (webSocketRef.current.readyState === WebSocket.OPEN) {
           webSocketRef.current.send('ping');
         }
-      }, 10000); 
+      // }, 10000); 
   
-      return () => clearInterval(interval);
+      // return () => clearInterval(interval);
     }
   }, []);
   
