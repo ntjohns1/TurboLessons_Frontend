@@ -8,19 +8,13 @@ export default function Home() {
 
   const login = async () => oktaAuth.signInWithRedirect();
 
-  useEffect(() => {
-    if (authState && authState.isAuthenticated) {
-      console.log(oktaAuth.getAccessToken);
-    }
-  }, [authState, oktaAuth]);
-
   return (
     <Container>
       {authState && authState.isAuthenticated && (
         <PortalNav />
       )}
       <Card.Body>
-        <h1 className="text-center">Welcome to TurboLessons!!!</h1>
+        <h1 className="text-center">Welcome to Turbo Lessons!!!</h1>
         <p className="text-center">Turbo Charge Your Lessons!!!</p>
       </Card.Body>
       {authState && !authState.isAuthenticated && (

@@ -8,9 +8,9 @@ const HomeNav = () => {
 
 
   const { authState, oktaAuth } = useOktaAuth();
-  const { principle, disconnect } = useSocket();
+  const { principle, disconnectSocket } = useSocket();
   const logout = async () => {
-    await disconnect();
+    await disconnectSocket();
     oktaAuth.signOut();
   };
 
