@@ -31,6 +31,11 @@ export default function DisplayMessages({ sendTo, updateOutMessages }) {
           (a, b) => new Date(a.timestamp) - new Date(b.timestamp)
         );
         setAllMessages(sortedMessages);
+        console.log('msg.sender:', msg.sender);
+        console.log('sendTo:', sendTo);
+        console.log('principle:', principle);
+        console.log('displayName:', displayName);
+
       } catch (error) {
         console.log(error);
       }
