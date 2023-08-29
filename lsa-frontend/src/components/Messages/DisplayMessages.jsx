@@ -74,7 +74,7 @@ export default function DisplayMessages({ sendTo, updateOutMessages }) {
               <Toast.Header closeButton={false}>
                 <img className="rounded me-2" alt="" />
                 <strong className="me-auto">
-                  {msg.sender === principle ? displayName : findStudentDisplayName(sendTo)}
+                  {msg.sender === principle ? displayName : (msg.sender === sendTo ? findStudentDisplayName(sendTo) : 'Unknown')}
                 </strong>
                 <small>{msg.timestamp}</small>
               </Toast.Header>
