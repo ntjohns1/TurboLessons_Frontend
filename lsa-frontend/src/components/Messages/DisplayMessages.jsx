@@ -18,6 +18,7 @@ export default function DisplayMessages({ sendTo, updateOutMessages }) {
     messagesEndRef.current.scrollIntoView({ behavior: "smooth" });
   };
 
+  // test
   useEffect(() => {
     const fetchData = async () => {
       if (!sendTo) {
