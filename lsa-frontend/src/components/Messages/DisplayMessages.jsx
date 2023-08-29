@@ -57,29 +57,33 @@ export default function DisplayMessages({ sendTo, updateOutMessages }) {
     return student ? student.displayName : '';
   };
 
-  {
-    allMessages.map((msg, index) => {
-      // Add the console logs here
-      console.log('msg.sender:', msg.sender);
-      console.log('sendTo:', sendTo);
-      console.log('principle:', principle);
-      console.log('displayName:', displayName);
-
-      return (
-        <Toast
-          key={index}
-          className={`my-3 ${msg.sender === sendTo ? "toast-right" : ""}`}
+  return (
+    <Container className="my-3">
+      <Card>
+        <Card.Body
+          style={{
+            maxHeight: "200px",
+            overflowY: "auto",
+          }}
         >
-          <Toast.Header closeButton={false}>
-            <img className="rounded me-2" alt="" />
-            <strong className="me-auto">
-              {msg.sender === principle ? displayName : (msg.sender === sendTo ? findStudentDisplayName(sendTo) : 'Unknown')}
-            </strong>
-            <small>{msg.timestamp}</small>
-          </Toast.Header>
-          <Toast.Body>{msg.msg}</Toast.Body>
-        </Toast>
-      );
-    })
-  }
+          {allMessages.map((msg, index) => (
+            <Toast
+              key={index}
+              className={`my-3 ${msg.sender === sendTo ? "toast-right" : ""}`}
+            >
+              <Toast.Header closeButton={false}>
+                <img className="rounded me-2" alt="" />
+                <strong className="me-auto">
+                  {msg.sender === principle ? displayName : (msg.sender === sendTo ? findStudentDisplayName(sendTo) : 'Unknown')}
+                </strong>
+                <small>{msg.timestamp}</small>
+              </Toast.Header>
+              <Toast.Body>{msg.msg}</Toast.Body>
+            </Toast>
+          ))}
+          <div ref={messagesEndRef} />
+        </Card.Body>
+      </Card>
+    </Container>
+  );
 }
