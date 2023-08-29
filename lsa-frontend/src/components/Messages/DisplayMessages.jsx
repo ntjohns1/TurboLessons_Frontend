@@ -18,6 +18,7 @@ export default function DisplayMessages({ sendTo, updateOutMessages }) {
     messagesEndRef.current.scrollIntoView({ behavior: "smooth" });
   };
 
+  // test
   useEffect(() => {
     const fetchData = async () => {
       if (!sendTo) {
@@ -74,7 +75,7 @@ export default function DisplayMessages({ sendTo, updateOutMessages }) {
               <Toast.Header closeButton={false}>
                 <img className="rounded me-2" alt="" />
                 <strong className="me-auto">
-                  {msg.sender === sendTo ? findStudentDisplayName(sendTo) : displayName}
+                  {msg.sender === principle ? displayName : (msg.sender === sendTo ? findStudentDisplayName(sendTo) : 'Unknown')}
                 </strong>
                 <small>{msg.timestamp}</small>
               </Toast.Header>
