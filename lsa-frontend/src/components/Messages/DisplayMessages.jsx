@@ -4,14 +4,12 @@ import { Card, Container, Toast, Row, Col } from "react-bootstrap";
 import { useSocket } from '../../util/context/WebSocketContext';
 import { fetchMessagesBySenderAndReceiver } from '../../util/api/messageServerCalls';
 import './DisplayMessages.css';
-import { useStudentContext } from '../../util/context/StudentContext';
 
 export default function DisplayMessages({ sendTo, updateOutMessages }) {
   const { authState, oktaAuth } = useOktaAuth();
   const displayName = authState && authState.idToken && authState.idToken.claims.name;
   const accessToken = oktaAuth.getAccessToken();
   const { inMessage, principle } = useSocket();
-  const { students } = useStudentContext();
   const [allMessages, setAllMessages] = useState([]);
   const messagesEndRef = useRef(null);
   const scrollToBottom = () => {
@@ -51,15 +49,6 @@ export default function DisplayMessages({ sendTo, updateOutMessages }) {
   }, [updateOutMessages, sendTo]);
 
   useEffect(scrollToBottom, [allMessages.length]);
-
-  const findStudentDisplayName = (id) => {
-    console.log('students:', students);
-    console.log('Searching for ID:', id);
-    const student = students.find((s) => s.id === id);
-    console.log('Found student:', student);
-    return student ? student.displayName : '';
-  };
-  
 
   return (
     <Container className="my-3">
