@@ -53,9 +53,13 @@ export default function DisplayMessages({ sendTo, updateOutMessages }) {
   useEffect(scrollToBottom, [allMessages.length]);
 
   const findStudentDisplayName = (id) => {
+    console.log('students:', students);
+    console.log('Searching for ID:', id);
     const student = students.find((s) => s.id === id);
+    console.log('Found student:', student);
     return student ? student.displayName : '';
   };
+  
 
   return (
     <Container className="my-3">
@@ -74,7 +78,7 @@ export default function DisplayMessages({ sendTo, updateOutMessages }) {
               <Toast.Header closeButton={false}>
                 <img className="rounded me-2" alt="" />
                 <strong className="me-auto">
-                  {msg.sender === principle ? displayName : findStudentDisplayName(sendTo)}
+                  {msg.sender === principle ? displayName : sendTo}
                 </strong>
                 <small>{msg.timestamp}</small>
               </Toast.Header>
