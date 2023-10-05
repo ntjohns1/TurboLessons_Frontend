@@ -54,7 +54,8 @@ export default function DisplayMessages({ sendTo, updateOutMessages }) {
 
   const findStudentDisplayName = (id) => {
     const student = students.find((s) => s.id === id);
-    return student ? student.displayName : '';
+    console.log(student);
+    return student ? student.name : '';
   };
 
   return (
