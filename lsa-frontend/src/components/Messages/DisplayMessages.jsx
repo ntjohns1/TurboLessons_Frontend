@@ -53,10 +53,13 @@ export default function DisplayMessages({ sendTo, updateOutMessages }) {
   useEffect(scrollToBottom, [allMessages.length]);
 
   const findStudentDisplayName = (id) => {
+    console.log('students:', students);
+    console.log('Searching for ID:', id);
     const student = students.find((s) => s.id === id);
-    console.log(student);
-    return student ? student.name : '';
+    console.log('Found student:', student);
+    return student ? student.displayName : '';
   };
+  
 
   return (
     <Container className="my-3">
