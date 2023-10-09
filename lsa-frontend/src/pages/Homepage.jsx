@@ -9,17 +9,20 @@ export default function Home() {
   const login = async () => oktaAuth.signInWithRedirect();
 
   const getTokenInfo = () => {
-    const idToken = oktaAuth.getAccessToken();
-    const decodedToken = oktaAuth.token.decode(idToken);
-    console.log(`Token Header: ${decodedToken.header}, Token Payload: ${decodedToken.payload}, Token Signature: ${decodedToken.signature}`);
-
+    if (authState && authState.isAuthenticated) {
+      const { accessToken } = authState;
+      if (accessToken && accessToken.claims) {
+        // Log the scopes
+        console.log('Scopes:', accessToken.claims.scp);
+        // You can also log the entire payload of the token
+        console.log('Token Payload:', accessToken.claims);
+      }
+    }
   }
 
   useEffect(() => {
-    if (authState && authState.isAuthenticated) {
-      getTokenInfo();
-    }
-}, [authState, oktaAuth]);
+    getTokenInfo();
+  }, [authState]);
 
   return (
     <Container>
