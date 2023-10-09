@@ -8,6 +8,19 @@ export default function Home() {
 
   const login = async () => oktaAuth.signInWithRedirect();
 
+  const getTokenInfo = () => {
+    const idToken = oktaAuth.getIdToken();
+    const decodedToken = oktaAuth.token.decode(idToken);
+    console.log(decodedToken.header, decodedToken.payload, decodedToken.signature);
+
+  }
+
+  useEffect(() => {
+    if (authState && authState.isAuthenticated) {
+      getTokenInfo();
+    }
+}, [authState, oktaAuth]);
+
   return (
     <Container>
       {authState && authState.isAuthenticated && (
