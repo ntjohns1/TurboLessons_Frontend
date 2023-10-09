@@ -9,7 +9,7 @@ export default function Home() {
   const login = async () => oktaAuth.signInWithRedirect();
 
   const getTokenInfo = () => {
-    const idToken = oktaAuth.getIdToken();
+    const idToken = oktaAuth.getAccessToken();
     const decodedToken = oktaAuth.token.decode(idToken);
     console.log(decodedToken.header, decodedToken.payload, decodedToken.signature);
 
