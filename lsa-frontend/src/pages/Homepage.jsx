@@ -11,7 +11,7 @@ export default function Home() {
   const getTokenInfo = () => {
     const idToken = oktaAuth.getAccessToken();
     const decodedToken = oktaAuth.token.decode(idToken);
-    console.log(decodedToken.header, decodedToken.payload, decodedToken.signature);
+    console.log(`Token Header: ${decodedToken.header}, Token Payload: ${decodedToken.payload}, Token Signature: ${decodedToken.signature}`);
 
   }
 
