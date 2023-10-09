@@ -15,8 +15,7 @@ export function useStudentContext() {
 export const StudentProvider = ({ children }) => {
     const { authState, oktaAuth } = useOktaAuth();
     const accessToken = oktaAuth.getAccessToken();
-    const idToken = oktaAuth.getIdToken();
-    const decodedToken = authClient.token.decode(idToken);
+    const decodedToken = oktaAuth.token.decode(accessToken);
     console.log(decodedToken.header, decodedToken.payload, decodedToken.signature);
     const [students, setStudents] = useState([]);
     const [studentFetchFailed, setStudentFetchFailed] = useState(false);
