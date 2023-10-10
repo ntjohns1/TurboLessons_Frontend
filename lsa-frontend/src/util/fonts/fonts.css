@@ -5,4 +5,11 @@
     font-style: normal;
   }
   
+  @font-face {
+    font-family: 'Montserrat';
+    src: local('Montserrat'), url('./Montserrat-VariableFont_wght.ttf') format('truetype');
+    font-weight: 600;
+    font-style: normal;
+  }
+  
   
