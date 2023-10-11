@@ -41,7 +41,7 @@ const App = () => {
               <Route path="" element={<SecuredPage />} />
             </Route>
             <Route path="login/callback" element={<LoginCallback loadingElement={<Loading />} />} />
-            <Route path="/portal" element={<RequiredAuth requiredScopes={['admin', 'teacher']} />}>
+            <Route path="/portal" element={<RequiredAuth />}>
               <Route path="" element={<Portal />} />
             </Route>
             <Route path="/students" element={<RequiredAuth />}>

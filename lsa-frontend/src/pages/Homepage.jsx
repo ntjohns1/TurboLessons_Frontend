@@ -8,6 +8,10 @@ import HomeLogo from '../util/HomeLogo';
 export default function Home() {
   const { authState, oktaAuth } = useOktaAuth();
 
+  const userGroups = authState?.accessToken?.claims?.groups || [];
+
+  const isTeacher = userGroups.includes('Teacher', 'Admin');
+
   const login = async () => oktaAuth.signInWithRedirect();
 
   const getTokenInfo = () => {
@@ -15,7 +19,7 @@ export default function Home() {
       const { accessToken } = authState;
       if (accessToken && accessToken.claims) {
         // Log the scopes
-        console.log('Scopes:', accessToken.claims.scp);
+        console.log('Groups:', accessToken.claims.groups);
         // You can also log the entire payload of the token
         console.log('Token Payload:', accessToken.claims);
       }
@@ -28,7 +32,7 @@ export default function Home() {
 
   return (
     <Container>
-      {authState && authState.isAuthenticated && (
+      {isTeacher && authState && authState.isAuthenticated && (
         <PortalNav />
       )}
       <Card.Body className='d-flex justify-content-center'>

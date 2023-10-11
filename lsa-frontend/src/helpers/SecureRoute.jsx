@@ -17,17 +17,6 @@ export const RequiredAuth = ({ requiredScopes }) => {
     return <Loading />;
   }
 
-  // Check if user has at least one of the required scopes
-  if (requiredScopes && requiredScopes.length > 0) {
-    const userScopes = authState.accessToken?.claims?.scp || [];
-    const hasRequiredScope = requiredScopes.some(scope => userScopes.includes(scope));
-
-    if (!hasRequiredScope) {
-      // Redirect to unauthorized page or show an error message
-      return <Navigate to="/unauthorized" />;
-    }
-  }
-
   return <Outlet />;
 };
 
