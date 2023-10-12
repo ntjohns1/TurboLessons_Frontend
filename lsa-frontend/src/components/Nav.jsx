@@ -3,6 +3,7 @@ import { useOktaAuth } from '@okta/okta-react';
 import { Navbar, Nav } from 'react-bootstrap';
 import { Link } from 'react-router-dom'
 import { useSocket } from "../util/context/WebSocketContext";
+import NavLogo from "../util/NavLogo";
 
 const HomeNav = () => {
 
@@ -24,7 +25,7 @@ const HomeNav = () => {
         className='mb-3'
         style={{ backgroundColor: '#00334E' }}>
         <Navbar.Brand className='header-nav px-3'>
-          Turbo Lessons
+          <NavLogo />
         </Navbar.Brand>
         <Navbar.Toggle aria-controls='responsive-navbar-nav' />
         <Navbar.Collapse id='responsive-navbar-nav'>

@@ -1,0 +1,15 @@
+@font-face {
+    font-family: 'Saira-Italic-900';
+    src: local('Saira-Italic-900'), url('./Saira-Italic-VariableFont_wdth,wght.ttf') format('truetype');
+    font-weight: 900;
+    font-style: normal;
+  }
+  
+  @font-face {
+    font-family: 'Montserrat';
+    src: local('Montserrat'), url('./Montserrat-VariableFont_wght.ttf') format('truetype');
+    font-weight: 600;
+    font-style: normal;
+  }
+  
+  

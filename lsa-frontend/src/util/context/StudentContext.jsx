@@ -15,15 +15,13 @@ export function useStudentContext() {
 export const StudentProvider = ({ children }) => {
     const { authState, oktaAuth } = useOktaAuth();
     const accessToken = oktaAuth.getAccessToken();
-    const decodedToken = oktaAuth.token.decode(accessToken);
-    console.log(decodedToken.header, decodedToken.payload, decodedToken.signature);
     const [students, setStudents] = useState([]);
     const [studentFetchFailed, setStudentFetchFailed] = useState(false);
 
 
     useEffect(() => {
         if (authState && authState.isAuthenticated) {
-            console.log();
+            console.log('URL:', config.resourceServer.userAdminUrl);
             fetch(config.resourceServer.userAdminUrl, {
                 headers: {
                     Authorization: `Bearer ${accessToken}`,

@@ -20,6 +20,7 @@ import SingleStudent from './components/Students/SingleStudent';
 import Messenger from './pages/Messenger';
 import NewLesson from './components/Lessons/NewLesson';
 import Videos from './pages/Videos';
+import Unauthorized from './helpers/Unauthorized';
 
 const oktaAuth = new OktaAuth(config.oidc);
 
@@ -60,6 +61,9 @@ const App = () => {
             </Route>
             <Route path="/videos" element={<RequiredAuth />}>
               <Route path="" element={<Videos />} />
+            </Route>
+            <Route path="/unauthorized" element={<RequiredAuth />}>
+              <Route path="" element={<Unauthorized />} />
             </Route>
           </Routes>
         </WebSocketProvider>
