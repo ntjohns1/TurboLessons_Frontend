@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Form } from "react-bootstrap";
 import SendMessage from './SendMessage';
 import DisplayMessages from './DisplayMessages';
-import { useStudentContext } from '../../util/context/StudentContext';
+import { useStudentContext } from '../../../util/context/StudentContext';
 
 export default function SelectStudent() {
   const { students } = useStudentContext();

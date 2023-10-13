@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { Card, Form, Button, Row, Col } from 'react-bootstrap';
 import { FaRegWindowClose } from "react-icons/fa";
 import DeletUserBtn from './DeleteUserBtn';
-import config from '../../config';
+import config from '../../../config';
 
 export default function EditStudent({ student, formState, setStudent, setIsUpdate, setFormState, oktaAuth, id }) {
 

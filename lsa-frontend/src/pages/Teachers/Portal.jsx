@@ -1,5 +1,5 @@
 import { Container } from "react-bootstrap";
-import PortalNav from "../components/PortalNav";
+import PortalNav from "../../components/PortalNav";
 export default function Portal() {
 
     return (

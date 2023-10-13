@@ -1,8 +1,8 @@
 import React from 'react';
 import { Container, Card, Toast, Button } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
-import { useStudentContext } from '../../util/context/StudentContext';
-import Loading from '../../helpers/Loading';
+import { useStudentContext } from '../../../util/context/StudentContext';
+import Loading from '../../../helpers/Loading';
 
 
 export default function StudentTable() {

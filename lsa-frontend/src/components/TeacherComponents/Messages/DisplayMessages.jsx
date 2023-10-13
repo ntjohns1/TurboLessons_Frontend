@@ -1,8 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useOktaAuth } from '@okta/okta-react';
 import { Card, Container, Toast, Row, Col } from "react-bootstrap";
-import { useSocket } from '../../util/context/WebSocketContext';
-import { fetchMessagesBySenderAndReceiver } from '../../util/api/messageServerCalls';
+import { useSocket } from '../../../util/context/WebSocketContext';
+import { fetchMessagesBySenderAndReceiver } from '../../../util/api/messageServerCalls';
 import './DisplayMessages.css';
 
 export default function DisplayMessages({ sendTo, updateOutMessages }) {
