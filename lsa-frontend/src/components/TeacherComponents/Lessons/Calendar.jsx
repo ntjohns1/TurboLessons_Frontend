@@ -43,7 +43,6 @@ export default function Calendar() {
 
     return (
         <Container className='demo-app'>
-            <PortalNav />
             <div className='demo-app-main'>
                 <FullCalendar
                     plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}

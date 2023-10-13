@@ -16,10 +16,10 @@ const HomeNav = () => {
   };
 
   return (
-    <>
+
       <Navbar
         collapseOnSelect
-        sticky='top'
+        // sticky='top'
         expand='lg'
         variant='dark'
         className='mb-3'
@@ -42,7 +42,6 @@ const HomeNav = () => {
           </Nav>
         </Navbar.Collapse>
       </Navbar>
-    </>
   );
 };
 

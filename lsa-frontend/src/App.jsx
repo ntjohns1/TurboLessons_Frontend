@@ -12,6 +12,7 @@ import { Route, Routes } from "react-router-dom";
 import HomeNav from "./components/Nav";
 import WelcomePage from "./pages/Teachers/TeacherHome";
 import Portal from "./pages/Teachers/Portal"
+import TeacherDashboard from './pages/Teachers/TeacherDashboard';
 import Students from "./pages/Teachers/Students"
 import AddStudent from "./components/TeacherComponents/Students/AddStudent"
 import { RequiredAuth } from "./helpers/SecureRoute";
@@ -39,7 +40,7 @@ const App = () => {
             <Route exact path="/" element={<WelcomePage />} />
             <Route path="login/callback" element={<LoginCallback loadingElement={<Loading />} />} />
             <Route path="/portal" element={<RequiredAuth />}>
-              <Route path="" element={<Portal />} />
+              <Route path="" element={<TeacherDashboard />} />
             </Route>
             <Route path="/students" element={<RequiredAuth />}>
               <Route path="" element={<Students />} />
