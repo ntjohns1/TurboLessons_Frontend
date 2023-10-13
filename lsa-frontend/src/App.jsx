@@ -20,6 +20,7 @@ import Messenger from './pages/Teachers/Messenger';
 import Lessons from './pages/Teachers/Lessons'
 import Videos from './pages/Teachers/Videos';
 import Unauthorized from './helpers/Unauthorized';
+import Calendar from './components/TeacherComponents/Lessons/Calendar';
 
 const oktaAuth = new OktaAuth(config.oidc);
 
@@ -48,6 +49,9 @@ const App = () => {
             </Route>
             <Route path="/addStudent" element={<RequiredAuth />}>
               <Route path="" element={<AddStudent />} />
+            </Route>
+            <Route path="/calendar" element={<RequiredAuth />}>
+              <Route path="" element={<Calendar />} />
             </Route>
             <Route path="/messenger" element={<RequiredAuth />}>
               <Route path="" element={<Messenger />} />
