@@ -4,7 +4,7 @@ import { useOktaAuth } from '@okta/okta-react';
 import { Card, Container, Row, Col } from 'react-bootstrap';
 import EditStudent from './EditStudent';
 import StudentList from './StudentList';
-import config from '../../config';
+import config from '../../../config';
 
 export default function SingleStudent() {
     const { authState, oktaAuth } = useOktaAuth();

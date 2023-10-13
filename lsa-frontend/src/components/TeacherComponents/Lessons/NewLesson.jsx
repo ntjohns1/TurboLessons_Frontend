@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import { Button, Card, Container, Form } from "react-bootstrap";
 import { useOktaAuth } from '@okta/okta-react';
-import { useStudentContext } from '../../util/context/StudentContext';
+import { useStudentContext } from '../../../util/context/StudentContext';
 import DatePicker from "react-datepicker";
-import config from '../../config';
+import config from '../../../config';
 import "react-datepicker/dist/react-datepicker.css";
 
 export default function NewLesson() {

@@ -10,16 +10,15 @@ import { StudentProvider } from './util/context/StudentContext';
 import { WebSocketProvider } from "./util/context/WebSocketContext.jsx";
 import { Route, Routes } from "react-router-dom";
 import HomeNav from "./components/Nav";
-import WelcomePage from "./pages/Homepage";
-import SecuredPage from "./components/Lessons/Securedpage"
-import Portal from "./pages/Portal"
-import Students from "./pages/Students"
-import AddStudent from "./components/Students/AddStudent"
+import WelcomePage from "./pages/Teachers/TeacherHome";
+import Portal from "./pages/Teachers/Portal"
+import Students from "./pages/Teachers/Students"
+import AddStudent from "./components/TeacherComponents/Students/AddStudent"
 import { RequiredAuth } from "./helpers/SecureRoute";
-import SingleStudent from './components/Students/SingleStudent';
-import Messenger from './pages/Messenger';
-import NewLesson from './components/Lessons/NewLesson';
-import Videos from './pages/Videos';
+import SingleStudent from './components/TeacherComponents/Students/SingleStudent';
+import Messenger from './pages/Teachers/Messenger';
+import Lessons from './pages/Teachers/Lessons'
+import Videos from './pages/Teachers/Videos';
 import Unauthorized from './helpers/Unauthorized';
 
 const oktaAuth = new OktaAuth(config.oidc);
@@ -37,9 +36,6 @@ const App = () => {
           <HomeNav />
           <Routes>
             <Route exact path="/" element={<WelcomePage />} />
-            <Route path="/secured" element={<RequiredAuth />}>
-              <Route path="" element={<SecuredPage />} />
-            </Route>
             <Route path="login/callback" element={<LoginCallback loadingElement={<Loading />} />} />
             <Route path="/portal" element={<RequiredAuth />}>
               <Route path="" element={<Portal />} />
@@ -57,9 +53,12 @@ const App = () => {
               <Route path="" element={<Messenger />} />
             </Route>
             <Route path="/lessons" element={<RequiredAuth />}>
-              <Route path="" element={<NewLesson />} />
+              <Route path="" element={<Lessons />} />
             </Route>
             <Route path="/videos" element={<RequiredAuth />}>
+              <Route path="" element={<Videos />} />
+            </Route>
+            <Route path="/studentHome" element={<RequiredAuth />}>
               <Route path="" element={<Videos />} />
             </Route>
             <Route path="/unauthorized" element={<RequiredAuth />}>

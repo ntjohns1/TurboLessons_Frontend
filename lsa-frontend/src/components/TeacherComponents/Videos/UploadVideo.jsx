@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Button, Card, Container, Form } from "react-bootstrap";
 import { useOktaAuth } from '@okta/okta-react';
-import config from '../../config';
+import config from '../../../config';
 
 
 export default function Uploadvideo() {

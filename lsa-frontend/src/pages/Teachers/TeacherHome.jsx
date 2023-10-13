@@ -1,11 +1,11 @@
 import React, { useEffect } from 'react';
 import { useOktaAuth } from '@okta/okta-react';
 import { Container, Card, Button } from "react-bootstrap";
-import PortalNav from '../components/PortalNav';
-import '../util/fonts/fonts.css'
-import HomeLogo from '../util/HomeLogo';
+import PortalNav from '../../components/PortalNav';
+import '../../util/fonts/fonts.css'
+import HomeLogo from '../../util/HomeLogo';
 
-export default function Home() {
+export default function TeacherHome() {
   const { authState, oktaAuth } = useOktaAuth();
 
   const userGroups = authState?.accessToken?.claims?.groups || [];

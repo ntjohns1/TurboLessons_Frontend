@@ -1,8 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useOktaAuth } from '@okta/okta-react';
 import { Button, Form, Container, Toast } from "react-bootstrap";
-import { useSocket } from '../../util/context/WebSocketContext';
-import { sendMessage } from '../../util/api/messageServerCalls';
+import { useSocket } from '../../../util/context/WebSocketContext';
+import { sendMessage } from '../../../util/api/messageServerCalls';
 // import DisplayMessages from './DisplayMessages';
 
 export default function SendMessage({ sendTo, setUpdateOutMessages }) {

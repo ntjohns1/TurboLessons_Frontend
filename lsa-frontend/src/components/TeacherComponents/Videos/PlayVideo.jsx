@@ -1,6 +1,6 @@
 import React, { useEffect, useRef } from 'react';
 import { useOktaAuth } from '@okta/okta-react';
-import config from '../../config';
+import config from '../../../config';
 
 const PlayVideo = ({ selected }) => {
     const videoRef = useRef();
