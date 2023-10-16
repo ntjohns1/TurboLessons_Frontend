@@ -22,6 +22,8 @@ import Lessons from './pages/Teachers/Lessons'
 import Videos from './pages/Teachers/Videos';
 import Unauthorized from './helpers/Unauthorized';
 import Calendar from './components/TeacherComponents/Lessons/Calendar';
+import DashboardLayout from './layouts/TeacherDashboard';
+import DashboardLayoutWrapper from './layouts/DashboardLayoutWrapper'
 
 const oktaAuth = new OktaAuth(config.oidc);
 
@@ -35,12 +37,12 @@ const App = () => {
     <Security oktaAuth={oktaAuth} restoreOriginalUri={restoreOriginalUri}>
       <StudentProvider>
         <WebSocketProvider>
-          <HomeNav />
+          {/* <HomeNav /> */}
           <Routes>
             <Route exact path="/" element={<WelcomePage />} />
             <Route path="login/callback" element={<LoginCallback loadingElement={<Loading />} />} />
             <Route path="/portal" element={<RequiredAuth />}>
-              <Route path="" element={<TeacherDashboard />} />
+              <Route path="" element={<DashboardLayoutWrapper component={TeacherDashboard} />} />
             </Route>
             <Route path="/students" element={<RequiredAuth />}>
               <Route path="" element={<Students />} />
@@ -54,7 +56,7 @@ const App = () => {
             <Route path="/calendar" element={<RequiredAuth />}>
               <Route path="" element={<Calendar />} />
             </Route>
-            <Route path="/messenger" element={<RequiredAuth />}>
+            <Route path="/messages" element={<RequiredAuth />}>
               <Route path="" element={<Messenger />} />
             </Route>
             <Route path="/lessons" element={<RequiredAuth />}>

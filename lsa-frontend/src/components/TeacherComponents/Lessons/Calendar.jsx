@@ -52,6 +52,8 @@ export default function Calendar() {
                         right: 'dayGridMonth,timeGridWeek,timeGridDay'
                     }}
                     initialView='dayGridMonth'
+                    height={'80vh'}
+                    contentHeight={800}
                     editable={true}
                     selectable={true}
                     selectMirror={true}

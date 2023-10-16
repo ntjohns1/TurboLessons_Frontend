@@ -21,7 +21,7 @@ export default function StudentTable() {
                     <Card.Header>
                         <h4>Students</h4>
                     </Card.Header>
-                    <Card.Body>
+                    <Card.Body style={{ height: '65vh', overflowY: 'auto' }}>
                         {students && students.map((student) => (
                             <Toast onClick={() => goToStudent(student.id)} key={student.id}>
                                 <Toast.Header closeButton={false}>

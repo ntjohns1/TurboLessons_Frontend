@@ -1,6 +1,8 @@
 import React from "react";
 import { NavLink } from "react-router-dom";
 import { Nav } from "react-bootstrap";
+import NavLogo from "../util/NavLogo";
+import '../App'
 
 const sidebarItems = [
   { to: "/portal", label: "Portal" },
@@ -12,10 +14,17 @@ const sidebarItems = [
 
 export default function Sidebar() {
   return (
-    <Nav className="flex-column">
+    <Nav
+      className="flex-column"
+    >
       {sidebarItems.map((item, index) => (
         <Nav.Item key={index}>
-          <Nav.Link as={NavLink} to={item.to} activeClassName="active">
+          <Nav.Link
+            as={NavLink}
+            to={item.to}
+            activeClassName="active"
+            className="navLinkWhite"
+          >
             {item.label}
           </Nav.Link>
         </Nav.Item>
@@ -24,4 +33,3 @@ export default function Sidebar() {
   );
 }
 
-// ... rest of your code

@@ -23,19 +23,19 @@ const HomeNav = () => {
         expand='lg'
         variant='dark'
         className='mb-3'
-        style={{ backgroundColor: '#00334E' }}>
-        <Navbar.Brand className='header-nav px-3'>
+        >
+        {/* <Navbar.Brand className='header-nav px-3'>
           <NavLogo />
-        </Navbar.Brand>
+        </Navbar.Brand> */}
         <Navbar.Toggle aria-controls='responsive-navbar-nav' />
         <Navbar.Collapse id='responsive-navbar-nav'>
           <Nav
             className='ms-auto px-3'>
-            <Nav.Link style={{ color: 'white' }} as={Link} to='/'>
+            <Nav.Link as={Link} to='/'>
               Home
             </Nav.Link>
             {oktaAuth.isAuthenticated && (
-              <Nav.Link style={{ color: 'white' }} onClick={logout}>
+              <Nav.Link onClick={logout}>
                 Logout
               </Nav.Link>
             )}

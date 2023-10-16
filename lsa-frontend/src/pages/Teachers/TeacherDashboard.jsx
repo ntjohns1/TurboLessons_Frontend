@@ -11,22 +11,13 @@ import NavLogo from "../../util/NavLogo";
 export default function TeacherDashboard() {
 
     return (
-        <Container fluid>
-            <Row>
-                <Col xs={2}>
-                    <Sidebar />
+            <Row xs={10} style={{ backgroundColor: '#F4F4F5' }}>
+                <Col xs={3}>
+                    <StudentTable />
                 </Col>
-                <Col xs={10}>
-                    <Row xs={10}>
-                        <Col xs={3}>
-                            <StudentTable />
-                        </Col>
-                        <Col xs={9}>
-                            <Calendar />
-                        </Col>
-                    </Row>
+                <Col xs={9}>
+                    <Calendar />
                 </Col>
             </Row>
-        </Container >
     )
 };
