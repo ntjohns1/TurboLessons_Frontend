@@ -42,8 +42,7 @@ export default function Calendar() {
     }
 
     return (
-        <Container className='demo-app'>
-            <div className='demo-app-main'>
+            <div style={{ height:'90vh' }}>
                 <FullCalendar
                     plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
                     headerToolbar={{
@@ -52,7 +51,7 @@ export default function Calendar() {
                         right: 'dayGridMonth,timeGridWeek,timeGridDay'
                     }}
                     initialView='dayGridMonth'
-                    height={'80vh'}
+                    height={'90vh'}
                     contentHeight={800}
                     editable={true}
                     selectable={true}
@@ -66,6 +65,5 @@ export default function Calendar() {
                     eventsSet={handleEvents} // called after events are initialized/added/changed/removed
                 />
             </div>
-        </Container>
     )
 }

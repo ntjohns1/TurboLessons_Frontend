@@ -15,7 +15,8 @@ const sidebarItems = [
 export default function Sidebar() {
   return (
     <Nav
-      className="flex-column"
+      className="flex-column py-4"
+      style={{ height:'90vh' }}
     >
       {sidebarItems.map((item, index) => (
         <Nav.Item key={index}>

@@ -23,6 +23,7 @@ const HomeNav = () => {
         expand='lg'
         variant='dark'
         className='mb-3'
+        style={{ height: '10vh'}}
         >
         {/* <Navbar.Brand className='header-nav px-3'>
           <NavLogo />

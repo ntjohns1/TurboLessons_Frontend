@@ -15,7 +15,7 @@ export default function DashboardLayout({ children }) {
                     <NavLogo />
                     <Sidebar />
                 </Col>
-                <Col xs={10} style={{ backgroundColor: '#E8E8E8' }}>
+                <Col xs={10}>
                         <HomeNav />
                         {children}
                 </Col>

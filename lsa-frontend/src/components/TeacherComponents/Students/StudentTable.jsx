@@ -14,14 +14,14 @@ export default function StudentTable() {
     }
 
     return (
-        <Container className='d-flex justify-content-center'>
+        <div className='d-flex justify-content-center' style={{ height:'90vh' }}>
             {studentFetchFailed && <Alert>Failed to fetch student</Alert>}
             {students.length != 0 ? (
                 <Card>
                     <Card.Header>
                         <h4>Students</h4>
                     </Card.Header>
-                    <Card.Body style={{ height: '65vh', overflowY: 'auto' }}>
+                    <Card.Body style={{ overflowY: 'auto' }}>
                         {students && students.map((student) => (
                             <Toast onClick={() => goToStudent(student.id)} key={student.id}>
                                 <Toast.Header closeButton={false}>
@@ -37,6 +37,6 @@ export default function StudentTable() {
             ) : (
                 <Loading />
             )}
-        </Container>
+        </ div>
     )
 }
