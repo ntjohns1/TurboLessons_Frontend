@@ -1,6 +1,6 @@
 import { Container, Col, Row } from "react-bootstrap";
 import Sidebar from "../components/Sidebar";
-import HomeNav from "../components/Nav";
+import Header from "../components/Header";
 import StudentTable from "../components/TeacherComponents/Students/StudentTable";
 import Calendar from "../components/TeacherComponents/Lessons/Calendar";
 import NavLogo from "../util/NavLogo";
@@ -16,7 +16,7 @@ export default function DashboardLayout({ children }) {
                     <Sidebar />
                 </Col>
                 <Col xs={10}>
-                        <HomeNav />
+                        <Header />
                         {children}
                 </Col>
             </Row>

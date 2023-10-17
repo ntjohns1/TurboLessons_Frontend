@@ -1,9 +1,6 @@
-import { Container, Col, Row } from "react-bootstrap";
-import Sidebar from "../../components/Sidebar";
-import HomeNav from "../../components/Nav";
+import { Col, Row } from "react-bootstrap";
 import StudentTable from "../../components/TeacherComponents/Students/StudentTable";
 import Calendar from "../../components/TeacherComponents/Lessons/Calendar";
-import NavLogo from "../../util/NavLogo";
 // import StudentOverview from "./StudentOverview/StudentOverview";
 // import ScheduleContainer from "./ScheduleOverview/ScheduleContainer";
 

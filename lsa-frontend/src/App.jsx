@@ -9,7 +9,7 @@ import config from './config';
 import { StudentProvider } from './util/context/StudentContext';
 import { WebSocketProvider } from "./util/context/WebSocketContext.jsx";
 import { Route, Routes } from "react-router-dom";
-import HomeNav from "./components/Nav";
+import Header from "./components/Header";
 import WelcomePage from "./pages/Teachers/TeacherHome";
 import Portal from "./pages/Teachers/Portal"
 import TeacherDashboard from './pages/Teachers/TeacherDashboard';
@@ -37,11 +37,9 @@ const App = () => {
     <Security oktaAuth={oktaAuth} restoreOriginalUri={restoreOriginalUri}>
       <StudentProvider>
         <WebSocketProvider>
-          {/* <HomeNav /> */}
           <Routes>
-            <Route exact path="/" element={<WelcomePage />} />
             <Route path="login/callback" element={<LoginCallback loadingElement={<Loading />} />} />
-            <Route path="/portal" element={<RequiredAuth />}>
+            <Route path="/" element={<RequiredAuth />}>
               <Route path="" element={<DashboardLayoutWrapper component={TeacherDashboard} />} />
             </Route>
             <Route path="/students" element={<RequiredAuth />}>
