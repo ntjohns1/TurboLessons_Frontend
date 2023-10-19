@@ -1,4 +1,5 @@
 import React from "react";
+import { Stack } from "react-bootstrap";
 import logo from '../util/icons/Profile Icon_Yellow.svg';
 
 
@@ -6,9 +7,14 @@ const Header = () => {
 
   return (
 
-      <div style={{ height: '10vh', width: '100%' }} className="d-flex justify-content-end">
-              <img src={logo} alt="Main Logo" style={{ width: '80%' }}  className='py-3'/>
+    <Stack direction="horizontal" gap={3} style={{ height: '10vh' }} >
+      <h2 className="p-2">Dashboard</h2>
+      <div className="p-2 ms-auto">
+        <img src={logo} alt="Profile Icon" style={{ height: '7vh' }}  />
       </div>
+    </Stack>
+
+
   );
 };
 
