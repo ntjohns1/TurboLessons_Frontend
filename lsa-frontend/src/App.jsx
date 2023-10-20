@@ -9,9 +9,10 @@ import config from './config';
 import { StudentProvider } from './util/context/StudentContext';
 import { WebSocketProvider } from "./util/context/WebSocketContext.jsx";
 import { Route, Routes } from "react-router-dom";
-import HomeNav from "./components/Nav";
+import Header from "./components/Header";
 import WelcomePage from "./pages/Teachers/TeacherHome";
 import Portal from "./pages/Teachers/Portal"
+import TeacherDashboard from './pages/Teachers/TeacherDashboard';
 import Students from "./pages/Teachers/Students"
 import AddStudent from "./components/TeacherComponents/Students/AddStudent"
 import { RequiredAuth } from "./helpers/SecureRoute";
@@ -21,6 +22,8 @@ import Lessons from './pages/Teachers/Lessons'
 import Videos from './pages/Teachers/Videos';
 import Unauthorized from './helpers/Unauthorized';
 import Calendar from './components/TeacherComponents/Lessons/Calendar';
+import DashboardLayout from './layouts/TeacherDashboard';
+import DashboardLayoutWrapper from './layouts/DashboardLayoutWrapper'
 
 const oktaAuth = new OktaAuth(config.oidc);
 
@@ -34,33 +37,31 @@ const App = () => {
     <Security oktaAuth={oktaAuth} restoreOriginalUri={restoreOriginalUri}>
       <StudentProvider>
         <WebSocketProvider>
-          <HomeNav />
           <Routes>
-            <Route exact path="/" element={<WelcomePage />} />
             <Route path="login/callback" element={<LoginCallback loadingElement={<Loading />} />} />
-            <Route path="/portal" element={<RequiredAuth />}>
-              <Route path="" element={<Portal />} />
+            <Route path="/" element={<RequiredAuth />}>
+              <Route path="" element={<DashboardLayoutWrapper component={TeacherDashboard} />} />
             </Route>
             <Route path="/students" element={<RequiredAuth />}>
-              <Route path="" element={<Students />} />
+              <Route path="" element={<DashboardLayoutWrapper component={Students} /> } />
             </Route>
             <Route path="/students/:id" element={<RequiredAuth />}>
-              <Route path="" element={<SingleStudent />} />
+              <Route path="" element={<DashboardLayoutWrapper component={SingleStudent} />} />
             </Route>
             <Route path="/addStudent" element={<RequiredAuth />}>
-              <Route path="" element={<AddStudent />} />
+              <Route path="" element={<DashboardLayoutWrapper component={AddStudent} />} />
             </Route>
             <Route path="/calendar" element={<RequiredAuth />}>
-              <Route path="" element={<Calendar />} />
+              <Route path="" element={<DashboardLayoutWrapper component={Calendar} />} />
             </Route>
-            <Route path="/messenger" element={<RequiredAuth />}>
-              <Route path="" element={<Messenger />} />
+            <Route path="/messages" element={<RequiredAuth />}>
+            <Route path="" element={<DashboardLayoutWrapper component={Messenger} /> } />
             </Route>
             <Route path="/lessons" element={<RequiredAuth />}>
-              <Route path="" element={<Lessons />} />
+              <Route path="" element={<DashboardLayoutWrapper component={Lessons} />} />
             </Route>
             <Route path="/videos" element={<RequiredAuth />}>
-              <Route path="" element={<Videos />} />
+              <Route path="" element={<DashboardLayoutWrapper component={Videos} />} />
             </Route>
             <Route path="/studentHome" element={<RequiredAuth />}>
               <Route path="" element={<Videos />} />

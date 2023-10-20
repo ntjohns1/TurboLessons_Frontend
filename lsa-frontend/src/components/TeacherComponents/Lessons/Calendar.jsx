@@ -5,7 +5,6 @@ import FullCalendar from '@fullcalendar/react'
 import dayGridPlugin from '@fullcalendar/daygrid'
 import timeGridPlugin from '@fullcalendar/timegrid'
 import interactionPlugin from '@fullcalendar/interaction'
-import PortalNav from '../../PortalNav'
 
 export default function Calendar() {
     const [weekendsVisible, setWeekendsVisible] = useState(true);
@@ -42,9 +41,7 @@ export default function Calendar() {
     }
 
     return (
-        <Container className='demo-app'>
-            <PortalNav />
-            <div className='demo-app-main'>
+            <Container style={{ height:'90vh' }}>
                 <FullCalendar
                     plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
                     headerToolbar={{
@@ -53,6 +50,8 @@ export default function Calendar() {
                         right: 'dayGridMonth,timeGridWeek,timeGridDay'
                     }}
                     initialView='dayGridMonth'
+                    height={'90vh'}
+                    contentHeight={800}
                     editable={true}
                     selectable={true}
                     selectMirror={true}
@@ -64,7 +63,6 @@ export default function Calendar() {
                     eventClick={handleEventClick}
                     eventsSet={handleEvents} // called after events are initialized/added/changed/removed
                 />
-            </div>
-        </Container>
+            </Container>
     )
 }
