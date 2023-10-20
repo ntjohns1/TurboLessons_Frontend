@@ -1,7 +1,6 @@
 import React, { useEffect } from 'react';
 import { useOktaAuth } from '@okta/okta-react';
 import { Container, Card, Button } from "react-bootstrap";
-import PortalNav from '../../components/PortalNav';
 import '../../util/fonts/fonts.css'
 import HomeLogo from '../../util/HomeLogo';
 

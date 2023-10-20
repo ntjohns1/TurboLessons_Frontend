@@ -43,25 +43,25 @@ const App = () => {
               <Route path="" element={<DashboardLayoutWrapper component={TeacherDashboard} />} />
             </Route>
             <Route path="/students" element={<RequiredAuth />}>
-              <Route path="" element={<Students />} />
+              <Route path="" element={<DashboardLayoutWrapper component={Students} /> } />
             </Route>
             <Route path="/students/:id" element={<RequiredAuth />}>
-              <Route path="" element={<SingleStudent />} />
+              <Route path="" element={<DashboardLayoutWrapper component={SingleStudent} />} />
             </Route>
             <Route path="/addStudent" element={<RequiredAuth />}>
-              <Route path="" element={<AddStudent />} />
+              <Route path="" element={<DashboardLayoutWrapper component={AddStudent} />} />
             </Route>
             <Route path="/calendar" element={<RequiredAuth />}>
-              <Route path="" element={<Calendar />} />
+              <Route path="" element={<DashboardLayoutWrapper component={Calendar} />} />
             </Route>
             <Route path="/messages" element={<RequiredAuth />}>
-              <Route path="" element={<Messenger />} />
+            <Route path="" element={<DashboardLayoutWrapper component={Messenger} /> } />
             </Route>
             <Route path="/lessons" element={<RequiredAuth />}>
-              <Route path="" element={<Lessons />} />
+              <Route path="" element={<DashboardLayoutWrapper component={Lessons} />} />
             </Route>
             <Route path="/videos" element={<RequiredAuth />}>
-              <Route path="" element={<Videos />} />
+              <Route path="" element={<DashboardLayoutWrapper component={Videos} />} />
             </Route>
             <Route path="/studentHome" element={<RequiredAuth />}>
               <Route path="" element={<Videos />} />

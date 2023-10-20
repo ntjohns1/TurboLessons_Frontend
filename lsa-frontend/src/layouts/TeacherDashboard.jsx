@@ -11,13 +11,15 @@ export default function DashboardLayout({ children }) {
     return (
         <Container fluid>
             <Row>
-                <Col xs={2}  style={{ backgroundColor: '#177E89' }}>
+                <Col xs={2} style={{ backgroundColor: '#177E89' }}>
                     <NavLogo />
                     <Sidebar />
                 </Col>
                 <Col xs={10}>
-                        <Header />
+                    <Header  style={{ height: '10vh'} }/>
+                    <div style={{ height: '90vh'} }>
                         {children}
+                    </div>
                 </Col>
             </Row>
         </Container >

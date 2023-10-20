@@ -7,9 +7,9 @@ import { useSocket } from "../util/context/WebSocketContext";
 import '../App'
 
 const sidebarItems = [
-  { to: "/portal", label: "Portal" },
-  { to: "/students", label: "Manage Students" },
-  { to: "/schedule", label: "Manage Schedule" },
+  { to: "/", label: "Home" },
+  { to: "/students", label: "Students" },
+  { to: "/lessons", label: "Schedule" },
   { to: "/calendar", label: "Calendar" },
   { to: "/messages", label: "Messages" },
 ];

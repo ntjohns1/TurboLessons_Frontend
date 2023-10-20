@@ -1,20 +1,18 @@
 import React from "react";
-import { Container, Card } from "react-bootstrap";
+import { Col, Card, Row } from "react-bootstrap";
 import SelectStudent from "../../components/TeacherComponents/Messages/SelectStudent";
-import PortalNav from "../../components/PortalNav";
 
 
 export default function Messenger() {
 
     return (
-        <Container>
-            <PortalNav />
-            <Card>
-                <h3>Student Messenger</h3>
-                <SelectStudent />
-            </Card>
-            <Card>
-            </Card>
-        </Container>
+        <Row xs={10} style={{ backgroundColor: '#F4F4F5' }}>
+            <Col>
+                <Card>
+                    <h3>Student Messenger</h3>
+                    <SelectStudent />
+                </Card>
+            </Col>
+        </Row>
     )
 }
