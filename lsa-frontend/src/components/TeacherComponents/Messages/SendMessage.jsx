@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useOktaAuth } from '@okta/okta-react';
 import { Button, Form, Container, Toast } from "react-bootstrap";
 import { useSocket } from '../../../util/context/WebSocketContext';
-import { sendMessage } from '../../../util/api/messageServerCalls';
+import '../../../App'
 // import DisplayMessages from './DisplayMessages';
 
 export default function SendMessage({ sendTo, setUpdateOutMessages }) {
@@ -21,7 +21,7 @@ export default function SendMessage({ sendTo, setUpdateOutMessages }) {
       receiver: sendTo,
     }));
   }, [sendTo]);
-  
+
 
   const handleFormSubmit = async (event) => {
     event.preventDefault();
@@ -53,7 +53,9 @@ export default function SendMessage({ sendTo, setUpdateOutMessages }) {
   }
 
   return (
+
     <Container className='my-3'>
+
       <Form onSubmit={handleFormSubmit}>
         <Form.Group id="addMessage">
           <Form.Label></Form.Label>
@@ -68,6 +70,7 @@ export default function SendMessage({ sendTo, setUpdateOutMessages }) {
         <Button
           className='my-2'
           type='submit'
+          variant='darkblue'
         >
           Send
         </Button>

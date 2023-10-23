@@ -6,6 +6,7 @@ import dayGridPlugin from '@fullcalendar/daygrid'
 import timeGridPlugin from '@fullcalendar/timegrid'
 import interactionPlugin from '@fullcalendar/interaction'
 
+
 export default function Calendar() {
     const [weekendsVisible, setWeekendsVisible] = useState(true);
 
@@ -43,7 +44,7 @@ export default function Calendar() {
     return (
             <Container style={{ height:'90vh' }}>
                 <FullCalendar
-                    plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
+                    plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin ]}
                     headerToolbar={{
                         left: 'prev,next today',
                         center: 'title',
