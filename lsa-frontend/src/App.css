@@ -1,47 +1,8 @@
-:root {
-  --turbo-teal: #177E89;
-  --turbo-blue: #084C61;
-  --turbo-red: #DB3A34;
-  --turbo-yellow: #ffc857;
-  --turbo-dark: #323031;
-  --fc-button-text-color: #fff;
-  --fc-button-bg-color: var(--turbo-teal);
-  --fc-button-border-color: var(--turbo-teal);
-  --fc-button-hover-bg-color: var(--turbo-blue);
-  --fc-button-hover-border-color: var(--turbo-blue);
-  --fc-button-active-bg-color: var(--turbo-blue);
-  --fc-button-active-border-color: var(--turbo-blue);
-  --fc-small-font-size: .85em;
-  --fc-page-bg-color: #fff;
-  --fc-neutral-bg-color: rgba(208, 208, 208, 0.3);
-  --fc-neutral-text-color: #808080;
-  --fc-border-color: #ddd;
-  --fc-event-bg-color: #3788d8;
-  --fc-event-border-color: #3788d8;
-  --fc-event-text-color: #fff;
-  --fc-event-selected-overlay-color: rgba(0, 0, 0, 0.25);
-
-  --fc-more-link-bg-color: #d0d0d0;
-  --fc-more-link-text-color: inherit;
-
-  --fc-event-resizer-thickness: 8px;
-  --fc-event-resizer-dot-total-width: 8px;
-  --fc-event-resizer-dot-border-width: 1px;
-
-  --fc-non-business-color: rgba(215, 215, 215, 0.3);
-  --fc-bg-event-color: rgb(143, 223, 130);
-  --fc-bg-event-opacity: 0.3;
-  --fc-highlight-color: rgba(188, 232, 241, 0.3);
-  --fc-today-bg-color: rgba(255, 200, 87, 0.30);
-  --fc-now-indicator-color: var(--turbo-red);
-}
-
-
+@import './fullcalendar-vars.css';
 
 .navLinkWhite {
   color: white !important;
 }
-
 
 .btn-darkblue {
   background-color: var(--turbo-blue) !important;
@@ -49,8 +10,8 @@
 }
 
 .btn-teal {
-  background-color: var(--turbo-teal);
-  color: white
+  background-color: var(--turbo-teal) !important;
+  color: white !important;
 }
 
 a, h2, h4 {

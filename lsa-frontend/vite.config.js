@@ -1,5 +1,8 @@
 import { defineConfig } from 'vite'
 import { VitePWA } from 'vite-plugin-pwa'
+import postcssImport from 'postcss-import';
+import postcssCalc from 'postcss-calc';
+import postcssCustomProperties from 'postcss-custom-properties'
 import react from '@vitejs/plugin-react'
 import path from 'path';
 import getEnvModule from './env'
@@ -55,6 +58,17 @@ export default defineConfig({
         warn('\nBuild warning happened, customize "onwarn" callback in vite.config.js to handle this error.');
         throw new Error(warning);
       }
+    },
+    css: {
+        postcss: {
+            plugins: [
+                postcssImport(),
+                postcssCustomProperties({
+                    preserve: false
+                }),
+                postcssCalc()
+            ]
+        }
     }
   }
 })
