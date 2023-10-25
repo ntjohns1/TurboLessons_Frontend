@@ -3,7 +3,6 @@ import { NavLink } from "react-router-dom";
 import { Nav } from "react-bootstrap";
 import { useOktaAuth } from '@okta/okta-react';
 import { useSocket } from "../util/context/WebSocketContext";
-
 import '../App'
 
 const sidebarItems = [

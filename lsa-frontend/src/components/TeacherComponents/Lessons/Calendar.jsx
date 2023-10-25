@@ -7,6 +7,7 @@ import timeGridPlugin from '@fullcalendar/timegrid'
 import interactionPlugin from '@fullcalendar/interaction'
 import { useOktaAuth } from '@okta/okta-react';
 import config from '../../../config'
+import NewLessonModal from './NewLessonModal'
 
 export default function Calendar() {
 
@@ -15,27 +16,22 @@ export default function Calendar() {
     const principle = authState && authState.idToken && authState.idToken.claims.name;
     const [weekendsVisible, setWeekendsVisible] = useState(true);
     const [currentEvents, setCurrentEvents] = useState([]);
+    const [showModal, setShowModal] = useState(false);
+    const [calendarInfo, setCalendarInfo] = useState({});
+    const [calendarApi, setCalendarApi]  = useState({});
 
-
+    const handleCloseModal = () => setShowModal(false);
+    const handleShowModal = () => setShowModal(true);
 
     const handleWeekendsToggle = () => {
         setWeekendsVisible(!weekendsVisible);
     }
 
     const handleDateSelect = (selectInfo) => {
-        let title = prompt('Please enter a new title for your event')
-        let calendarApi = selectInfo.view.calendar
 
-        calendarApi.unselect() // clear date selection
-
-        if (title) {
-            calendarApi.addEvent({
-                title,
-                start: selectInfo.startStr,
-                end: selectInfo.endStr,
-                allDay: selectInfo.allDay
-            })
-        }
+        setCalendarApi(selectInfo.view.calendar)
+        setCalendarInfo(selectInfo);
+        handleShowModal();
     }
 
     const handleEventClick = (clickInfo) => {
@@ -71,7 +67,7 @@ export default function Calendar() {
                             end: s.endTime,
                             title: s.title,
                         }));
-                        setCurrentEvents(events);  // Still setting state here as you might want to use it elsewhere.
+                        setCurrentEvents(events);
                         resolve(events);
                         console.log("events: \n" + JSON.stringify(events, null, 2));
                     })
@@ -87,6 +83,12 @@ export default function Calendar() {
 
     return (
         <Container style={{ height: '90vh' }}>
+            <NewLessonModal
+                showModal={showModal}
+                handleCloseModal={handleCloseModal}
+                selectInfo={calendarInfo}
+                calendarApi={calendarApi}
+            />
             <FullCalendar
                 plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
                 headerToolbar={{
