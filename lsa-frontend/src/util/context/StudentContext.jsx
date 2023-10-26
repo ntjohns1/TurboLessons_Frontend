@@ -28,7 +28,6 @@ export const StudentProvider = ({ children }) => {
                 },
             })
                 .then((response) => {
-                    console.log('Response status:', response.status);
                     if (!response.ok) {
                         setStudentFetchFailed(true);
                         return Promise.reject();

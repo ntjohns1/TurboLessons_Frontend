@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Button, Form, Modal } from "react-bootstrap";
 import { useOktaAuth } from '@okta/okta-react';
 import { useStudentContext } from '../../../util/context/StudentContext';
@@ -10,8 +10,8 @@ export default function NewLessonModal({ showModal, handleCloseModal, selectInfo
     const principleEmail = authState && authState.idToken && authState.idToken.claims.email;
     const { students } = useStudentContext();
     const [formState, setFormState] = useState({
-        startTime: selectInfo.startStr,
-        endTime: selectInfo.endStr,
+        startTime: '',
+        endTime: '',
         title: '',
         student: '',
         studentEmail: '',
@@ -20,7 +20,11 @@ export default function NewLessonModal({ showModal, handleCloseModal, selectInfo
         date: selectInfo.startStr,
         comments: ''
     });
-    console.log(calendarApi);
+
+    useEffect(() => {
+        console.log(formState);
+    }, [formState]);
+
 
 
     const handleChange = (e) => {
@@ -29,11 +33,21 @@ export default function NewLessonModal({ showModal, handleCloseModal, selectInfo
         if (name === 'student') {
             const selectedStudent = students.find((student) => student.displayName === value);
 
+            const startDate = new Date(selectInfo.startStr);
+            const endDate = new Date(selectInfo.endStr);
+            const start = startDate.toISOString().split('Z')[0];
+            const end = endDate.toISOString().split('Z')[0];
+
             setFormState({
                 ...formState,
+                startTime: start,
+                endTime: end,
+                title: value,
                 student: value,
                 studentEmail: selectedStudent ? selectedStudent.email : ''
             });
+
+            console.log(formState);
         } else {
             setFormState({
                 ...formState,
@@ -67,8 +81,8 @@ export default function NewLessonModal({ showModal, handleCloseModal, selectInfo
                 console.log("Response Data:", JSON.stringify(responseData));
                 calendarApi.addEvent({
                     title: formState.title,
-                    start: selectInfo.startStr,
-                    end: selectInfo.endStr,
+                    start: formState.startTime,
+                    end: formState.endTime,
                     allDay: selectInfo.allDay
                 })
                 calendarApi.unselect() // clear date selection
@@ -109,20 +123,18 @@ export default function NewLessonModal({ showModal, handleCloseModal, selectInfo
                             onChange={handleChange}
                         />
                     </Form.Group>
+                    <Button variant="secondary" onClick={handleCloseModal}>
+                        Cancel
+                    </Button>
+                    <Button
+                        className="mx-3"
+                        type="submit"
+                        style={{ cursor: 'pointer' }}
+                    >
+                        Create Lesson
+                    </Button>
                 </Form>
             </Modal.Body>
-            <Modal.Footer>
-                <Button variant="secondary" onClick={handleCloseModal}>
-                    Cancel
-                </Button>
-                <Button
-                    className="mx-3"
-                    type="submit"
-                    style={{ cursor: 'pointer' }}
-                >
-                    Create Lesson
-                </Button>
-            </Modal.Footer>
         </Modal>
     )
 }
