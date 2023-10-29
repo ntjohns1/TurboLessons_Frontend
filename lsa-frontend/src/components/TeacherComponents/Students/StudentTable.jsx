@@ -3,6 +3,7 @@ import { Container, Card, Toast, Button } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 import { useStudentContext } from '../../../util/context/StudentContext';
 import Loading from '../../../helpers/Loading';
+import '../../../App'
 
 
 export default function StudentTable() {
@@ -31,7 +32,7 @@ export default function StudentTable() {
                         ))}
                     </Card.Body>
                     <Card.Footer>
-                        <Button as={Link} to='/addStudent' >New Student</Button>
+                        <Button as={Link} to='/addStudent' variant='darkblue'>New Student</Button>
                     </Card.Footer>
                 </Card>
             ) : (

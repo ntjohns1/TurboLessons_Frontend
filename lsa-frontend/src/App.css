@@ -1,4 +1,21 @@
+@import './fullcalendar-vars.css';
+
 .navLinkWhite {
-    color: white !important;
-  }
-  
+  color: white !important;
+}
+
+.btn-darkblue {
+  background-color: var(--turbo-blue) !important;
+  color: white !important;
+}
+
+.btn-teal {
+  background-color: var(--turbo-teal) !important;
+  color: white !important;
+}
+
+a, h2, h4 {
+  color: var(--turbo-dark) !important;
+}
+
+
