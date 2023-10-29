@@ -1,4 +1,4 @@
-name: lsa-frontend-docker
+name: turbolessons-frontend-docker
 
 on:
   push:
@@ -23,12 +23,12 @@ jobs:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_TOKEN }}
 
-      - name: Build and push lsa-frontend
+      - name: Build and push turbolessons-frontend
         uses: docker/build-push-action@v4
         with:
-          context: ./lsa-frontend
+          context: ./turbolessons-frontend
           push: true
-          tags: noslenj/lsa-frontend:latest
+          tags: noslenj/turbolessons-frontend:latest
           build-args: |
             ISSUER=${{ secrets.ISSUER }}
             CLIENT_ID=${{ secrets.CLIENT_ID }}
