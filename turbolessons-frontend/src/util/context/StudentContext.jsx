@@ -21,8 +21,10 @@ export const StudentProvider = ({ children }) => {
 
     useEffect(() => {
         if (authState && authState.isAuthenticated) {
-            console.log('URL:', config.resourceServer.userAdminUrl);
-            fetch(config.resourceServer.userAdminUrl, {
+            console.log(accessToken);
+            const principle = authState.idToken.claims.name
+            const url = `${config.resourceServer.userAdminUrl}/teacher/${principle}` 
+            fetch(url, {
                 headers: {
                     Authorization: `Bearer ${accessToken}`,
                 },
