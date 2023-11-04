@@ -2,15 +2,15 @@ import React from "react";
 import { NavLink } from "react-router-dom";
 import { Nav } from "react-bootstrap";
 import { useOktaAuth } from '@okta/okta-react';
-import { useSocket } from "../util/context/WebSocketContext";
-import '../App'
+import { useSocket } from "../../util/context/WebSocketContext";
+import '../../App'
 
 const sidebarItems = [
   { to: "/", label: "Home" },
-  { to: "/students", label: "Students" },
-  { to: "/lessons", label: "Schedule" },
-  { to: "/calendar", label: "Calendar" },
+  { to: "/library", label: "Library" },
   { to: "/messages", label: "Messages" },
+  { to: "/settings", label: "Settings" },
+  { to: "/billing", label: "Payments" },
 ];
 
 export default function Sidebar() {

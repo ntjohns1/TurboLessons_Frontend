@@ -1,6 +1,6 @@
 import React from "react";
 import { Stack } from "react-bootstrap";
-import logo from '../util/icons/Profile Icon_Yellow.svg';
+import logo from '../../util/icons/Profile Icon_Yellow.svg';
 
 
 const Header = () => {

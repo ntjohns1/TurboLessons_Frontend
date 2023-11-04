@@ -1,9 +1,9 @@
 import { Container, Col, Row } from "react-bootstrap";
-import Sidebar from "../components/TeacherComponents/Sidebar";
-import Header from "../components/TeacherComponents/Header";
+import Sidebar from "../components/StudentComponents/Sidebar";
+import Header from "../components/StudentComponents/Header";
 import NavLogo from "../util/NavLogo";
 
-export default function TeacherLayout({ children }) {
+export default function StudentLayout({ children }) {
 
     return (
         <Container fluid>
