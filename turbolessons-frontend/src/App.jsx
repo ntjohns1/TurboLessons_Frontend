@@ -9,9 +9,6 @@ import config from './config';
 import { StudentProvider } from './util/context/StudentContext';
 import { WebSocketProvider } from "./util/context/WebSocketContext.jsx";
 import { Route, Routes } from "react-router-dom";
-import Header from "./components/Header";
-import WelcomePage from "./pages/Teachers/TeacherHome";
-import Portal from "./pages/Teachers/Portal"
 import TeacherDashboard from './pages/Teachers/TeacherDashboard';
 import Students from "./pages/Teachers/Students"
 import AddStudent from "./components/TeacherComponents/Students/AddStudent"
@@ -22,8 +19,9 @@ import Lessons from './pages/Teachers/Lessons'
 import Videos from './pages/Teachers/Videos';
 import Unauthorized from './helpers/Unauthorized';
 import Calendar from './components/TeacherComponents/Lessons/Calendar';
-import DashboardLayout from './layouts/TeacherDashboard';
-import DashboardLayoutWrapper from './layouts/DashboardLayoutWrapper'
+import TeacherLayoutWrapper from './layouts/TeacherLayoutWrapper'
+import './App.css';
+
 
 const oktaAuth = new OktaAuth(config.oidc);
 
@@ -40,28 +38,28 @@ const App = () => {
           <Routes>
             <Route path="login/callback" element={<LoginCallback loadingElement={<Loading />} />} />
             <Route path="/" element={<RequiredAuth />}>
-              <Route path="" element={<DashboardLayoutWrapper component={TeacherDashboard} />} />
+              <Route path="" element={<TeacherLayoutWrapper component={TeacherDashboard} />} />
             </Route>
             <Route path="/students" element={<RequiredAuth />}>
-              <Route path="" element={<DashboardLayoutWrapper component={Students} /> } />
+              <Route path="" element={<TeacherLayoutWrapper component={Students} /> } />
             </Route>
             <Route path="/students/:id" element={<RequiredAuth />}>
-              <Route path="" element={<DashboardLayoutWrapper component={SingleStudent} />} />
+              <Route path="" element={<TeacherLayoutWrapper component={SingleStudent} />} />
             </Route>
             <Route path="/addStudent" element={<RequiredAuth />}>
-              <Route path="" element={<DashboardLayoutWrapper component={AddStudent} />} />
+              <Route path="" element={<TeacherLayoutWrapper component={AddStudent} />} />
             </Route>
             <Route path="/calendar" element={<RequiredAuth />}>
-              <Route path="" element={<DashboardLayoutWrapper component={Calendar} />} />
+              <Route path="" element={<TeacherLayoutWrapper component={Calendar} />} />
             </Route>
             <Route path="/messages" element={<RequiredAuth />}>
-            <Route path="" element={<DashboardLayoutWrapper component={Messenger} /> } />
+            <Route path="" element={<TeacherLayoutWrapper component={Messenger} /> } />
             </Route>
             <Route path="/lessons" element={<RequiredAuth />}>
-              <Route path="" element={<DashboardLayoutWrapper component={Lessons} />} />
+              <Route path="" element={<TeacherLayoutWrapper component={Lessons} />} />
             </Route>
             <Route path="/videos" element={<RequiredAuth />}>
-              <Route path="" element={<DashboardLayoutWrapper component={Videos} />} />
+              <Route path="" element={<TeacherLayoutWrapper component={Videos} />} />
             </Route>
             <Route path="/studentHome" element={<RequiredAuth />}>
               <Route path="" element={<Videos />} />

@@ -5,8 +5,7 @@ import StudentTable from "../components/TeacherComponents/Students/StudentTable"
 import Calendar from "../components/TeacherComponents/Lessons/Calendar";
 import NavLogo from "../util/NavLogo";
 
-
-export default function DashboardLayout({ children }) {
+export default function TeacherLayout({ children }) {
 
     return (
         <Container fluid>
