@@ -14,4 +14,3 @@ yalc.lock
 .okta.env
 ./env
 reactBuild.sh
-docs
