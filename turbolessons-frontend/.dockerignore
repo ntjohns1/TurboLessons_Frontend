@@ -4,9 +4,12 @@
 .dockerignore
 Dockerfile
 README.md
+reactBuild.sh
+**.md
+**.png
 
 # Directories
 node_modules/
 build/
 coverage/
-reactBuild.sh
+docs/
