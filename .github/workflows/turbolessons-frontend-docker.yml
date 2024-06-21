@@ -4,7 +4,6 @@ on:
   push:
     branches:
       - main
-      - deploy
 
 jobs:
   docker:
@@ -37,6 +36,6 @@ jobs:
         uses: appleboy/jenkins-action@master
         with:
           url: "https://mostly-certain-primate.ngrok-free.app/"
-          user: "root"
+          user: "noslen"
           token: ${{ secrets.JENKINS_TOKEN }}
           job: "frontend"
