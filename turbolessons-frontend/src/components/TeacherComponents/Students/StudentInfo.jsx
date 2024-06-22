@@ -3,7 +3,7 @@ import { FaEdit } from "react-icons/fa";
 import { Button, Card, Col, Form, Row } from 'react-bootstrap';
 
 
-export default function StudentList({ student, setFormState, setIsUpdate }) {
+export default function StudentInfo({ student, setFormState, setIsUpdate }) {
 
     useEffect(() => {
         setFormState({
