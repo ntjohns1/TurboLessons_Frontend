@@ -11,18 +11,21 @@
 
 import React from 'react';
 import { Button, Card, Form, Row, Col } from 'react-bootstrap';
-import { Link } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import { useStudentContext } from '../../../util/context/StudentContext';
 import Loading from '../../../helpers/Loading';
 import '../../../App'
 
 export default function BillingOverview() {
+
+    const id = useParams().id;
+
     return (
         <Card>
             <Card.Header>Billing Details</Card.Header>
             <Card.Body>
                 <Form>
-                    <Form.Group as={Row} className="mb-3" controlId="formPlaintextEmail">
+                    <Form.Group as={Row} className="mb-1" controlId="formPlaintextEmail">
                         <Form.Label column sm="5">
                             Status
                         </Form.Label>
@@ -30,7 +33,7 @@ export default function BillingOverview() {
                             <Form.Control plaintext readOnly defaultValue={"Active"} />
                         </Col>
                     </Form.Group>
-                    <Form.Group as={Row} className="mb-3" controlId="formPlaintextEmail">
+                    <Form.Group as={Row} className="mb-1" controlId="formPlaintextEmail">
                         <Form.Label column sm="5">
                             Last Bill Date
                         </Form.Label>
@@ -38,7 +41,7 @@ export default function BillingOverview() {
                             <Form.Control plaintext readOnly defaultValue={"06/01"} />
                         </Col>
                     </Form.Group>
-                    <Form.Group as={Row} className="mb-3" controlId="formPlaintextEmail">
+                    <Form.Group as={Row} className="mb-1" controlId="formPlaintextEmail">
                         <Form.Label column sm="5">
                             Active Since
                         </Form.Label>
@@ -49,7 +52,7 @@ export default function BillingOverview() {
                 </Form>
             </Card.Body>
             <Card.Footer>
-                <Button as={Link} to='/addStudent' variant='darkblue'>Manage Billing</Button>
+                <Button as={Link} to={`/students/${id}/billing`} variant='darkblue'>Manage Billing</Button>
             </Card.Footer>
         </Card>
     )

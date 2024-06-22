@@ -21,7 +21,7 @@ import Unauthorized from './helpers/Unauthorized';
 import Calendar from './components/TeacherComponents/Lessons/Calendar';
 import TeacherLayoutWrapper from './layouts/TeacherLayoutWrapper'
 import './App.css';
-import Subscription from './components/TeacherComponents/Billing/Subscription.jsx';
+import ManageSubscription from './components/TeacherComponents/Billing/ManageSubscription.jsx';
 
 
 const oktaAuth = new OktaAuth(config.oidc);
@@ -47,8 +47,8 @@ const App = () => {
             <Route path="/students/:id" element={<RequiredAuth />}>
               <Route path="" element={<TeacherLayoutWrapper component={SingleStudent} />} />
             </Route>
-            <Route path="/billing" element={<RequiredAuth />}>
-              <Route path="" element={<TeacherLayoutWrapper component={Subscription} />} />
+            <Route path="/students/:id/billing" element={<RequiredAuth />}>
+              <Route path="" element={<TeacherLayoutWrapper component={ManageSubscription} />} />
             </Route>
             <Route path="/addStudent" element={<RequiredAuth />}>
               <Route path="" element={<TeacherLayoutWrapper component={AddStudent} />} />
