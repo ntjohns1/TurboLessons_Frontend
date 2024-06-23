@@ -1,7 +1,14 @@
-import React from "react";
+import React, { useState } from "react";
 import { Container, Row, Col, Table, Form, Button, Card } from "react-bootstrap";
+import PaymentMethodModal from "./PaymentMethodModal";
 
 const ManageSubscription = () => {
+
+  const [show, setShow] = useState(false);
+
+  const handleClose = () => setShow(false);
+  const handleShow = () => setShow(true);
+
   return (
     <Container >
       <Row >
@@ -34,6 +41,7 @@ const ManageSubscription = () => {
                       <div className="mt-3 text-center">
                         <Button variant="primary" type="submit">Update Plan</Button>
                       </div>
+                      <PaymentMethodModal show={show} handleClose={handleClose}/>
                     </Form>
                   </Card.Body>
                 </Card>
@@ -70,7 +78,7 @@ const ManageSubscription = () => {
             <Card.Body>
               <h3>Payment Methods</h3>
               <p>Current Method: **** **** **** 1234</p>
-              <Button variant="primary">Add New Payment Method</Button>
+              <Button Button variant="primary" onClick={handleShow}>Manage Payment Methods</Button>
             </Card.Body>
           </Card>
         </Col>
