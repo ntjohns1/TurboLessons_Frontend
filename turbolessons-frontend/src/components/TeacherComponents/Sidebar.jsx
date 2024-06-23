@@ -8,7 +8,6 @@ import '../../App'
 const sidebarItems = [
   { to: "/", label: "Home" },
   { to: "/students", label: "Students" },
-  { to: "/billing", label: "Billing" },
   { to: "/lessons", label: "Schedule" },
   { to: "/calendar", label: "Calendar" },
   { to: "/messages", label: "Messages" },
