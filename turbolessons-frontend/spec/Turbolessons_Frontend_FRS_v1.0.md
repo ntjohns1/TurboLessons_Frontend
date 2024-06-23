@@ -39,6 +39,7 @@
 >  
 >  3. **Students**
 >      * View their own billing history.
+>      * View and edit their payment methods
 >      * View video data owned by their teacher.
 >      * View and edit email history and notification options for themselves.
 >      * Send chat messages to their teacher and admins.
