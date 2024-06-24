@@ -1,7 +1,5 @@
 import axios from "axios";
-import config from "../config";
 import { useOktaAuth } from "@okta/okta-react";
-import EditStudent from "../components/TeacherComponents/Students/EditStudent";
 
 // Base configuration
 const api = axios.create({
