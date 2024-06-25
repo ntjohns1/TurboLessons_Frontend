@@ -32,8 +32,6 @@ export default function SingleStudent() {
     }
   }, [authState, oktaAuth, id]);
 
-
-
   useEffect(() => {
     setFormState({
       ...student,
