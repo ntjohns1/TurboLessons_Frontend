@@ -1,5 +1,4 @@
 import api from './axiosConfig';
-import config from '../config';
 
 export const getStudentProfile = async (id) => {
   try {
@@ -54,4 +53,4 @@ export const deleteStudent = async (id) => {
     console.error('Error deleting student:', error);
     throw error;
   }
-};v
+};

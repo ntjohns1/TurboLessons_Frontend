@@ -2,34 +2,37 @@ import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { useOktaAuth } from '@okta/okta-react';
 import { Card, Container, Row, Col, CardImg } from 'react-bootstrap';
+import { getStudentProfile } from '../../../service/adminService';
+import { setAccessToken } from '../../../service/axiosConfig';
 import EditStudent from './EditStudent';
 import StudentInfo from './StudentInfo';
-import config from '../../../config';
 import BillingOverview from '../Billing/BillingOverview';
 
 export default function SingleStudent() {
   const { authState, oktaAuth } = useOktaAuth();
   const [isUpdate, setIsUpdate] = useState(false);
-
-  const id = useParams().id;
   const [student, setStudent] = useState({});
+  const [formState, setFormState] = useState({ ...student, });
+  const id = useParams().id;
 
   useEffect(() => {
-    const accessToken = oktaAuth.getAccessToken();
+    const fetchProfile = async () => {
+      try {
+        const accessToken = await oktaAuth.getAccessToken();
+        setAccessToken(accessToken);
+        const data = await getStudentProfile(id, accessToken);
+        setStudent(data);
+      } catch (error) {
+        console.error('Error fetching student profile:', error);
+      }
+    };
 
-    fetch(`${config.resourceServer.userAdminUrl}/profile/${id}`, {
-      headers: {
-        Authorization: `Bearer ${accessToken}`,
-      },
-    })
-      .then((response) => response.json())
-      .then((result) => setStudent(result))
-      .catch(console.log);
-  }, [id, oktaAuth]);
+    if (authState.isAuthenticated) {
+      fetchProfile();
+    }
+  }, [authState, oktaAuth, id]);
 
-  const [formState, setFormState] = useState({
-    ...student,
-  });
+
 
   useEffect(() => {
     setFormState({
