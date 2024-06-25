@@ -2,7 +2,6 @@ import React, { useState, useEffect, createContext, useContext } from 'react';
 import { useOktaAuth } from '@okta/okta-react';
 import { getStudentsByTeacher } from '../../service/adminService';
 import { setAccessToken } from '../../service/axiosConfig';
-import config from '../../config';
 
 const StudentContext = createContext({
     students: [],

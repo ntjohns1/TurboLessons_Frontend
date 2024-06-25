@@ -1,10 +1,12 @@
 import axios from 'axios';
 
 // Base configuration
+// Base configuration
 const api = axios.create({
   baseURL: 'https://www.turbolessons.com/api',
   headers: {
     'Content-Type': 'application/json',
+    'Accept': 'application/json',
   },
 });
 

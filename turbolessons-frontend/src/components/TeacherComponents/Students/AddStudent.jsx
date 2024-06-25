@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { useOktaAuth } from '@okta/okta-react';
 import { Card, Container, Form, Button } from 'react-bootstrap';
-import config from '../../../config';
+import { createStudent } from '../../../service/adminService';
+import { setAccessToken } from '../../../service/axiosConfig';
 
+// Todo: assign student to teacher when created
 export default function AddStudent() {
     const { authState, oktaAuth } = useOktaAuth();
     // form input to add student
@@ -25,30 +27,17 @@ export default function AddStudent() {
 
     const handleFormSubmit = async (event) => {
         event.preventDefault();
-        const accessToken = oktaAuth.getAccessToken();
-        await fetch(config.resourceServer.userAdminUrl, {
-            method: 'POST',
-            headers: {
-                'Authorization': `Bearer ${accessToken}`,
-                'Accept': 'application/json',
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(formState),
-        })
-            .then(response => {
-                if (response.status === 200 || response.status === 201) {
-                    return response.json();
-                }
-                return Promise.reject('Didn\'t receive expected status: 201');
-            })
-            .then((data) => {
-                console.log(data);
+        try {
+            if (authState && authState.isAuthenticated) {
+                const accessToken = await oktaAuth.getAccessToken();
+                setAccessToken(accessToken);
+                await createStudent(formState);
                 alert(`Successfully Added Account for: ${formState.firstName} ${formState.lastName}`);
-            })
-            .then(()=> goBack())
-            .catch((error) => {
-                console.error('Error:', error);
-            });
+                goBack();
+            }
+        } catch (error) {
+            console.error('Error creating student:', error);
+        }
     };
     function goBack() {
         document.location.replace(`/students`);

@@ -25,6 +25,7 @@ export const getStudentsByTeacher = async (principle) => {
   }
 };
 
+// TODO: should automatically place user in teacher's own students or admin can assign to any teacher
 export const createStudent = async (formState) => {
   try {
     const response = await api.post('/users', formState);
