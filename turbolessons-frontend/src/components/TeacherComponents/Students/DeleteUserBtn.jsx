@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import { Button, Modal, Form, Row } from 'react-bootstrap';
+import { deleteStudent } from '../../../service/adminService';
+import { setAccessToken } from '../../../service/axiosConfig';
 import config from '../../../config';
 
 export default function DeletUserBtn({ oktaAuth, id, student }) {
@@ -24,22 +26,16 @@ export default function DeletUserBtn({ oktaAuth, id, student }) {
         });
     };
 
-
+    // TODO: possible caching issue where state is not being updated upon
+    // deleting a user
     const handleDelete = async (e) => {
         // e.preventDefault();
-        const accessToken = oktaAuth.getAccessToken();
         try {
-            fetch(`${config.resourceServer.userAdminUrl}/${id}`, {
-                method: "DELETE",
-                headers: {
-                    'Authorization': `Bearer ${accessToken}`,
-                    "Content-Type": "application/json",
-                    "Accept": "application/json"
-                }
-            })
-                .then(() => alert(`${studentName} Deleted`))
-                .then(() => goBack())
-                .catch(error => console.log(error));
+            const accessToken = oktaAuth.getAccessToken();
+            setAccessToken(accessToken);
+            await deleteStudent(id);
+            alert(`${studentName} Deleted`);
+            goBack();
         }
         catch (err) {
             return console.error(err);
