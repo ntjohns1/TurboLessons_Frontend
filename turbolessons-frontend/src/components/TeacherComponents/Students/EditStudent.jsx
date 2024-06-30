@@ -2,73 +2,40 @@ import React, { useEffect } from 'react';
 import { Card, Form, Button, Row, Col } from 'react-bootstrap';
 import { FaRegWindowClose } from "react-icons/fa";
 import DeletUserBtn from './DeleteUserBtn';
-import config from '../../../config';
+import { setAccessToken } from '../../../service/axiosConfig';
+import { editStudent } from '../../../service/adminService';
 
 export default function EditStudent({ student, formState, setStudent, setIsUpdate, setFormState, oktaAuth, id }) {
 
     useEffect(() => {
         setFormState({
             ...student,
-        })
-    }, [student]);
+        });
+    }, [student, setFormState]);
 
-    // update state based on form input changes
     const handleChange = (event) => {
         const { name, value } = event.target;
-
         setFormState({
             ...formState,
             [name]: value,
         });
     };
 
-    function handleSubmit(evt) {
+    const handleSubmit = async (evt) => {
         evt.preventDefault();
-
-        const url = `${config.resourceServer.userAdminUrl}/${id}`;
-        const accessToken = oktaAuth.getAccessToken();
-        const method = "PUT";
-
-        const init = {
-            method,
-            headers: {
-                'Authorization': `Bearer ${accessToken}`,
-                "Content-Type": "application/json",
-                "Accept": "application/json"
-            },
-            body: JSON.stringify(
-                {
-                    "login": formState.login,
-                    "displayName": formState.displayName,
-                    "firstName": formState.firstName,
-                    "middleName": formState.middleName,
-                    "lastName": formState.lastName,
-                    "email": formState.email,
-                    "mobilePhone": formState.mobilePhone,
-                    "primaryPhone": formState.primaryPhone,
-                    "streetAddress": formState.streetAddress,
-                    "city": formState.city,
-                    "state": formState.state,
-                    "zipCode": formState.zipCode,
-                    "userType": formState.userType
-                }
-            )
-        };
-
-        fetch(url, init)
-            .then(() => {
-                setStudent({ ...formState })
-                return formState;
-            })
-            .then((data) => {
-                console.log('/updateStudent: ', data);
-                alert(`${data.displayName} successfully updated`);
-            })
-            .then(() => setIsUpdate(false))
-            .catch((error) => {
-                console.error('Error:', error);
-            });
-    }
+        try {
+            if (oktaAuth && oktaAuth.isAuthenticated) {
+                const accessToken = await oktaAuth.getAccessToken();
+                setAccessToken(accessToken);
+                await editStudent(id, formState);
+                setStudent({ ...formState });
+                alert(`${formState.displayName} successfully updated`);
+                setIsUpdate(false);
+            }
+        } catch (error) {
+            console.error('Error updating student:', error);
+        }
+    };
 
     return (
         <Card className="card-user">
