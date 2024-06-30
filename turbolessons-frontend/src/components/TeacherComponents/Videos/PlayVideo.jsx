@@ -12,15 +12,16 @@ const PlayVideo = ({ selected }) => {
     useEffect(() => {
         const fetchVideo = async () => {
             try {
-                const accessToken = oktaAuth.getAccessToken();
-                setAccessToken(accessToken);
-                const url = await getVideo(videoSrc);
-                videoRef.current.src = url;
+                if (authState && authState.isAuthenticated) {
+                    const accessToken = oktaAuth.getAccessToken();
+                    setAccessToken(accessToken);
+                    const url = await getVideo(videoSrc);
+                    videoRef.current.src = url;
+                }
             } catch (error) {
                 console.error(error);
             }
         }
-
         fetchVideo()
     }, [authState, videoSrc]);
 
