@@ -28,8 +28,8 @@ export default function DeletUserBtn({ oktaAuth, id, student }) {
 
     // TODO: possible caching issue where state is not being updated upon
     // deleting a user
-    const handleDelete = async (e) => {
-        // e.preventDefault();
+    const handleDelete = async (event) => {
+        event.preventDefault();
         try {
             const accessToken = oktaAuth.getAccessToken();
             setAccessToken(accessToken);

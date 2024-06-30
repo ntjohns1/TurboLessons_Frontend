@@ -2,7 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { Button, Form, Modal } from "react-bootstrap";
 import { useOktaAuth } from '@okta/okta-react';
 import { useStudentContext } from '../../../util/context/StudentContext';
-import config from '../../../config';
+import { createLessonEvent } from '../../../service/eventService';
+import { setAccessToken } from '../../../service/axiosConfig';
 
 export default function NewLessonModal({ showModal, handleCloseModal, selectInfo, calendarApi }) {
     const { authState, oktaAuth } = useOktaAuth();
@@ -60,39 +61,15 @@ export default function NewLessonModal({ showModal, handleCloseModal, selectInfo
     // submit form
     const handleSubmit = async (event) => {
         event.preventDefault();
-        console.log("Request Payload:", JSON.stringify(formState)); // Log the request payload
-
-        const accessToken = oktaAuth.getAccessToken();
-        await fetch(config.resourceServer.eventsUrl, {
-            method: 'POST',
-            headers: {
-                'Authorization': `Bearer ${accessToken}`,
-                'Accept': 'application/json',
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(formState),
-        })
-            .then(response => {
-                if (response.status === 200 || response.status === 204) {
-                    return response.json();
-                }
-                return Promise.reject('Didn\'t receive expected status');
-            })
-            .then((responseData) => {
-                console.log("Response Data:", JSON.stringify(responseData));
-                calendarApi.addEvent({
-                    title: formState.title,
-                    start: formState.startTime,
-                    end: formState.endTime,
-                    allDay: selectInfo.allDay
-                })
-                calendarApi.unselect() // clear date selection
-                handleCloseModal()
-                alert('Successfully Added Lesson Event');
-            })
-            .catch((error) => {
-                console.error('Error:', error);
-            });
+        try {
+            console.log("Request Payload:", JSON.stringify(formState));
+            const accessToken = oktaAuth.getAccessToken();
+            setAccessToken(accessToken);
+            await createLessonEvent(formState);
+            alert('Successfully Added Lesson Event');
+        } catch (error) {
+            console.error(error);
+        }
     };
 
     return (

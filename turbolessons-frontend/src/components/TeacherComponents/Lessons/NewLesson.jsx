@@ -49,40 +49,10 @@ export default function NewLesson() {
     });
   };
 
-  // submit form
-  // const handleSubmit = async (event) => {
-  //   event.preventDefault();
-  //   console.log("Request Payload:", JSON.stringify(formState)); // Log the request payload
-
-  //   const accessToken = oktaAuth.getAccessToken();
-  //   await fetch(config.resourceServer.eventsUrl, {
-  //     method: 'POST',
-  //     headers: {
-  //       'Authorization': `Bearer ${accessToken}`,
-  //       'Accept': 'application/json',
-  //       'Content-Type': 'application/json'
-  //     },
-  //     body: JSON.stringify(formState),
-  //   })
-  //     .then(response => {
-  //       if (response.status === 200 || response.status === 204) {
-  //         return response.json();
-  //       }
-  //       return Promise.reject('Didn\'t receive expected status: 201');
-  //     })
-  //     .then((responseData) => {
-  //       console.log("Response Data:", JSON.stringify(responseData));
-  //       alert('Successfully Added Lesson Event');
-  //     })
-  //     .catch((error) => {
-  //       console.error('Error:', error);
-  //     });
-  // };
-
   const handleSubmit = async (event) => {
     event.preventDefault();
     try {
-      console.log("Request Payload:", JSON.stringify(formState)); // Log the request payload
+      console.log("Request Payload:", JSON.stringify(formState));
       const accessToken = oktaAuth.getAccessToken();
       setAccessToken(accessToken);
       await createLessonEvent(formState);
