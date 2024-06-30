@@ -2,27 +2,28 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useOktaAuth } from '@okta/okta-react';
 import { Button, Form, Container, Toast } from "react-bootstrap";
 import { useSocket } from '../../../util/context/WebSocketContext';
+import { sendMessage } from '../../../service/messageService';
+import { setAccessToken } from '../../../service/axiosConfig';
 import '../../../App'
 // import DisplayMessages from './DisplayMessages';
 
 export default function SendMessage({ sendTo, setUpdateOutMessages }) {
   const { oktaAuth } = useOktaAuth();
-  const accessToken = oktaAuth.getAccessToken();
   const { principle } = useSocket();
   const [outMessage, setOutMessage] = useState({
     sender: principle,
     receiver: sendTo ? sendTo : '',
     msg: ''
   });
-
+  
   useEffect(() => {
     setOutMessage((prevOutMessage) => ({
       ...prevOutMessage,
       receiver: sendTo,
     }));
   }, [sendTo]);
-
-
+  
+  // Todo: finish implementing setUpdateOutMessages
   const handleFormSubmit = async (event) => {
     event.preventDefault();
     // error handling to check if recipient or sendTo is null
@@ -34,9 +35,11 @@ export default function SendMessage({ sendTo, setUpdateOutMessages }) {
       console.log('Error: msg is blank or empty');
       return;
     }
+    const accessToken = oktaAuth.getAccessToken();
+    setAccessToken(accessToken);
     const newTimestamp = new Date().toISOString().replace("T", " ").replace("Z", "");
     const newOutMessage = { ...outMessage, timestamp: newTimestamp };
-    sendMessage(sendTo, newOutMessage, accessToken);
+    sendMessage(sendTo, newOutMessage);
     setUpdateOutMessages(newOutMessage);
     setOutMessage({
       ...outMessage,

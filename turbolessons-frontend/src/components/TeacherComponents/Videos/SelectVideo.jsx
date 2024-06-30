@@ -29,7 +29,8 @@ export default function SelectVideo({ setSelected }) {
                 console.error(error);
             }
         }
-
+        
+        getVideos();
     }, []);
 
     return (
