@@ -7,7 +7,7 @@ import timeGridPlugin from '@fullcalendar/timegrid'
 import interactionPlugin from '@fullcalendar/interaction'
 import { useOktaAuth } from '@okta/okta-react';
 import NewLessonModal from './LessonModal'
-import { fetchEvents } from "../../../service/eventService";
+import { fetchAllEvents, fetchEventsByTeacher } from "../../../service/eventService";
 import { setAccessToken } from "../../../service/axiosConfig";
 
 
@@ -50,7 +50,7 @@ export default function LessonCalendar() {
         try {
             const accessToken = await oktaAuth.getAccessToken();
             setAccessToken(accessToken);
-            const data = await fetchEvents(principle);
+            const data = await fetchEventsByTeacher(principle);
             setCurrentEvents(data);
             return data;
         } catch (error) {
