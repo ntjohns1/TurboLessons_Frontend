@@ -6,12 +6,12 @@ import dayGridPlugin from '@fullcalendar/daygrid'
 import timeGridPlugin from '@fullcalendar/timegrid'
 import interactionPlugin from '@fullcalendar/interaction'
 import { useOktaAuth } from '@okta/okta-react';
-import NewLessonModal from './NewLessonModal'
+import NewLessonModal from './LessonModal'
 import { fetchEvents } from "../../../service/eventService";
 import { setAccessToken } from "../../../service/axiosConfig";
 
 
-export default function Calendar() {
+export default function LessonCalendar() {
 
     const { authState, oktaAuth } = useOktaAuth();
     const principle = authState && authState.idToken && authState.idToken.claims.name;

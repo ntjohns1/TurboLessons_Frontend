@@ -1,6 +1,6 @@
 import { Col, Row } from "react-bootstrap";
 import StudentTable from "../../components/TeacherComponents/Students/StudentTable";
-import Calendar from "../../components/TeacherComponents/Lessons/Calendar";
+import LessonCalendar from "../../components/TeacherComponents/Lessons/LessonCalendar";
 // import StudentOverview from "./StudentOverview/StudentOverview";
 // import ScheduleContainer from "./ScheduleOverview/ScheduleContainer";
 
@@ -13,7 +13,7 @@ export default function TeacherDashboard() {
                     <StudentTable />
                 </Col>
                 <Col xs={9}>
-                    <Calendar />
+                    <LessonCalendar />
                 </Col>
             </Row>
     )
