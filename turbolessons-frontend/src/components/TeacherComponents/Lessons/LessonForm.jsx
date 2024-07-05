@@ -15,31 +15,65 @@ const LessonForm = ({ selectInfo }) => {
   const principleName = authState && authState.idToken && authState.idToken.claims.name;
   const principleEmail = authState && authState.idToken.claims.email;
   const { students } = useStudentContext();
+  const initialDate = selectInfo && selectInfo.start ? new Date(selectInfo.start) : new Date();
+  const initialTime = initialDate;
   const [formState, setFormState] = useState({
-    startTime: '',
-    endTime: '',
+    date: initialDate,
+    startTime: initialTime,
+    endTime: new Date(initialTime.getTime() + 30 * 60000),
     title: '',
     student: '',
     studentEmail: '',
     teacher: principleName,
     teacherEmail: principleEmail,
-    date: selectInfo ? new Date(selectInfo.startStr) : new Date(),
     comments: '',
-    durationOption: '1h' // default duration option
+    durationOption: '30m', // default duration option
   });
 
-  const handleStartTimeChange = (date) => {
+  useEffect(() => {
+    if (selectInfo && selectInfo.start) {
+      const parsedDate = new Date(selectInfo.start);
+      if (!isNaN(parsedDate)) {
+        setFormState((prevState) => ({
+          ...prevState,
+          date: parsedDate,
+          startTime: parsedDate,
+          endTime: new Date(parsedDate.getTime() + (prevState.durationOption === '30m' ? 30 : 60) * 60000),
+        }));
+      } else {
+        console.error('Invalid date from selectInfo:', selectInfo.start);
+      }
+    }
+  }, [selectInfo]);
+
+  const handleDateChange = (date) => {
+    setFormState((prevState) => ({
+      ...prevState,
+      date,
+    }));
+  };
+
+  const handleStartTimeChange = (time) => {
     setFormState((prevState) => {
+      const date = new Date(prevState.date);
+      date.setHours(time.getHours());
+      date.setMinutes(time.getMinutes());
+
       const endTime = new Date(date.getTime() + (prevState.durationOption === '30m' ? 30 : 60) * 60000);
-      console.log(formState);
-      return { ...prevState, startTime: date, endTime };
+      return { ...prevState, startTime: time, endTime };
     });
   };
-  
-  const handleEndTimeChange = (date) => {
-    setFormState({ ...formState, endTime: date });
+
+  const handleEndTimeChange = (time) => {
+    setFormState((prevState) => {
+      const date = new Date(prevState.date);
+      date.setHours(time.getHours());
+      date.setMinutes(time.getMinutes());
+
+      return { ...prevState, endTime: time };
+    });
   };
-  
+
   const handleDurationOptionChange = (e) => {
     const newDuration = e.target.value;
     setFormState((prevState) => {
@@ -47,7 +81,7 @@ const LessonForm = ({ selectInfo }) => {
       return { ...prevState, durationOption: newDuration, endTime };
     });
   };
-  
+
   const handleStudentChange = (e) => {
     const selectedStudent = students.find((student) => student.displayName === e.target.value);
     setFormState({
@@ -55,15 +89,6 @@ const LessonForm = ({ selectInfo }) => {
       student: e.target.value,
       studentEmail: selectedStudent ? selectedStudent.email : ''
     });
-  };
-  
-  const handleDateChange = (date) => {
-    const formattedDate = date.toISOString();
-    setFormState({
-      ...formState,
-      date: formattedDate
-    });
-    console.log(formState);
   };
 
   const handleSubmit = async (event) => {
@@ -109,7 +134,7 @@ const LessonForm = ({ selectInfo }) => {
             <Form.Label>Date</Form.Label>
             <DatePicker
               className='mx-3 px-3'
-              selected={new Date(formState.date)}
+              selected={formState.date}
               onChange={handleDateChange}
             />
           </Form.Group>
