@@ -6,7 +6,7 @@ import dayGridPlugin from '@fullcalendar/daygrid'
 import timeGridPlugin from '@fullcalendar/timegrid'
 import interactionPlugin from '@fullcalendar/interaction'
 import { useOktaAuth } from '@okta/okta-react';
-import NewLessonModal from './LessonModal'
+import LessonModal from './LessonModal'
 import { fetchAllEvents, fetchEventsByTeacher } from "../../../service/eventService";
 import { setAccessToken } from "../../../service/axiosConfig";
 
@@ -68,7 +68,7 @@ export default function LessonCalendar() {
 
     return (
         <Container style={{ height: '90vh' }}>
-            <NewLessonModal
+            <LessonModal
                 showModal={showModal}
                 handleCloseModal={handleCloseModal}
                 selectInfo={calendarInfo}

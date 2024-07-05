@@ -1,11 +1,11 @@
 import React from 'react';
 import { Container } from 'react-bootstrap';
-import NewLesson from '../../components/TeacherComponents/Lessons/LessonForm.jsx'
+import LessonForm from '../../components/TeacherComponents/Lessons/LessonForm.jsx'
 
-export default function Students() {
+export default function Lessons() {
     return (
         <Container>
-            <NewLesson/>
+            <LessonForm/>
         </Container>
     )
 };
