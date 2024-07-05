@@ -51,8 +51,18 @@ export default function LessonCalendar() {
             const accessToken = await oktaAuth.getAccessToken();
             setAccessToken(accessToken);
             const data = await fetchEventsByTeacher(principle);
-            setCurrentEvents(data);
-            return data;
+            // Convert event times to local time if necessary
+            const adjustedEvents = data.map(event => {
+                const start = new Date(event.start);
+                const end = new Date(event.end);
+                return {
+                    ...event,
+                    start: new Date(start.getTime() - (start.getTimezoneOffset() * 60000)),
+                    end: new Date(end.getTime() - (end.getTimezoneOffset() * 60000)),
+                };
+            });
+            setCurrentEvents(adjustedEvents);
+            return adjustedEvents;
         } catch (error) {
             console.error(error);
             return [];
@@ -64,6 +74,7 @@ export default function LessonCalendar() {
             eventsCallback();
         }
     }, [authState, eventsCallback]);
+
 
 
     return (
@@ -95,6 +106,7 @@ export default function LessonCalendar() {
                 // eventContent={renderEventContent} // custom render function
                 eventClick={handleEventClick}
                 eventsSet={handleEvents} // called after events are initialized/added/changed/removed
+                timeZone="local"
             />
         </Container>
     )
