@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Modal } from "react-bootstrap";
 import LessonForm from './LessonForm';
+import LessonList from './LessonList';
 
 
 export default function LessonModal({ showModal, handleCloseModal, selectInfo }) {
@@ -16,7 +17,8 @@ export default function LessonModal({ showModal, handleCloseModal, selectInfo })
                 <Modal.Title>New Lesson</Modal.Title>
             </Modal.Header>
             <Modal.Body>
-                <LessonForm selectInfo={selectInfo}/>
+                {/* <LessonForm selectInfo={selectInfo}/> */}
+                <LessonList />
             </Modal.Body>
         </Modal>
     )

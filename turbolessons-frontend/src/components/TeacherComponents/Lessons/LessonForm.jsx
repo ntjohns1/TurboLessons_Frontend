@@ -10,14 +10,14 @@ import "react-datepicker/dist/react-datepicker.css";
 
 
 // TODO: State management for handleDateChange
-const LessonForm = ({ selectInfo }) => {
+const LessonForm = ({ selectInfo, existingLesson, onSave }) => {
   const { authState, oktaAuth } = useOktaAuth();
   const principleName = authState && authState.idToken && authState.idToken.claims.name;
   const principleEmail = authState && authState.idToken.claims.email;
   const { students } = useStudentContext();
   const initialDate = selectInfo && selectInfo.start ? new Date(selectInfo.start) : new Date();
   const initialTime = initialDate;
-  const [formState, setFormState] = useState({
+  const [formState, setFormState] = useState(existingLesson || {
     date: initialDate,
     startTime: initialTime,
     endTime: new Date(initialTime.getTime() + 30 * 60000),

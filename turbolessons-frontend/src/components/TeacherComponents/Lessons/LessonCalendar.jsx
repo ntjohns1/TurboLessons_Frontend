@@ -36,9 +36,10 @@ export default function LessonCalendar() {
     }
 
     const handleEventClick = (clickInfo) => {
-        if (confirm(`Are you sure you want to delete the event '${clickInfo.event.title}'`)) {
-            clickInfo.event.remove()
-        }
+        console.log(clickInfo.event);
+        // if (confirm(`Are you sure you want to delete the event '${clickInfo.event.title}'`)) {
+        //     clickInfo.event.remove()
+        // }
     }
 
     const handleEvents = (events) => {
@@ -73,7 +74,7 @@ export default function LessonCalendar() {
         if (authState?.isAuthenticated) {
             eventsCallback();
         }
-    }, [authState, eventsCallback]);
+    }, [authState, eventsCallback, currentEvents]);
 
 
 
