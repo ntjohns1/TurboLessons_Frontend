@@ -4,22 +4,22 @@ import LessonForm from './LessonForm';
 import LessonList from './LessonList';
 
 
-export default function LessonModal({ showModal, handleCloseModal, selectInfo }) {
-
+const LessonModal = ({ show, onHide, event }) => {
+    const isEditMode = event && event.id;
+    useEffect(() => {
+        console.log(event);
+    }, [event])
+    
     return (
-        <Modal
-            show={showModal}
-            onHide={handleCloseModal}
-            backdrop="static"
-            keyboard={false}
-        >
+        <Modal show={show} onHide={onHide}>
             <Modal.Header closeButton>
-                <Modal.Title>New Lesson</Modal.Title>
+                <Modal.Title>{isEditMode ? 'Edit Lesson' : 'Add Lesson'}</Modal.Title>
             </Modal.Header>
             <Modal.Body>
-                {/* <LessonForm selectInfo={selectInfo}/> */}
-                <LessonList />
+                {isEditMode ? <LessonForm event={event} /> : <LessonList event={event} />}
             </Modal.Body>
         </Modal>
-    )
-}
+    );
+};
+
+export default LessonModal;
