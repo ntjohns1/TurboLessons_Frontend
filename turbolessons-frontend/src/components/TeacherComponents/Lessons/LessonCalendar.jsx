@@ -25,50 +25,17 @@ export default function LessonCalendar() {
     const handleCloseModal = () => setShowModal(false);
     const handleShowModal = () => setShowModal(true);
 
+
     const handleDateClick = (info) => {
         setSelectedEvent({ date: info.date });
         handleShowModal();
-    };
+      };
 
     const handleEventClick = (info) => {
         console.log(info);
         setSelectedEvent(info.event);
         handleShowModal();
     };
-
-    // const handleWeekendsToggle = () => {
-    //     setWeekendsVisible(!weekendsVisible);
-    // }
-
-    // const handleDateSelect = (info) => {
-
-    //     // setCalendarInfo(info);
-    //     setCalendarApi(info.view.calendar)
-    //     setSelectedEvent({
-    //         start: info.dateStr,
-    //         end: info.dateStr,
-    //     });
-    //     handleShowModal();
-    // }
-    // // const handleSelectEvent = (event) => {
-    // //     setSelectedEvent(event);
-    // //     setShowModal()
-    // // };
-
-    // const handleEvents = (events) => {
-    //     // setCalendarEvents(events)
-    // }
-
-    // const handleEventClick = (info) => {
-    //     setSelectedEvent({
-    //       id: info.event.extendedProps.id,
-    //       title: info.event.title,
-    //       date: info.event.startStr.split('T')[0],
-    //       time: info.event.startStr.split('T')[1],
-    //       student: info.event.extendedProps.student,
-    //     });
-    //     handleShowModal()
-    //   };
 
     const eventsCallback = useCallback(async () => {
         try {
@@ -137,3 +104,38 @@ export default function LessonCalendar() {
         </Container>
     )
 }
+
+
+    // const handleWeekendsToggle = () => {
+    //     setWeekendsVisible(!weekendsVisible);
+    // }
+
+    // const handleDateSelect = (info) => {
+
+    //     // setCalendarInfo(info);
+    //     setCalendarApi(info.view.calendar)
+    //     setSelectedEvent({
+    //         start: info.dateStr,
+    //         end: info.dateStr,
+    //     });
+    //     handleShowModal();
+    // }
+    // // const handleSelectEvent = (event) => {
+    // //     setSelectedEvent(event);
+    // //     setShowModal()
+    // // };
+
+    // const handleEvents = (events) => {
+    //     // setCalendarEvents(events)
+    // }
+
+    // const handleEventClick = (info) => {
+    //     setSelectedEvent({
+    //       id: info.event.extendedProps.id,
+    //       title: info.event.title,
+    //       date: info.event.startStr.split('T')[0],
+    //       time: info.event.startStr.split('T')[1],
+    //       student: info.event.extendedProps.student,
+    //     });
+    //     handleShowModal()
+    //   };

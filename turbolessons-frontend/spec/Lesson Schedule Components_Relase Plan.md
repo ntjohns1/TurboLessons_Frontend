@@ -28,7 +28,6 @@
     - `LessonForm.jsx`: Component for simpler form-based view to create and edit lessons.
     - `LessonList.jsx`: Component to display a list of lessons.
   - **Deliverable**: Basic components with placeholder content and form fields.
-    - individual date grids can show first two lessons scheduled on that date (sorted by time) in the LessonCalendar view, if more than two lessons, click for overflow.  
 ### Week 2: API Integration and Modal Implementation
 
 #### **Feature 2.1: Integrate Calendar View and Modal**

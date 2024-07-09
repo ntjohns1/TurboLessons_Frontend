@@ -7,7 +7,7 @@ import { useOktaAuth } from '@okta/okta-react';
 
 const LessonList = () => {
     const [lessons, setLessons] = useState([]);
-    const [editingLesson, setEditingLesson] = useState(null);
+    const [editLesson, setEditLesson] = useState(null);
     const { authState, oktaAuth } = useOktaAuth();
     const principle = authState && authState.idToken && authState.idToken.claims.name;
 
@@ -26,11 +26,11 @@ const LessonList = () => {
     }, []);
 
     const handleEdit = (lesson) => {
-        setEditingLesson(lesson);
+        setEditLesson(lesson);
     };
 
     const handleSave = () => {
-        setEditingLesson(null);
+        setEditLesson(null);
         const loadLessons = async () => {
             try {
                 const data = await fetchEventsByTeacher(principle);
@@ -45,8 +45,8 @@ const LessonList = () => {
 
     return (
         <Card>
-            {editingLesson ? (
-                <LessonForm existingLesson={editingLesson} onSave={handleSave} />
+            {editLesson ? (
+                <LessonForm event={editLesson} handleSave={handleSave}/>
             ) : (
                 <Card.Body>
                     {lessons && lessons.map(lesson => (

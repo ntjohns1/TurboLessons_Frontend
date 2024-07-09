@@ -8,16 +8,16 @@ import DatePicker from "react-datepicker";
 import config from '../../../config';
 import "react-datepicker/dist/react-datepicker.css";
 
-
-// TODO: State management for handleDateChange
-const LessonForm = ({ selectInfo, existingLesson, onSave }) => {
+const LessonForm = ({ event, handleSave }) => {
+  
+  const { isReadOnly, setReadOnly } = useState(true)
   const { authState, oktaAuth } = useOktaAuth();
   const principleName = authState && authState.idToken && authState.idToken.claims.name;
   const principleEmail = authState && authState.idToken.claims.email;
   const { students } = useStudentContext();
-  const initialDate = selectInfo && selectInfo.start ? new Date(selectInfo.start) : new Date();
+  const initialDate = event && event.start ? new Date(event.start) : new Date();
   const initialTime = initialDate;
-  const [formState, setFormState] = useState(existingLesson || {
+  const [formState, setFormState] = useState(event || {
     date: initialDate,
     startTime: initialTime,
     endTime: new Date(initialTime.getTime() + 30 * 60000),
@@ -31,8 +31,8 @@ const LessonForm = ({ selectInfo, existingLesson, onSave }) => {
   });
 
   useEffect(() => {
-    if (selectInfo && selectInfo.start) {
-      const parsedDate = new Date(selectInfo.start);
+    if (event && event.start) {
+      const parsedDate = new Date(event.start);
       if (!isNaN(parsedDate)) {
         setFormState((prevState) => ({
           ...prevState,
@@ -41,10 +41,10 @@ const LessonForm = ({ selectInfo, existingLesson, onSave }) => {
           endTime: new Date(parsedDate.getTime() + (prevState.durationOption === '30m' ? 30 : 60) * 60000),
         }));
       } else {
-        console.error('Invalid date from selectInfo:', selectInfo.start);
+        console.error('Invalid date from event:', event.start);
       }
     }
-  }, [selectInfo]);
+  }, [event]);
 
   const handleDateChange = (date) => {
     setFormState((prevState) => ({
@@ -98,6 +98,7 @@ const LessonForm = ({ selectInfo, existingLesson, onSave }) => {
       setAccessToken(accessToken);
       await createLessonEvent(formState);
       alert('Successfully Added Lesson Event');
+      handleSave();
     } catch (error) {
       console.error(error);
     }
@@ -110,12 +111,12 @@ const LessonForm = ({ selectInfo, existingLesson, onSave }) => {
           <Form.Label className='mb-3'>Add New Lesson</Form.Label>
           <Form.Group className="mb-3 px-3" controlId="formTitle">
             <Form.Label>Title</Form.Label>
-            <Form.Control
+            {<Form.Control
               type="text"
               name="title"
               value={formState.title}
               onChange={(e) => setFormState({ ...formState, title: e.target.value })}
-            />
+            />}
           </Form.Group>
           <Form.Group className="mb-3 px-3" controlId="selectStudent">
             <Form.Label>Student</Form.Label>
