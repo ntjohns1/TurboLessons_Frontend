@@ -29,12 +29,15 @@ export default function LessonCalendar() {
     const handleDateClick = (info) => {
         setSelectedEvent({ date: info.date });
         handleShowModal();
-      };
+    };
 
     const handleEventClick = (info) => {
-        console.log(info);
-        setSelectedEvent(info.event);
-        handleShowModal();
+        const event = calendarEvents.find(e => e.id == info.event.id);
+        console.log(event);
+        if (event) {
+            setSelectedEvent(event);
+            handleShowModal();
+        }
     };
 
     const eventsCallback = useCallback(async () => {
@@ -106,36 +109,36 @@ export default function LessonCalendar() {
 }
 
 
-    // const handleWeekendsToggle = () => {
-    //     setWeekendsVisible(!weekendsVisible);
-    // }
+// const handleWeekendsToggle = () => {
+//     setWeekendsVisible(!weekendsVisible);
+// }
 
-    // const handleDateSelect = (info) => {
+// const handleDateSelect = (info) => {
 
-    //     // setCalendarInfo(info);
-    //     setCalendarApi(info.view.calendar)
-    //     setSelectedEvent({
-    //         start: info.dateStr,
-    //         end: info.dateStr,
-    //     });
-    //     handleShowModal();
-    // }
-    // // const handleSelectEvent = (event) => {
-    // //     setSelectedEvent(event);
-    // //     setShowModal()
-    // // };
+//     // setCalendarInfo(info);
+//     setCalendarApi(info.view.calendar)
+//     setSelectedEvent({
+//         start: info.dateStr,
+//         end: info.dateStr,
+//     });
+//     handleShowModal();
+// }
+// // const handleSelectEvent = (event) => {
+// //     setSelectedEvent(event);
+// //     setShowModal()
+// // };
 
-    // const handleEvents = (events) => {
-    //     // setCalendarEvents(events)
-    // }
+// const handleEvents = (events) => {
+//     // setCalendarEvents(events)
+// }
 
-    // const handleEventClick = (info) => {
-    //     setSelectedEvent({
-    //       id: info.event.extendedProps.id,
-    //       title: info.event.title,
-    //       date: info.event.startStr.split('T')[0],
-    //       time: info.event.startStr.split('T')[1],
-    //       student: info.event.extendedProps.student,
-    //     });
-    //     handleShowModal()
-    //   };
+// const handleEventClick = (info) => {
+//     setSelectedEvent({
+//       id: info.event.extendedProps.id,
+//       title: info.event.title,
+//       date: info.event.startStr.split('T')[0],
+//       time: info.event.startStr.split('T')[1],
+//       student: info.event.extendedProps.student,
+//     });
+//     handleShowModal()
+//   };
