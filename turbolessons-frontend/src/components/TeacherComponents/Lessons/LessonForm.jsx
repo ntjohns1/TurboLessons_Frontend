@@ -114,7 +114,7 @@ const LessonForm = ({ event, handleSave }) => {
             {<Form.Control
               type="text"
               name="title"
-              value={formState.title}
+              value={formState.student}
               onChange={(e) => setFormState({ ...formState, title: e.target.value })}
             />}
           </Form.Group>
@@ -135,7 +135,7 @@ const LessonForm = ({ event, handleSave }) => {
             <Form.Label>Date</Form.Label>
             <DatePicker
               className='mx-3 px-3'
-              selected={formState.date}
+              selected={formState.startTime}
               onChange={handleDateChange}
             />
           </Form.Group>

@@ -34,6 +34,7 @@ export default function LessonCalendar() {
     const handleEventClick = (info) => {
         const event = calendarEvents.find(e => e.id == info.event.id);
         console.log(event);
+        
         if (event) {
             setSelectedEvent(event);
             handleShowModal();
@@ -45,6 +46,7 @@ export default function LessonCalendar() {
             const accessToken = await oktaAuth.getAccessToken();
             setAccessToken(accessToken);
             const data = await fetchEventsByTeacher(principle);
+            
             // Convert event times to local time if necessary
             const adjustedEvents = data.map(event => {
                 const start = new Date(event.start);
