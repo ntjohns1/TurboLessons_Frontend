@@ -8,31 +8,31 @@ import DatePicker from "react-datepicker";
 import config from '../../../config';
 import "react-datepicker/dist/react-datepicker.css";
 
-const LessonForm = ({ event, handleSave }) => {
-  
-  const { isReadOnly, setReadOnly } = useState(true)
+const LessonForm = ({ event, onHide, onSave, isReadOnly }) => {
+
+
   const { authState, oktaAuth } = useOktaAuth();
   const principleName = authState && authState.idToken && authState.idToken.claims.name;
   const principleEmail = authState && authState.idToken.claims.email;
   const { students } = useStudentContext();
   const initialDate = event && event.start ? new Date(event.start) : new Date();
   const initialTime = initialDate;
-  const [formState, setFormState] = useState(event || {
+  const [formState, setFormState] = useState({
     date: initialDate,
     startTime: initialTime,
     endTime: new Date(initialTime.getTime() + 30 * 60000),
-    title: '',
-    student: '',
-    studentEmail: '',
+    title: event && event.student ? event.student : '',
+    student: event && event.student ? event.student : '',
+    studentEmail: event && event.studentEmail ? event.studentEmail : '',
     teacher: principleName,
     teacherEmail: principleEmail,
-    comments: '',
-    durationOption: '30m', // default duration option
+    comments: event && event.comments ? event.comments : '',
+    durationOption: event && event.durationOption ? event.durationOption : '30m', // default duration option
   });
 
   useEffect(() => {
-    if (event && event.start) {
-      const parsedDate = new Date(event.start);
+    if (event && event.startTime) {
+      const parsedDate = new Date(event.startTime);
       if (!isNaN(parsedDate)) {
         setFormState((prevState) => ({
           ...prevState,
@@ -41,10 +41,19 @@ const LessonForm = ({ event, handleSave }) => {
           endTime: new Date(parsedDate.getTime() + (prevState.durationOption === '30m' ? 30 : 60) * 60000),
         }));
       } else {
-        console.error('Invalid date from event:', event.start);
+        console.error('Invalid date from event:', event.startTime);
       }
     }
   }, [event]);
+
+
+  useEffect(() => {
+    // Update the title whenever the student changes
+    setFormState((prevState) => ({
+      ...prevState,
+      title: prevState.student,
+    }));
+  }, [formState.student]);
 
   const handleDateChange = (date) => {
     setFormState((prevState) => ({
@@ -88,7 +97,7 @@ const LessonForm = ({ event, handleSave }) => {
       ...formState,
       student: e.target.value,
       studentEmail: selectedStudent ? selectedStudent.email : ''
-    });
+    }); 
   };
 
   const handleSubmit = async (event) => {
@@ -96,9 +105,10 @@ const LessonForm = ({ event, handleSave }) => {
     try {
       const accessToken = await oktaAuth.getAccessToken();
       setAccessToken(accessToken);
-      await createLessonEvent(formState);
+      const newEvent = await createLessonEvent(formState);
+      onSave(newEvent);
+      onHide();
       alert('Successfully Added Lesson Event');
-      handleSave();
     } catch (error) {
       console.error(error);
     }
@@ -108,16 +118,6 @@ const LessonForm = ({ event, handleSave }) => {
     <Container>
       <Card className='d-flex justify-content-center'>
         <Form onSubmit={handleSubmit} className="m-3 px-3">
-          <Form.Label className='mb-3'>Add New Lesson</Form.Label>
-          <Form.Group className="mb-3 px-3" controlId="formTitle">
-            <Form.Label>Title</Form.Label>
-            {<Form.Control
-              type="text"
-              name="title"
-              value={formState.student}
-              onChange={(e) => setFormState({ ...formState, title: e.target.value })}
-            />}
-          </Form.Group>
           <Form.Group className="mb-3 px-3" controlId="selectStudent">
             <Form.Label>Student</Form.Label>
             <Form.Select

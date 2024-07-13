@@ -51,7 +51,7 @@ const LessonView = ({ event, handleSave }) => {
     return (
         <Container>
             <Card className='d-flex justify-content-center'>
-                <Form onSubmit={handleSubmit} className="m-3 px-3">
+                <Form className="m-3 px-3">
                     <Form.Label className='mb-3'>Add New Lesson</Form.Label>
                     <Form.Group className="mb-3 px-3" controlId="formTitle">
                         <Form.Label>Title</Form.Label>

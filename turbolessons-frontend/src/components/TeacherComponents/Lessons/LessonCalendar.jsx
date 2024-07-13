@@ -1,13 +1,12 @@
 import React, { useState, useCallback, useEffect } from 'react'
 import { Container } from 'react-bootstrap'
-import { formatDate } from '@fullcalendar/core'
 import FullCalendar from '@fullcalendar/react'
 import dayGridPlugin from '@fullcalendar/daygrid'
 import timeGridPlugin from '@fullcalendar/timegrid'
 import interactionPlugin from '@fullcalendar/interaction'
 import { useOktaAuth } from '@okta/okta-react';
 import LessonModal from './LessonModal'
-import { fetchAllEvents, fetchEventsByTeacher } from "../../../service/eventService";
+import { fetchEventsByTeacher } from "../../../service/eventService";
 import { setAccessToken } from "../../../service/axiosConfig";
 
 
@@ -15,7 +14,6 @@ export default function LessonCalendar() {
 
     const { authState, oktaAuth } = useOktaAuth();
     const principle = authState && authState.idToken && authState.idToken.claims.name;
-    const [weekendsVisible, setWeekendsVisible] = useState(true);
     const [calendarEvents, setCalendarEvents] = useState([]);
     const [selectedEvent, setSelectedEvent] = useState(null);
     const [showModal, setShowModal] = useState(false);
@@ -27,14 +25,12 @@ export default function LessonCalendar() {
 
 
     const handleDateClick = (info) => {
-        setSelectedEvent({ date: info.date });
+        setSelectedEvent({ startTime: info.date });
         handleShowModal();
     };
 
     const handleEventClick = (info) => {
-        const event = calendarEvents.find(e => e.id == info.event.id);
-        console.log(event);
-        
+        const event = calendarEvents.find(e => e.id === parseInt(info.event.id, 10));
         if (event) {
             setSelectedEvent(event);
             handleShowModal();
@@ -46,8 +42,8 @@ export default function LessonCalendar() {
             const accessToken = await oktaAuth.getAccessToken();
             setAccessToken(accessToken);
             const data = await fetchEventsByTeacher(principle);
-            
-            // Convert event times to local time if necessary
+
+
             const adjustedEvents = data.map(event => {
                 const start = new Date(event.start);
                 const end = new Date(event.end);
@@ -69,8 +65,12 @@ export default function LessonCalendar() {
         if (authState?.isAuthenticated) {
             eventsCallback();
         }
-    }, [authState, eventsCallback, calendarEvents]);
+    }, [authState, eventsCallback]);
 
+    const handleSave = async (newEvent) => {
+        setCalendarEvents(prevEvents => [...prevEvents, newEvent]);
+        handleCloseModal();
+      };
 
 
     return (
@@ -78,6 +78,7 @@ export default function LessonCalendar() {
             <LessonModal
                 show={showModal}
                 onHide={() => handleCloseModal()}
+                onSave={handleSave}
                 event={selectedEvent}
                 calendarApi={calendarApi}
             />
@@ -96,13 +97,12 @@ export default function LessonCalendar() {
                 selectable={true}
                 selectMirror={true}
                 dayMaxEvents={true}
-                weekends={weekendsVisible} // Use the state variable directly
-                // initialEvents={INITIAL_EVENTS} // alternatively, use the `events` setting to fetch from a feed
+                // weekends={true}
                 // select={handleDateSelect}
                 dateClick={handleDateClick}
                 // eventContent={renderEventContent} // custom render function
                 eventClick={handleEventClick}
-                // eventsSet={handleEvents} // called after events are initialized/added/changed/removed
+                eventsSet={eventsCallback} // called after events are initialized/added/changed/removed
                 timeZone="local"
 
             />
