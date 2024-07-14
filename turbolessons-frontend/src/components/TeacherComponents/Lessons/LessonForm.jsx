@@ -97,7 +97,7 @@ const LessonForm = ({ event, onHide, onSave, isReadOnly }) => {
       ...formState,
       student: e.target.value,
       studentEmail: selectedStudent ? selectedStudent.email : ''
-    }); 
+    });
   };
 
   const handleSubmit = async (event) => {
@@ -120,80 +120,160 @@ const LessonForm = ({ event, onHide, onSave, isReadOnly }) => {
         <Form onSubmit={handleSubmit} className="m-3 px-3">
           <Form.Group className="mb-3 px-3" controlId="selectStudent">
             <Form.Label>Student</Form.Label>
-            <Form.Select
-              name="student"
-              value={formState.student}
-              onChange={handleStudentChange}
-            >
-              <option value=''>Select a Student</option>
-              {students && students.map((option) => (
-                <option value={option.displayName} key={option.id}>{option.displayName}</option>
-              ))}
-            </Form.Select>
+            {!isReadOnly ? (
+              <Form.Select
+                name="student"
+                value={formState.student}
+                onChange={handleStudentChange}
+              >
+                <option value=''>Select a Student</option>
+                {students && students.map((option) => (
+                  <option value={option.displayName} key={option.id}>{option.displayName}</option>
+                ))}
+              </Form.Select>
+            ) : (
+              <Form.Control plaintext readOnly defaultValue={event.student} />
+            )}
           </Form.Group>
           <Form.Group className="mb-3 px-3" controlId="date">
             <Form.Label>Date</Form.Label>
-            <DatePicker
-              className='mx-3 px-3'
-              selected={formState.startTime}
-              onChange={handleDateChange}
-            />
+            {isReadOnly ? (
+              <DatePicker
+                className='mx-3 px-3'
+                selected={formState.startTime}
+                // onChange={handleDateChange}
+                readOnly
+                disabled
+              />
+            ) : (
+              <DatePicker
+                className='mx-3 px-3'
+                selected={formState.startTime}
+                onChange={handleDateChange}
+              />)}
           </Form.Group>
           <Form.Group className="mb-3 px-3" controlId="formStartTime">
             <Form.Label>Start Time</Form.Label>
-            <DatePicker
-              className='mx-3 px-3'
-              selected={formState.startTime}
-              onChange={handleStartTimeChange}
-              showTimeSelect
-              showTimeSelectOnly
-              timeIntervals={15}
-              timeCaption="Time"
-              dateFormat="h:mm aa"
-            />
+            {isReadOnly ? (
+              <DatePicker
+                className='mx-3 px-3'
+                selected={formState.startTime}
+                onChange={handleStartTimeChange}
+                showTimeSelect
+                showTimeSelectOnly
+                timeIntervals={15}
+                timeCaption="Time"
+                dateFormat="h:mm aa"
+                readOnly
+                disabled
+              />
+            ) : (
+              <DatePicker
+                className='mx-3 px-3'
+                selected={formState.startTime}
+                onChange={handleStartTimeChange}
+                showTimeSelect
+                showTimeSelectOnly
+                timeIntervals={15}
+                timeCaption="Time"
+                dateFormat="h:mm aa"
+              />
+            )}
           </Form.Group>
           <Form.Group className="mb-3 px-3" controlId="formEndTime">
             <Form.Label>End Time</Form.Label>
-            <DatePicker
-              className='mx-3 px-3'
-              selected={formState.endTime}
-              onChange={handleEndTimeChange}
-              showTimeSelect
-              showTimeSelectOnly
-              timeIntervals={15}
-              timeCaption="Time"
-              dateFormat="h:mm aa"
-            />
+            {isReadOnly ? (
+
+              <DatePicker
+                className='mx-3 px-3'
+                selected={formState.endTime}
+                onChange={handleEndTimeChange}
+                showTimeSelect
+                showTimeSelectOnly
+                timeIntervals={15}
+                timeCaption="Time"
+                dateFormat="h:mm aa"
+                disabled
+                readOnly
+              />
+            ) : (
+              <DatePicker
+                className='mx-3 px-3'
+                selected={formState.endTime}
+                onChange={handleEndTimeChange}
+                showTimeSelect
+                showTimeSelectOnly
+                timeIntervals={15}
+                timeCaption="Time"
+                dateFormat="h:mm aa"
+              />
+
+            )}
           </Form.Group>
-          <Form.Group className="mb-3 px-3" controlId="formDuration">
-            <Form.Label>Duration</Form.Label>
-            <Form.Control
-              as="select"
-              value={formState.durationOption}
-              onChange={handleDurationOptionChange}
-            >
-              <option value="1h">1 hour</option>
-              <option value="30m">30 minutes</option>
-            </Form.Control>
-          </Form.Group>
-          <Form.Group className="mb-3 px-3" controlId="comments">
-            <Form.Label>Comments</Form.Label>
-            <Form.Control
-              type="text"
-              name="comments"
-              value={formState.comments}
-              onChange={(e) => setFormState({ ...formState, comments: e.target.value })}
-            />
-          </Form.Group>
-          <Button
-            className="mx-3"
-            variant="success"
-            type="submit"
-            style={{ cursor: 'pointer' }}
-          >
-            Create Lesson
-          </Button>
+
+          {isReadOnly ? (
+            <>
+              <Form.Group className="mb-3 px-3" controlId="comments">
+                <Form.Label>Comments</Form.Label>
+                <Form.Control plaintext readOnly defaultValue={event.comments} />
+              </Form.Group>
+            </>
+          ) : (
+            <>
+              <Form.Group className="mb-3 px-3" controlId="formDuration">
+                <Form.Label>Duration</Form.Label>
+                <Form.Control
+                  as="select"
+                  value={formState.durationOption}
+                  onChange={handleDurationOptionChange}
+                >
+                  <option value="1h">1 hour</option>
+                  <option value="30m">30 minutes</option>
+                </Form.Control>
+              </Form.Group>
+              <Form.Group className="mb-3 px-3" controlId="comments">
+                <Form.Label>Comments</Form.Label>
+                <Form.Control
+                  type="text"
+                  name="comments"
+                  value={formState.comments}
+                  onChange={(e) => setFormState({ ...formState, comments: e.target.value })}
+                />
+              </Form.Group>
+            </>
+          )}
         </Form>
+        {isReadOnly ? (
+          <Card.Footer className='d-flex'>
+            <Button
+              className="mx-3"
+              variant="info"
+              type="submit"
+              style={{ cursor: 'pointer' }}
+            >
+              Edit
+            </Button>
+            <Button
+              className="mx-3"
+              variant="danger"
+              type="submit"
+              style={{ cursor: 'pointer' }}
+            >
+              Delete
+            </Button>
+          </Card.Footer>
+        ) : (
+          <Card.Footer>
+            <Button
+              className="mx-3"
+              variant="info"
+              type="submit"
+              style={{ cursor: 'pointer' }}
+            >
+              Submit
+            </Button>
+          </Card.Footer>
+        )}
       </Card>
     </Container>
   );
