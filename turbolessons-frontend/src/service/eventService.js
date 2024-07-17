@@ -90,3 +90,13 @@ export const fetchEventsByTeacherAndDate = async (teacher, date) => {
     throw error;
   }
 };
+
+export const deleteLessonEvent = async (id) => {
+  try {
+    const response = await api.delete(`/lessons/${id}`);
+    return response.data;
+  } catch (error) {
+    console.error('Error deleting lesson:', error);
+    throw error;
+  }
+};
