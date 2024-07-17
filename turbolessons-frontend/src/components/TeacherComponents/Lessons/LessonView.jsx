@@ -13,10 +13,14 @@ const LessonView = ({ event, setUpdate, onDelete }) => {
 
     const [show, setShow] = useState(false)
     const handleClose = () => {
-        setUpdate(false);
         setShow(false);
     };
-    const handleShow = () => setShow(true);
+
+    // useEffect(() => {
+    //     return () => {
+    //       setUpdate(false);
+    //     };
+    //   }, []);
 
     return (
         <Container>
@@ -30,7 +34,7 @@ const LessonView = ({ event, setUpdate, onDelete }) => {
                         <Form.Label>Date</Form.Label>
                         <DatePicker
                             className='mx-3 px-3'
-                            selected={event.startTime}
+                            selected={event.start}
                             readOnly
                             disabled
                         />
@@ -39,7 +43,7 @@ const LessonView = ({ event, setUpdate, onDelete }) => {
                         <Form.Label>Start Time</Form.Label>
                         <DatePicker
                             className='mx-3 px-3'
-                            selected={event.startTime}
+                            selected={event.start}
                             showTimeSelect
                             showTimeSelectOnly
                             timeIntervals={15}
@@ -53,7 +57,7 @@ const LessonView = ({ event, setUpdate, onDelete }) => {
                         <Form.Label>End Time</Form.Label>
                         <DatePicker
                             className='mx-3 px-3'
-                            selected={event.endTime}
+                            selected={event.end}
                             showTimeSelect
                             showTimeSelectOnly
                             timeIntervals={15}
@@ -82,7 +86,7 @@ const LessonView = ({ event, setUpdate, onDelete }) => {
                         className="mx-3"
                         variant="danger"
                         style={{ cursor: 'pointer' }}
-                        onClick={() => handleShow()}
+                        onClick={() => onDelete()}
                     >
                         Delete
                     </Button>

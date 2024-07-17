@@ -19,12 +19,13 @@ export default function LessonCalendar() {
     const [showModal, setShowModal] = useState(false);
     // const [calendarInfo, setCalendarInfo] = useState({});
     const [calendarApi, setCalendarApi] = useState({});
-
+    const [isDateClick, setIsDateClick] = useState(false);
     const handleCloseModal = () => setShowModal(false);
     const handleShowModal = () => setShowModal(true);
 
 
     const handleDateClick = (info) => {
+        setIsDateClick(true);
         setSelectedEvent({ startTime: info.date });
         handleShowModal();
     };
@@ -32,6 +33,7 @@ export default function LessonCalendar() {
     const handleEventClick = (info) => {
         const event = calendarEvents.find(e => e.id === parseInt(info.event.id, 10));
         if (event) {
+            setIsDateClick(false);
             setSelectedEvent(event);
             handleShowModal();
         }
@@ -92,6 +94,7 @@ export default function LessonCalendar() {
                 onSave={handleSave}
                 onDelete={handleDelete}
                 event={selectedEvent}
+                isDateClick={isDateClick}
                 calendarApi={calendarApi}
             />
             <FullCalendar
