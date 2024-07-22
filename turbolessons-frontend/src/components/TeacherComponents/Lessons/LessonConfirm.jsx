@@ -4,7 +4,7 @@ import { deleteLessonEvent } from '../../../service/eventService';
 import { setAccessToken } from '../../../service/axiosConfig';
 import { Modal, Button, ButtonGroup } from 'react-bootstrap';
 
-export default function LessonConfirm({ eventId, show, onHide }) {
+export default function LessonConfirm({  show, onHide, eventId }) {
 
     const {authState, oktaAuth}= useOktaAuth();
     const handleDelete = async (event) => {
@@ -12,6 +12,7 @@ export default function LessonConfirm({ eventId, show, onHide }) {
             const accessToken = await oktaAuth.getAccessToken();
             setAccessToken(accessToken);
             await deleteLessonEvent(event);
+            onHide()
             alert('Lesson Deleted');
         } catch (error) {
             console.error(error);
