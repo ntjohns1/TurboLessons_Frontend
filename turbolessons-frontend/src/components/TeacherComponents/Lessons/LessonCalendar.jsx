@@ -74,17 +74,7 @@ export default function LessonCalendar() {
         handleCloseModal();
     };
 
-    const handleDelete = async (event) => {
-        event.preventDefault();
-        try {
-            const accessToken = await oktaAuth.getAccessToken();
-            setAccessToken(accessToken);
-            const newEvent = await deleteLessonEvent(event.id);
-            alert('Successfully Added Lesson Event');
-        } catch (error) {
-            console.error(error);
-        }
-    };
+
 
     return (
         <Container style={{ height: '90vh' }}>
@@ -92,7 +82,7 @@ export default function LessonCalendar() {
                 show={showModal}
                 onHide={() => handleCloseModal()}
                 onSave={handleSave}
-                onDelete={handleDelete}
+                // onDelete={handleDelete}
                 event={selectedEvent}
                 isDateClick={isDateClick}
                 calendarApi={calendarApi}

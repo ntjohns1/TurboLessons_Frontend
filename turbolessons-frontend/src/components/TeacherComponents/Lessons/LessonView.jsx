@@ -9,18 +9,11 @@ import config from '../../../config';
 import "react-datepicker/dist/react-datepicker.css";
 import LessonConfirm from './LessonConfirm';
 
-const LessonView = ({ event, setUpdate, onDelete }) => {
+const LessonView = ({ event, setUpdate }) => {
 
-    const [show, setShow] = useState(false)
-    const handleClose = () => {
-        setShow(false);
-    };
-
-    // useEffect(() => {
-    //     return () => {
-    //       setUpdate(false);
-    //     };
-    //   }, []);
+    const [showConfirm, setShowConfirm] = useState(false)
+    const handleCloseConfirm = () => setShowConfirm(false);
+    const handleShowConfirm = () => setShowConfirm(true);
 
     return (
         <Container>
@@ -86,14 +79,14 @@ const LessonView = ({ event, setUpdate, onDelete }) => {
                         className="mx-3"
                         variant="danger"
                         style={{ cursor: 'pointer' }}
-                        onClick={() => onDelete()}
+                        onClick={handleShowConfirm}
                     >
                         Delete
                     </Button>
                     <LessonConfirm
-                        show={show}
-                        onHide={handleClose}
-                        onDelete={onDelete}
+                        show={showConfirm}
+                        onHide={handleCloseConfirm}
+                        eventId={event.id}
                         backdrop="static"
                         keyboard="false"
                     />

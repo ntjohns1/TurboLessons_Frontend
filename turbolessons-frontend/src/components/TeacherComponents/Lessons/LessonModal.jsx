@@ -5,7 +5,7 @@ import LessonView from './LessonView';
 // import LessonView from "./LessonView"
 
 
-const LessonModal = ({ show, onHide, event, onSave, onDelete, isDateClick }) => {
+const LessonModal = ({ show, onHide, event, onSave, isDateClick }) => {
     const [isUpdate, setUpdate] = useState(false);
     return (
         <Modal show={show} onHide={onHide}>
@@ -16,7 +16,7 @@ const LessonModal = ({ show, onHide, event, onSave, onDelete, isDateClick }) => 
                 {isUpdate || isDateClick ? (
                     <LessonForm event={event} setUpdate={setUpdate} onHide={onHide} onSave={onSave} />
                 ) : (
-                    <LessonView event={event} setUpdate={setUpdate} onHide={onHide} onDelete={onDelete} />
+                    <LessonView event={event} setUpdate={setUpdate} onHide={onHide} />
                 )}
             </Modal.Body>
         </Modal>
