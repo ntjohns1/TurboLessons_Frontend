@@ -25,7 +25,7 @@ export default function LessonConfirm({  show, onHide, eventId }) {
             onHide={onHide}
         >
             <Modal.Header closeButton>
-                <Modal.Title>Modal title</Modal.Title>
+                <Modal.Title>Delete Lesson?</Modal.Title>
             </Modal.Header>
             <Modal.Body>
                 <ButtonGroup>

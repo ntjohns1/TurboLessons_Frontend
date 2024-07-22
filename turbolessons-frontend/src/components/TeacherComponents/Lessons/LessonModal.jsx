@@ -14,7 +14,7 @@ const LessonModal = ({ show, onHide, event, onSave, isDateClick }) => {
             </Modal.Header>
             <Modal.Body>
                 {isUpdate || isDateClick ? (
-                    <LessonForm event={event} setUpdate={setUpdate} onHide={onHide} onSave={onSave} />
+                    <LessonForm event={event} setUpdate={setUpdate} onHide={onHide} onSave={onSave} isDateClick={isDateClick} />
                 ) : (
                     <LessonView event={event} setUpdate={setUpdate} onHide={onHide} />
                 )}

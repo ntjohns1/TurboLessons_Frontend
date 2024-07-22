@@ -82,7 +82,6 @@ export default function LessonCalendar() {
                 show={showModal}
                 onHide={() => handleCloseModal()}
                 onSave={handleSave}
-                // onDelete={handleDelete}
                 event={selectedEvent}
                 isDateClick={isDateClick}
                 calendarApi={calendarApi}

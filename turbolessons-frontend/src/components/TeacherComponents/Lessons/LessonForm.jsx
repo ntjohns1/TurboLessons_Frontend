@@ -8,7 +8,7 @@ import DatePicker from "react-datepicker";
 import config from '../../../config';
 import "react-datepicker/dist/react-datepicker.css";
 
-const LessonForm = ({ event, setUpdate, onHide, onSave }) => {
+const LessonForm = ({ event, setUpdate, onHide, onSave, isDateClick }) => {
 
 
   const { authState, oktaAuth } = useOktaAuth();
@@ -17,7 +17,6 @@ const LessonForm = ({ event, setUpdate, onHide, onSave }) => {
   const { students } = useStudentContext();
   const initialDate = event && event.start ? new Date(event.start) : new Date();
   const initialTime = initialDate;
-  const isEdit = event && event.id;
   const [formState, setFormState] = useState({
     date: initialDate,
     startTime: initialTime,
@@ -198,7 +197,7 @@ const LessonForm = ({ event, setUpdate, onHide, onSave }) => {
             type="submit"
             style={{ cursor: 'pointer' }}
           >
-            {isEdit ? "Edit Lesson" : "Create Lesson"}
+            {isDateClick ? "Create Lesson" : "Edit Lesson"}
           </Button>
         </Form>
       </Card>
