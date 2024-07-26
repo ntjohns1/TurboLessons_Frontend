@@ -30,6 +30,21 @@ export default function LessonCalendar() {
     const handleShowModal = () => setShowModal(true);
 
 
+    const handleDateClick = (info) => {
+        setIsDateClick(true);
+        setSelectedEvent({ startTime: info.date });
+        handleShowModal();
+    };
+
+    const handleEventClick = (info) => {
+        const event = calendarEvents.find(e => e.id === parseInt(info.event.id, 10));
+        if (event) {
+            console.log(info.event.id);
+            setIsDateClick(false);
+            setSelectedEvent(event);
+            handleShowModal();
+        }
+    };
 
     const eventsCallback = useCallback(async () => {
         try {
@@ -55,38 +70,29 @@ export default function LessonCalendar() {
         }
     }, [oktaAuth, principle]);
 
-    const handleDateClick = (info) => {
-
-    };
-
-    const handleEventClick = (info) => {
-        const event = calendarEvents.find(e => e.id === parseInt(info.event.id, 10));
-        if (event) {
-
+    useEffect(() => {
+        if (authState?.isAuthenticated) {
+            eventsCallback();
         }
-    };
-
-    // useEffect(() => {
-
-    //     if (authState?.isAuthenticated) {
-    //         eventsCallback();
-    //     }
-    // }, [authState, eventsCallback]);
-
-    // const handleSave = async (newEvent) => {
-    //     setCalendarEvents(prevEvents => {
-    //       const existingEventIndex = prevEvents.findIndex(event => event.id === newEvent.id);
-    //       if (existingEventIndex !== -1) {
-    //         return null;
-    //       } else {
-    //         return [...prevEvents, newEvent];
-    //       }
-    //     });
-    //   };
+    }, [authState, eventsCallback]);
 
     const handleSave = async (newEvent) => {
-
-    };
+        setCalendarEvents(prevEvents => {
+          const existingEventIndex = prevEvents.findIndex(event => event.id === newEvent.id);
+          if (existingEventIndex !== -1) {
+            const updatedEvents = [...prevEvents];
+            updatedEvents[existingEventIndex] = newEvent;
+            return updatedEvents;
+          } else {
+            return [...prevEvents, newEvent];
+          }
+        });
+      };
+    
+      const handleEventsChange = async (info) => {
+        const updatedEvents = await eventsCallback();
+        setCalendarEvents(updatedEvents);
+      };
 
 
     return (
@@ -97,7 +103,7 @@ export default function LessonCalendar() {
                 onSave={handleSave}
                 event={selectedEvent}
                 isDateClick={isDateClick}
-            />
+                />
             <FullCalendar
                 ref={calendarRef}
                 plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
@@ -114,13 +120,13 @@ export default function LessonCalendar() {
                 selectable={true}
                 selectMirror={true}
                 dayMaxEvents={true}
-            // weekends={true}
-            // select={handleDateSelect}
-            // dateClick={handleDateClick}
-            // eventContent={renderEventContent} // custom render function
-            // eventClick={handleEventClick}
-            // eventChange={eventsCallback} // called after events are initialized/added/changed/removed
-            // timeZone="local"
+                // weekends={true}
+                // select={handleDateSelect}
+                dateClick={handleDateClick}
+                // eventContent={renderEventContent} // custom render function
+                eventClick={handleEventClick}
+                // eventChange={eventsCallback} // called after events are initialized/added/changed/removed
+                timeZone="local"
 
             />
         </Container>
