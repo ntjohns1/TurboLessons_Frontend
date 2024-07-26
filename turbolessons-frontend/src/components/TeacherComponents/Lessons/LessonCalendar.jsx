@@ -9,7 +9,9 @@ import LessonModal from './LessonModal'
 import { fetchEventsByTeacher } from "../../../service/eventService";
 import { setAccessToken } from "../../../service/axiosConfig";
 
-
+/*  TODO: Refer to previous iteration, the reason the Calendar is not updating is that you need 
+to create a CalendarApi object in order to interact with the Fullcalendar component
+*/
 export default function LessonCalendar() {
 
     const { authState, oktaAuth } = useOktaAuth();
@@ -17,8 +19,6 @@ export default function LessonCalendar() {
     const [calendarEvents, setCalendarEvents] = useState([]);
     const [selectedEvent, setSelectedEvent] = useState(null);
     const [showModal, setShowModal] = useState(false);
-    // const [calendarInfo, setCalendarInfo] = useState({});
-    const [calendarApi, setCalendarApi] = useState({});
     const [isDateClick, setIsDateClick] = useState(false);
     const handleCloseModal = () => setShowModal(false);
     const handleShowModal = () => setShowModal(true);
@@ -69,11 +69,27 @@ export default function LessonCalendar() {
         }
     }, [authState, eventsCallback]);
 
-    const handleSave = async (newEvent) => {
-        setCalendarEvents(prevEvents => [...prevEvents, newEvent]);
-        handleCloseModal();
-    };
+    // const handleSave = async (newEvent) => {
+    //     setCalendarEvents(prevEvents => [...prevEvents, newEvent]);
+    // };
 
+    const handleSave = async (newEvent) => {
+        setCalendarEvents(prevEvents => {
+          const existingEventIndex = prevEvents.findIndex(event => event.id === newEvent.id);
+          if (existingEventIndex !== -1) {
+            const updatedEvents = [...prevEvents];
+            updatedEvents[existingEventIndex] = newEvent;
+            return updatedEvents;
+          } else {
+            return [...prevEvents, newEvent];
+          }
+        });
+      };
+    
+      const handleEventsChange = async (info) => {
+        const updatedEvents = await eventsCallback();
+        setCalendarEvents(updatedEvents);
+      };
 
 
     return (
@@ -84,7 +100,6 @@ export default function LessonCalendar() {
                 onSave={handleSave}
                 event={selectedEvent}
                 isDateClick={isDateClick}
-                calendarApi={calendarApi}
             />
             <FullCalendar
                 plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
@@ -106,7 +121,7 @@ export default function LessonCalendar() {
                 dateClick={handleDateClick}
                 // eventContent={renderEventContent} // custom render function
                 eventClick={handleEventClick}
-                eventsSet={eventsCallback} // called after events are initialized/added/changed/removed
+                eventChange={eventsCallback} // called after events are initialized/added/changed/removed
                 timeZone="local"
 
             />

@@ -91,6 +91,16 @@ export const fetchEventsByTeacherAndDate = async (teacher, date) => {
   }
 };
 
+export const editLessonEvent = async (id, formState) => {
+  try {
+    const response = await api.put(`/lessons/${id}`, formState);
+    return response.data;
+  } catch (error) {
+    console.error('Error editing lesson:', error);
+    throw error;
+  }
+};
+
 export const deleteLessonEvent = async (id) => {
   try {
     const response = await api.delete(`/lessons/${id}`);

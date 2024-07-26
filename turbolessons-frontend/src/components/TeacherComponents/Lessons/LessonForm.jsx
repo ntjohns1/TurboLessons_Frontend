@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Button, Card, Container, Form } from "react-bootstrap";
 import { useOktaAuth } from '@okta/okta-react';
 import { useStudentContext } from '../../../util/context/StudentContext';
-import { createLessonEvent } from '../../../service/eventService';
+import { createLessonEvent, editLessonEvent } from '../../../service/eventService';
 import { setAccessToken } from '../../../service/axiosConfig';
 import DatePicker from "react-datepicker";
 import config from '../../../config';
@@ -106,15 +106,26 @@ const LessonForm = ({ event, setUpdate, onHide, onSave, isDateClick }) => {
     });
   };
 
-  const handleSubmit = async (event) => {
-    event.preventDefault();
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    console.log(formState);
+    console.log(event.id);
     try {
       const accessToken = await oktaAuth.getAccessToken();
       setAccessToken(accessToken);
-      const newEvent = await createLessonEvent(formState);
-      onSave(newEvent);
-      onHide();
-      alert('Successfully Added Lesson Event');
+      onSave
+      if (!isDateClick) {
+        const newEvent = await editLessonEvent(event.id, formState)
+        onSave(newEvent);
+        onHide();
+        alert('Successfully Edited Lesson Event');
+
+      } else {
+        const newEvent = await createLessonEvent(formState);
+        onSave(newEvent);
+        onHide();
+        alert('Successfully Added Lesson Event');
+      }
     } catch (error) {
       console.error(error);
     }
