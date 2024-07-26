@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useEffect } from 'react'
+import React, { useState, useCallback, useEffect, useRef } from 'react'
 import { Container } from 'react-bootstrap'
 import FullCalendar from '@fullcalendar/react'
 import dayGridPlugin from '@fullcalendar/daygrid'
@@ -9,8 +9,13 @@ import LessonModal from './LessonModal'
 import { fetchEventsByTeacher } from "../../../service/eventService";
 import { setAccessToken } from "../../../service/axiosConfig";
 
-/*  TODO: Refer to previous iteration, the reason the Calendar is not updating is that you need 
-to create a CalendarApi object in order to interact with the Fullcalendar component
+/*  TODO: State management should interact with Fullcalendar API, currently just using our own objects
+
+Refactor Create Event Objects
+Refactor Read Event Objects
+Refactor Update Event Objects
+Refactor Delete Event Objects
+
 */
 export default function LessonCalendar() {
 
@@ -20,6 +25,8 @@ export default function LessonCalendar() {
     const [selectedEvent, setSelectedEvent] = useState(null);
     const [showModal, setShowModal] = useState(false);
     const [isDateClick, setIsDateClick] = useState(false);
+    const [calendarInfo, setCalendarInfo] = useState({});
+    const [calendarApi, setCalendarApi] = useState({});
     const handleCloseModal = () => setShowModal(false);
     const handleShowModal = () => setShowModal(true);
 
@@ -33,6 +40,7 @@ export default function LessonCalendar() {
     const handleEventClick = (info) => {
         const event = calendarEvents.find(e => e.id === parseInt(info.event.id, 10));
         if (event) {
+            console.log(info.event.id);
             setIsDateClick(false);
             setSelectedEvent(event);
             handleShowModal();
