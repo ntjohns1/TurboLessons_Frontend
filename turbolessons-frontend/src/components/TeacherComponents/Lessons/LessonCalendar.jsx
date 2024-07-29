@@ -1,4 +1,5 @@
 import React, { useState, useCallback, useEffect, useRef } from 'react'
+import { useDispatch, useSelector } from 'react-redux';
 import { Container } from 'react-bootstrap'
 import FullCalendar from '@fullcalendar/react'
 import dayGridPlugin from '@fullcalendar/daygrid'
@@ -6,6 +7,7 @@ import timeGridPlugin from '@fullcalendar/timegrid'
 import interactionPlugin from '@fullcalendar/interaction'
 import { useOktaAuth } from '@okta/okta-react';
 import LessonModal from './LessonModal'
+import { fetchTeacherEvents, createEvent, updateEvent, deleteEvent, setLoading } from './LessonSlice';
 import { fetchEventsByTeacher } from "../../../service/eventService";
 import { setAccessToken } from "../../../service/axiosConfig";
 
@@ -21,7 +23,6 @@ export default function LessonCalendar() {
 
     const calendarRef = useRef(null)
     const { authState, oktaAuth } = useOktaAuth();
-    const principle = authState && authState.idToken && authState.idToken.claims.name;
     const [calendarEvents, setCalendarEvents] = useState([]);
     const [selectedEvent, setSelectedEvent] = useState(null);
     const [showModal, setShowModal] = useState(false);
@@ -29,31 +30,30 @@ export default function LessonCalendar() {
     const handleCloseModal = () => setShowModal(false);
     const handleShowModal = () => setShowModal(true);
 
+    const dispatch = useDispatch();
+    const eventsByTeacher = useSelector((state) => state.lessons.eventsByTeacher);
+    const loading = useSelector((state) => state.lessons.loading);
 
 
-    const eventsCallback = useCallback(async () => {
-        try {
-            const accessToken = await oktaAuth.getAccessToken();
+
+    useEffect(() => {
+        if (authState.isAuthenticated) {
+            const teacher = authState.idToken.claims.name;
+            const accessToken = oktaAuth.getAccessToken();
             setAccessToken(accessToken);
-            const data = await fetchEventsByTeacher(principle);
-
-
-            const adjustedEvents = data.map(event => {
-                const start = new Date(event.start);
-                const end = new Date(event.end);
-                return {
-                    ...event,
-                    start: new Date(start.getTime() - (start.getTimezoneOffset() * 60000)),
-                    end: new Date(end.getTime() - (end.getTimezoneOffset() * 60000)),
-                };
-            });
-            setCalendarEvents(adjustedEvents);
-            return adjustedEvents;
-        } catch (error) {
-            console.error(error);
-            return [];
+            dispatch(fetchTeacherEvents({ teacher }));
         }
-    }, [oktaAuth, principle]);
+    }, [authState, dispatch]);
+
+    
+    const events = useCallback(() => {
+        return eventsByTeacher.map(event => ({
+            id: event.id,
+            title: event.title,
+            start: new Date(event.start),
+            end: new Date(event.end),
+        }));
+    }, [eventsByTeacher]);
 
     const handleDateClick = (info) => {
 
@@ -66,23 +66,6 @@ export default function LessonCalendar() {
         }
     };
 
-    // useEffect(() => {
-
-    //     if (authState?.isAuthenticated) {
-    //         eventsCallback();
-    //     }
-    // }, [authState, eventsCallback]);
-
-    // const handleSave = async (newEvent) => {
-    //     setCalendarEvents(prevEvents => {
-    //       const existingEventIndex = prevEvents.findIndex(event => event.id === newEvent.id);
-    //       if (existingEventIndex !== -1) {
-    //         return null;
-    //       } else {
-    //         return [...prevEvents, newEvent];
-    //       }
-    //     });
-    //   };
 
     const handleSave = async (newEvent) => {
 
@@ -106,7 +89,7 @@ export default function LessonCalendar() {
                     center: 'title',
                     right: 'dayGridMonth,timeGridWeek,timeGridDay'
                 }}
-                events={eventsCallback}
+                events={events()}
                 initialView='dayGridMonth'
                 height={'90vh'}
                 contentHeight={800}
