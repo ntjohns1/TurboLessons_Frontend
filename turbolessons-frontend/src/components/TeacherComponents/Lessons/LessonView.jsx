@@ -15,6 +15,10 @@ const LessonView = ({ event, setUpdate, onHide }) => {
     const handleCloseConfirm = () => setShowConfirm(false);
     const handleShowConfirm = () => setShowConfirm(true);
 
+    const parseDate = (dateString) => {
+        return new Date(dateString);
+      };
+
     return (
         <Container>
             {!showConfirm ? (
@@ -28,7 +32,7 @@ const LessonView = ({ event, setUpdate, onHide }) => {
                             <Form.Label>Date</Form.Label>
                             <DatePicker
                                 className='mx-3 px-3'
-                                selected={event.start}
+                                selected={parseDate(event.start)}
                                 readOnly
                                 disabled
                             />
@@ -37,7 +41,7 @@ const LessonView = ({ event, setUpdate, onHide }) => {
                             <Form.Label>Start Time</Form.Label>
                             <DatePicker
                                 className='mx-3 px-3'
-                                selected={event.start}
+                                selected={parseDate(event.start)}
                                 showTimeSelect
                                 showTimeSelectOnly
                                 timeIntervals={15}
@@ -51,7 +55,7 @@ const LessonView = ({ event, setUpdate, onHide }) => {
                             <Form.Label>End Time</Form.Label>
                             <DatePicker
                                 className='mx-3 px-3'
-                                selected={event.end}
+                                selected={parseDate(event.end)}
                                 showTimeSelect
                                 showTimeSelectOnly
                                 timeIntervals={15}

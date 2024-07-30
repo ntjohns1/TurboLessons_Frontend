@@ -12,8 +12,12 @@ const adjustEvents = (events) => {
     const end = new Date(event.end);
     return {
       ...event,
-      start: new Date(start.getTime() - start.getTimezoneOffset() * 60000).toISOString(),
-      end: new Date(end.getTime() - end.getTimezoneOffset() * 60000).toISOString(),
+      start: new Date(
+        start.getTime() - start.getTimezoneOffset() * 60000
+      ).toISOString(),
+      end: new Date(
+        end.getTime() - end.getTimezoneOffset() * 60000
+      ).toISOString(),
     };
   });
 };
@@ -56,11 +60,24 @@ const lessonSlice = createSlice({
   name: "lessons",
   initialState: {
     eventsByTeacher: [],
+    selectedEvent: null,
+    dateClick: false,
+    showModal: false,
+    showConfirm: false,
     loading: false,
   },
   reducers: {
-    setTeacherEvents(state, action) {
-      state.eventsByTeacher = action.payload;
+    setSelectedEvent(state, action) {
+      state.selectedEvent = action.payload;
+    },
+    setDateClick(state, action) {
+      state.dateClick = action.payload;
+    },
+    setShowModal(state, action) {
+      state.showModal = action.payload;
+    },
+    setShowConfirm(state, action) {
+      state.showConfirm = action.payload;
     },
     setLoading(state, action) {
       state.loading = action.payload;
@@ -97,6 +114,15 @@ const lessonSlice = createSlice({
   },
 });
 
-export const { setTeacherEvents, setLoading } = lessonSlice.actions;
+export const {
+  setSelectedEvent,
+  setDateClick,
+  setShowModal,
+  setShowConfirm,
+  setLoading,
+} = lessonSlice.actions;
+
+export const selectEventById = (state, eventId) =>
+  state.lessons.eventsByTeacher.find((event) => event.id === eventId);
 
 export default lessonSlice.reducer;
