@@ -26,8 +26,8 @@ entity "Email" as MailObject {
 
 entity "Lesson Event" as LessonEvent {
 * id : Integer
-* startTime : LocalDateTime
-* endTime : LocalDateTime
+* start : LocalDateTime
+* end : LocalDateTime
 * title : String
 * student : String
 * studentEmail : String

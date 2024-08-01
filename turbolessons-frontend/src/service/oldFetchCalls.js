@@ -182,8 +182,8 @@ export const fetchEvents = () => {
         .then((data) => {
           const events = data.map((s) => ({
             id: s.id,
-            start: s.startTime,
-            end: s.endTime,
+            start: s.start,
+            end: s.end,
             title: s.title,
           }));
           setCurrentEvents(events);

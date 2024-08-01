@@ -67,37 +67,45 @@ export default function LessonCalendar() {
     }, [eventsByTeacher]);
 
     const handleDateClick = (info) => {
-
+        dispatch(setDateClick(true));
+        dispatch(setSelectedEvent({ start: info.date }));
+        handleShowModal();
     };
-
+    
     const handleEventClick = (info) => {
         const event = eventsByTeacher.find(e => e.id === parseInt(info.event.id, 10));
         if (event) {
+            dispatch(setDateClick(false));
             dispatch(setSelectedEvent(event));
             handleShowModal();
         }
     };
 
-    const handleEventAdd = async (addInfo) => {
-        if (authState.isAuthenticated) {
-            setAccessToken(accessToken);
-            dispatch(createEvent({ addInfo }));
-        }
+    const handleEventAdd = (addInfo) => {
+        dispatch(createEvent({
+            ...addInfo,
+            start: new Date(addInfo.startTime),
+            end: new Date(addInfo.endTime)
+        }));
     };
 
-    const handleEventChange = (changeInfo) => {
-        if (authState.isAuthenticated) {
-            setAccessToken(accessToken);
-            dispatch(updateEvent({ changeInfo }));
-        }
+    const handleEventChange = (id, changeInfo) => {
+        console.log(changeInfo);
+        dispatch(updateEvent({
+            id,
+            formState: {
+                ...changeInfo,
+                start: new Date(changeInfo.startTime),
+                end: new Date(changeInfo.endTime)
+            }
+        }));
     };
 
     const handleEventRemove = (removeInfo) => {
-        if (authState.isAuthenticated) {
-            setAccessToken(accessToken);
-            dispatch(updateEvent({ changeInfo }));
-        }
-    }
+        const event = removeInfo.event;
+        dispatch(deleteEvent(event.id));
+    };
+
 
     return (
         <Container style={{ height: '90vh' }}>
@@ -106,7 +114,7 @@ export default function LessonCalendar() {
                 onHide={() => handleCloseModal()}
                 isDateClick={dateClick}
                 event={selectedEvent}
-                onSave={handleEventAdd}
+                onCreate={handleEventAdd}
                 onUpdate={handleEventChange}
                 onDelete={handleEventRemove}
             />
@@ -128,7 +136,7 @@ export default function LessonCalendar() {
                 dayMaxEvents={true}
                 weekends={true}
                 // eventContent={renderEventContent} // custom render function
-                // dateClick={handleDateClick}
+                dateClick={handleDateClick}
                 eventClick={handleEventClick}
                 eventAdd={handleEventAdd}
                 eventChange={handleEventChange} // called after events are initialized/added/changed/removed

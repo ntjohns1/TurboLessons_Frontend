@@ -2,13 +2,12 @@ import React, { useState, useEffect } from 'react';
 import { Button, Card, Container, Form } from "react-bootstrap";
 import { useOktaAuth } from '@okta/okta-react';
 import { useStudentContext } from '../../../util/context/StudentContext';
-import { createLessonEvent, editLessonEvent } from '../../../service/eventService';
 import { setAccessToken } from '../../../service/axiosConfig';
 import DatePicker from "react-datepicker";
 import config from '../../../config';
 import "react-datepicker/dist/react-datepicker.css";
 
-const LessonForm = ({ event, setUpdate, onHide, onSave, isDateClick }) => {
+const LessonForm = ({ event, setUpdate, onHide, isDateClick, onCreate, onUpdate }) => {
 
 
   const { authState, oktaAuth } = useOktaAuth();
@@ -71,23 +70,14 @@ const LessonForm = ({ event, setUpdate, onHide, onSave, isDateClick }) => {
   const handleStartTimeChange = (time) => {
     setFormState((prevState) => {
       const date = new Date(prevState.date);
-      date.setHours(time.getHours());
-      date.setMinutes(time.getMinutes());
+      // date.setHours(time.getHours());
+      // date.setMinutes(time.getMinutes());
 
-      const endTime = new Date(date.getTime() + (prevState.durationOption === '30m' ? 30 : 60) * 60000);
+      const endTime = new Date(time.getTime() + (prevState.durationOption === '30m' ? 30 : 60) * 60000);
       return { ...prevState, startTime: time, endTime };
     });
   };
 
-  const handleEndTimeChange = (time) => {
-    setFormState((prevState) => {
-      const date = new Date(prevState.date);
-      date.setHours(time.getHours());
-      date.setMinutes(time.getMinutes());
-
-      return { ...prevState, endTime: time };
-    });
-  };
 
   const handleDurationOptionChange = (e) => {
     const newDuration = e.target.value;
@@ -108,21 +98,18 @@ const LessonForm = ({ event, setUpdate, onHide, onSave, isDateClick }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log(formState);
-    console.log(event.id);
+    // console.log(formState);
+    // console.log(event.id);
     try {
       const accessToken = await oktaAuth.getAccessToken();
       setAccessToken(accessToken);
-      onSave
       if (!isDateClick) {
-        const newEvent = await editLessonEvent(event.id, formState)
-        onSave(newEvent);
+        onUpdate(event.id, formState);
         onHide();
         alert('Successfully Edited Lesson Event');
 
       } else {
-        const newEvent = await createLessonEvent(formState);
-        onSave(newEvent);
+        onCreate(formState);
         onHide();
         alert('Successfully Added Lesson Event');
       }
@@ -174,12 +161,12 @@ const LessonForm = ({ event, setUpdate, onHide, onSave, isDateClick }) => {
             <DatePicker
               className='mx-3 px-3'
               selected={formState.endTime}
-              onChange={handleEndTimeChange}
               showTimeSelect
               showTimeSelectOnly
               timeIntervals={15}
               timeCaption="Time"
               dateFormat="h:mm aa"
+              readOnly
             />
           </Form.Group>
           <Form.Group className="mb-3 px-3" controlId="formDuration">

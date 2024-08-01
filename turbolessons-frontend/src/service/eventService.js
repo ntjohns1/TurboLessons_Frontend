@@ -93,6 +93,7 @@ export const fetchEventsByTeacherAndDate = async (teacher, date) => {
 
 export const editLessonEvent = async (id, formState) => {
   try {
+    console.log('event service: ', formState);
     const response = await api.put(`/lessons/${id}`, formState);
     return response.data;
   } catch (error) {

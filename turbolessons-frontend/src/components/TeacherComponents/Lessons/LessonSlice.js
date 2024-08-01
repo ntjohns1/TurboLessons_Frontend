@@ -43,6 +43,7 @@ export const createEvent = createAsyncThunk(
 export const updateEvent = createAsyncThunk(
   "lessons/updateEvent",
   async ({ id, formState }) => {
+    // Ensure dates are in ISO string format before sending to the API
     const response = await editLessonEvent(id, formState);
     return response;
   }

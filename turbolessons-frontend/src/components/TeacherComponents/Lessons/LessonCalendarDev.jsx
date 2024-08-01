@@ -32,7 +32,7 @@ export default function LessonCalendar() {
 
     const handleDateClick = (info) => {
         setIsDateClick(true);
-        setSelectedEvent({ startTime: info.date });
+        setSelectedEvent({ start: info.date });
         handleShowModal();
     };
 
