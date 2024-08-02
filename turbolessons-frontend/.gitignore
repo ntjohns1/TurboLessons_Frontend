@@ -14,3 +14,5 @@ yalc.lock
 .okta.env
 ./env
 reactBuild.sh
+./src/components/TeacherComponents/Lessons/old_ref/
+/Users/noslen/DevProjects/TurboLessons_Frontend/turbolessons-frontend/src/components/TeacherComponents/Lessons/old_ref/

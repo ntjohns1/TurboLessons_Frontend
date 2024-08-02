@@ -20,14 +20,6 @@ import {
 } from './LessonSlice';
 import { setAccessToken } from "../../../service/axiosConfig";
 
-/*  TODO: State management should interact with Fullcalendar API, currently just using our own objects
-
-Refactor Create Event Objects
-Refactor Read Event Objects
-Refactor Update Event Objects
-Refactor Delete Event Objects
-
-*/
 export default function LessonCalendar() {
 
     const calendarRef = useRef(null)
@@ -47,6 +39,13 @@ export default function LessonCalendar() {
         dispatch(setShowModal(true));
     };
 
+    useEffect(() => {
+        if (authState.isAuthenticated) {
+            const teacher = authState.idToken.claims.name;
+            setAccessToken(accessToken);
+            dispatch(fetchTeacherEvents({ teacher }));
+        }
+    }, [handleCloseModal]);
 
     useEffect(() => {
         if (authState.isAuthenticated) {
@@ -67,11 +66,12 @@ export default function LessonCalendar() {
     }, [eventsByTeacher]);
 
     const handleDateClick = (info) => {
-        dispatch(setDateClick(true));
-        dispatch(setSelectedEvent({ start: info.date }));
+        // dispatch(setDateClick(true));
+        // dispatch(setSelectedEvent({ start: new Date(info.date) }));
+        console.log(info.date);
         handleShowModal();
     };
-    
+
     const handleEventClick = (info) => {
         const event = eventsByTeacher.find(e => e.id === parseInt(info.event.id, 10));
         if (event) {
