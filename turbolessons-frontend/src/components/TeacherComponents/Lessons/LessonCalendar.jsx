@@ -27,7 +27,7 @@ export default function LessonCalendar() {
     const accessToken = oktaAuth.getAccessToken();
     const dispatch = useDispatch();
     const eventsByTeacher = useSelector((state) => state.lessons.eventsByTeacher);
-    const loading = useSelector((state) => state.lessons.loading);
+    // const loading = useSelector((state) => state.lessons.loading);
     const selectedEvent = useSelector((state) => state.lessons.selectedEvent);
     const showModal = useSelector((state) => state.lessons.showModal);
     const dateClick = useSelector((state) => state.lessons.dateClick);
