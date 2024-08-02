@@ -26,13 +26,13 @@ const LessonView = ({ event, setUpdate, onHide }) => {
                     <Form className="m-3 px-3">
                         <Form.Group className="mb-3 px-3" controlId="selectStudent">
                             <Form.Label>Student</Form.Label>
-                            <Form.Control plaintext readOnly defaultValue={event.student} />
+                            <Form.Control plaintext readOnly defaultValue={event?.student} />
                         </Form.Group>
                         <Form.Group className="mb-3 px-3" controlId="date">
                             <Form.Label>Date</Form.Label>
                             <DatePicker
                                 className='mx-3 px-3'
-                                selected={parseDate(event.start)}
+                                selected={parseDate(event?.start)}
                                 readOnly
                                 disabled
                             />
@@ -41,7 +41,7 @@ const LessonView = ({ event, setUpdate, onHide }) => {
                             <Form.Label>Start Time</Form.Label>
                             <DatePicker
                                 className='mx-3 px-3'
-                                selected={parseDate(event.start)}
+                                selected={parseDate(event?.start)}
                                 showTimeSelect
                                 showTimeSelectOnly
                                 timeIntervals={15}
@@ -55,7 +55,7 @@ const LessonView = ({ event, setUpdate, onHide }) => {
                             <Form.Label>End Time</Form.Label>
                             <DatePicker
                                 className='mx-3 px-3'
-                                selected={parseDate(event.end)}
+                                selected={parseDate(event?.end)}
                                 showTimeSelect
                                 showTimeSelectOnly
                                 timeIntervals={15}
@@ -68,7 +68,7 @@ const LessonView = ({ event, setUpdate, onHide }) => {
 
                         <Form.Group className="mb-3 px-3" controlId="comments">
                             <Form.Label>Comments</Form.Label>
-                            <Form.Control plaintext readOnly defaultValue={event.comments} />
+                            <Form.Control plaintext readOnly defaultValue={event?.comments} />
                         </Form.Group>
                     </Form>
                     <Card.Footer className='d-flex'>

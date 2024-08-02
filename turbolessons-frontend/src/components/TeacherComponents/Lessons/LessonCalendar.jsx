@@ -32,6 +32,7 @@ export default function LessonCalendar() {
     const showModal = useSelector((state) => state.lessons.showModal);
     const dateClick = useSelector((state) => state.lessons.dateClick);
     const handleCloseModal = () => {
+        dispatch(setSelectedEvent(null))
         dispatch(setShowModal(false));
     };
 
@@ -45,15 +46,7 @@ export default function LessonCalendar() {
             setAccessToken(accessToken);
             dispatch(fetchTeacherEvents({ teacher }));
         }
-    }, [handleCloseModal]);
-
-    useEffect(() => {
-        if (authState.isAuthenticated) {
-            const teacher = authState.idToken.claims.name;
-            setAccessToken(accessToken);
-            dispatch(fetchTeacherEvents({ teacher }));
-        }
-    }, [authState, dispatch]);
+    }, [authState, dispatch, handleCloseModal]);
 
 
     const events = useCallback(() => {
@@ -65,11 +58,27 @@ export default function LessonCalendar() {
         }));
     }, [eventsByTeacher]);
 
-    const handleDateClick = (info) => {
-        // dispatch(setDateClick(true));
-        // dispatch(setSelectedEvent({ start: new Date(info.date) }));
-        console.log(info.date);
-        handleShowModal();
+    const handleDateClick = (arg) => {
+        const selectedDate = new Date(arg.dateStr);
+    
+        // Set the start time to 12:00 PM
+        selectedDate.setHours(12, 0, 0, 0);
+        const startTime = selectedDate.toISOString(); // Convert to ISO string
+    
+        // Set the end time to 12:30 PM
+        const endDate = new Date(selectedDate);
+        endDate.setMinutes(endDate.getMinutes() + 30);
+        const endTime = endDate.toISOString(); // Convert to ISO string
+    
+        // Dispatch the event with the updated start and end times
+        dispatch(setDateClick(true));
+        dispatch(setSelectedEvent({
+            start: startTime,
+            end: endTime,
+        }));
+    
+        // Show the modal
+        dispatch(setShowModal(true));
     };
 
     const handleEventClick = (info) => {
