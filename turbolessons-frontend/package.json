@@ -16,6 +16,7 @@
     "@fullcalendar/core": "^6.1.9",
     "@fullcalendar/daygrid": "^6.1.9",
     "@fullcalendar/interaction": "^6.1.9",
+    "@fullcalendar/moment-timezone": "^6.1.15",
     "@fullcalendar/react": "^6.1.9",
     "@fullcalendar/timegrid": "^6.1.9",
     "@okta/okta-auth-js": "7.0.1",

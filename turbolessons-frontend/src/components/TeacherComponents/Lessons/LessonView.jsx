@@ -1,23 +1,18 @@
 import React, { useState, useEffect } from 'react';
 import { Button, Card, Container, Form } from "react-bootstrap";
-import { useOktaAuth } from '@okta/okta-react';
-import { useStudentContext } from '../../../util/context/StudentContext';
-import { deleteLessonEvent } from '../../../service/eventService';
-import { setAccessToken } from '../../../service/axiosConfig';
 import DatePicker from "react-datepicker";
-import config from '../../../config';
 import "react-datepicker/dist/react-datepicker.css";
 import LessonConfirm from './LessonConfirm';
+import { useSelector, useDispatch } from 'react-redux';
+import { setShowConfirm } from './LessonSlice';
 
-const LessonView = ({ event, setUpdate, onHide }) => {
-
-    const [showConfirm, setShowConfirm] = useState(false)
-    const handleCloseConfirm = () => setShowConfirm(false);
-    const handleShowConfirm = () => setShowConfirm(true);
-
+const LessonView = ({ event, setUpdate }) => {
+    const dispatch = useDispatch();
+    const showConfirm = useSelector((state) => state.lessons.showConfirm);
+    const handleShowConfirm = () => dispatch(setShowConfirm(true));
     const parseDate = (dateString) => {
         return new Date(dateString);
-      };
+    };
 
     return (
         <Container>
@@ -84,7 +79,7 @@ const LessonView = ({ event, setUpdate, onHide }) => {
                             className="mx-3"
                             variant="danger"
                             style={{ cursor: 'pointer' }}
-                            onClick={handleShowConfirm}
+                            onClick={() => handleShowConfirm()}
                         >
                             Delete
                         </Button>
@@ -93,7 +88,6 @@ const LessonView = ({ event, setUpdate, onHide }) => {
             ) : (
                 <LessonConfirm
                     show={showConfirm}
-                    onHide={onHide}
                     eventId={event.id}
                 />
             )}

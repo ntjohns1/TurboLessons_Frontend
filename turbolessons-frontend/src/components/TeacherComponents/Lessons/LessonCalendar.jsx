@@ -56,17 +56,23 @@ export default function LessonCalendar() {
     }, [eventsByTeacher]);
 
     const handleDateClick = (arg) => {
-        const selectedDate = new Date(arg.dateStr);
-        selectedDate.setHours(12, 0, 0, 0);
-        const startTime = selectedDate.toISOString();
-        const endDate = new Date(selectedDate);
-        endDate.setMinutes(endDate.getMinutes() + 30);
+        // Parse the date string as UTC
+        let utcDate = new Date(Date.parse(arg.dateStr + "T00:00:00Z"));
+
+        // Set the start time to 12:00 PM UTC
+        utcDate.setUTCHours(12, 0, 0, 0);
+        const startTime = utcDate.toISOString();
+
+        // Create the end time (12:30 PM UTC)
+        const endDate = new Date(utcDate);
+        endDate.setUTCMinutes(endDate.getUTCMinutes() + 30);
         const endTime = endDate.toISOString();
-        dispatch(setDateClick(true));
         dispatch(setSelectedEvent({
             start: startTime,
             end: endTime,
         }));
+
+        dispatch(setDateClick(true))
         dispatch(setShowModal(true));
     };
 

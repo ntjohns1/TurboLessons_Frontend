@@ -3,16 +3,23 @@ import { useOktaAuth } from '@okta/okta-react';
 import { deleteLessonEvent } from '../../../service/eventService';
 import { setAccessToken } from '../../../service/axiosConfig';
 import { Modal, Button, ButtonGroup } from 'react-bootstrap';
+import { useSelector, useDispatch } from 'react-redux';
+import { setShowConfirm, setShowModal } from './LessonSlice';
 
-export default function LessonConfirm({  show, onHide, eventId }) {
+export default function LessonConfirm({  eventId }) {
 
-    const {authState, oktaAuth}= useOktaAuth();
+    const dispatch = useDispatch();
+    const showConfirm = useSelector((state) => state.lessons.showConfirm);
+    const handleCloseConfirm = () => dispatch(setShowConfirm(false));
+    const handleCloseModal = () => dispatch(setShowModal(false))
+    const {oktaAuth}= useOktaAuth();
     const handleDelete = async (event) => {
         try {
             const accessToken = await oktaAuth.getAccessToken();
             setAccessToken(accessToken);
             await deleteLessonEvent(event);
-            onHide()
+            handleCloseConfirm()
+            handleCloseModal();
             alert('Lesson Deleted');
         } catch (error) {
             console.error(error);
@@ -21,8 +28,8 @@ export default function LessonConfirm({  show, onHide, eventId }) {
 
     return (
         <Modal
-            show={show}
-            onHide={onHide}
+            show={showConfirm}
+            onHide={handleCloseConfirm}
         >
             <Modal.Header closeButton>
                 <Modal.Title>Delete Lesson?</Modal.Title>
@@ -30,7 +37,7 @@ export default function LessonConfirm({  show, onHide, eventId }) {
             <Modal.Body>
                 <ButtonGroup>
                     <Button
-                        onClick={() => onHide()}
+                        onClick={() => handleCloseConfirm()}
                         variant="secondary"
                     >
                         Cancel

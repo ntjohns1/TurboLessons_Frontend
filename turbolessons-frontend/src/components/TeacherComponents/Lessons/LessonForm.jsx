@@ -4,16 +4,10 @@ import { useOktaAuth } from '@okta/okta-react';
 import { useStudentContext } from '../../../util/context/StudentContext';
 import { setAccessToken } from '../../../service/axiosConfig';
 import DatePicker from "react-datepicker";
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import "react-datepicker/dist/react-datepicker.css";
 
 const LessonForm = ({ setUpdate, onHide, onCreate, onUpdate }) => {
-
-/* 
-TODO: 
-Can't change date.
-Fix localization, use Fullcalendar not adjustment function in lessonSlice
-*/
 
   const { authState, oktaAuth } = useOktaAuth();
   const event = useSelector((state) => state.lessons.selectedEvent);
@@ -52,15 +46,6 @@ Fix localization, use Fullcalendar not adjustment function in lessonSlice
     }
   }, [event]);
 
-
-  // useEffect(() => {
-  //   // Update the title whenever the student changes
-  //   setFormState((prevState) => ({
-  //     ...prevState,
-  //     title: prevState.student,
-  //   }));
-  // }, [formState.student]);
-
   useEffect(() => {
     return () => {
       setUpdate(false);
@@ -68,18 +53,19 @@ Fix localization, use Fullcalendar not adjustment function in lessonSlice
   }, [setUpdate]);
 
   const handleDateChange = (date) => {
-    setFormState((prevState) => ({
-      ...prevState,
-      date,
-    }));
+    setFormState((prevState) => {
+      const startTime = new Date(date);
+      startTime.setHours(prevState.startTime.getHours(), prevState.startTime.getMinutes());
+
+      const endTime = new Date(date);
+      endTime.setHours(prevState.endTime.getHours(), prevState.endTime.getMinutes());
+
+      return { ...prevState, date, startTime, endTime };
+    });
   };
 
   const handleStartTimeChange = (time) => {
     setFormState((prevState) => {
-      const date = new Date(prevState.date);
-      // date.setHours(time.getHours());
-      // date.setMinutes(time.getMinutes());
-
       const endTime = new Date(time.getTime() + (prevState.durationOption === '30m' ? 30 : 60) * 60000);
       return { ...prevState, startTime: time, endTime };
     });
@@ -106,20 +92,16 @@ Fix localization, use Fullcalendar not adjustment function in lessonSlice
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    // console.log(formState);
-    // console.log(event.id);
     try {
       const accessToken = await oktaAuth.getAccessToken();
       setAccessToken(accessToken);
       if (!dateClick) {
         onUpdate(event.id, formState);
-        // setFormState(null);
         onHide();
         alert('Successfully Edited Lesson Event');
 
       } else {
         onCreate(formState);
-        // setFormState(null);
         onHide();
         alert('Successfully Added Lesson Event');
       }
@@ -149,7 +131,7 @@ Fix localization, use Fullcalendar not adjustment function in lessonSlice
             <Form.Label>Date</Form.Label>
             <DatePicker
               className='mx-3 px-3'
-              selected={formState.startTime}
+              selected={formState.date}
               onChange={handleDateChange}
             />
           </Form.Group>
