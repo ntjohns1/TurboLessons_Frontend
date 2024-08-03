@@ -4,13 +4,20 @@ import { useOktaAuth } from '@okta/okta-react';
 import { useStudentContext } from '../../../util/context/StudentContext';
 import { setAccessToken } from '../../../service/axiosConfig';
 import DatePicker from "react-datepicker";
-import config from '../../../config';
+import { useDispatch, useSelector } from 'react-redux';
 import "react-datepicker/dist/react-datepicker.css";
 
-const LessonForm = ({ event, setUpdate, onHide, isDateClick, onCreate, onUpdate }) => {
+const LessonForm = ({ setUpdate, onHide, onCreate, onUpdate }) => {
 
+/* 
+TODO: 
+Can't change date.
+Fix localization, use Fullcalendar not adjustment function in lessonSlice
+*/
 
   const { authState, oktaAuth } = useOktaAuth();
+  const event = useSelector((state) => state.lessons.selectedEvent);
+  const dateClick = useSelector((state) => state.lessons.dateClick);
   const principleName = authState && authState.idToken && authState.idToken.claims.name;
   const principleEmail = authState && authState.idToken.claims.email;
   const { students } = useStudentContext();
@@ -46,13 +53,13 @@ const LessonForm = ({ event, setUpdate, onHide, isDateClick, onCreate, onUpdate 
   }, [event]);
 
 
-  useEffect(() => {
-    // Update the title whenever the student changes
-    setFormState((prevState) => ({
-      ...prevState,
-      title: prevState.student,
-    }));
-  }, [formState.student]);
+  // useEffect(() => {
+  //   // Update the title whenever the student changes
+  //   setFormState((prevState) => ({
+  //     ...prevState,
+  //     title: prevState.student,
+  //   }));
+  // }, [formState.student]);
 
   useEffect(() => {
     return () => {
@@ -92,7 +99,8 @@ const LessonForm = ({ event, setUpdate, onHide, isDateClick, onCreate, onUpdate 
     setFormState({
       ...formState,
       student: e.target.value,
-      studentEmail: selectedStudent ? selectedStudent.email : ''
+      studentEmail: selectedStudent ? selectedStudent.email : '',
+      title: e.target.value,
     });
   };
 
@@ -103,13 +111,15 @@ const LessonForm = ({ event, setUpdate, onHide, isDateClick, onCreate, onUpdate 
     try {
       const accessToken = await oktaAuth.getAccessToken();
       setAccessToken(accessToken);
-      if (!isDateClick) {
+      if (!dateClick) {
         onUpdate(event.id, formState);
+        // setFormState(null);
         onHide();
         alert('Successfully Edited Lesson Event');
 
       } else {
         onCreate(formState);
+        // setFormState(null);
         onHide();
         alert('Successfully Added Lesson Event');
       }
@@ -195,7 +205,7 @@ const LessonForm = ({ event, setUpdate, onHide, isDateClick, onCreate, onUpdate 
             type="submit"
             style={{ cursor: 'pointer' }}
           >
-            {isDateClick ? "Create Lesson" : "Edit Lesson"}
+            {dateClick ? "Create Lesson" : "Edit Lesson"}
           </Button>
         </Form>
       </Card>

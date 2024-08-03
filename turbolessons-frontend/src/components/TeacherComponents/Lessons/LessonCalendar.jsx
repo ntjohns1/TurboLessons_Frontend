@@ -15,14 +15,12 @@ import {
     setSelectedEvent,
     setDateClick,
     setShowModal,
-    setShowConfirm,
     setLoading
 } from './LessonSlice';
 import { setAccessToken } from "../../../service/axiosConfig";
 
 export default function LessonCalendar() {
 
-    const calendarRef = useRef(null)
     const { authState, oktaAuth } = useOktaAuth();
     const accessToken = oktaAuth.getAccessToken();
     const dispatch = useDispatch();
@@ -32,7 +30,6 @@ export default function LessonCalendar() {
     const showModal = useSelector((state) => state.lessons.showModal);
     const dateClick = useSelector((state) => state.lessons.dateClick);
     const handleCloseModal = () => {
-        dispatch(setSelectedEvent(null))
         dispatch(setShowModal(false));
     };
 
@@ -60,24 +57,16 @@ export default function LessonCalendar() {
 
     const handleDateClick = (arg) => {
         const selectedDate = new Date(arg.dateStr);
-    
-        // Set the start time to 12:00 PM
         selectedDate.setHours(12, 0, 0, 0);
-        const startTime = selectedDate.toISOString(); // Convert to ISO string
-    
-        // Set the end time to 12:30 PM
+        const startTime = selectedDate.toISOString();
         const endDate = new Date(selectedDate);
         endDate.setMinutes(endDate.getMinutes() + 30);
-        const endTime = endDate.toISOString(); // Convert to ISO string
-    
-        // Dispatch the event with the updated start and end times
+        const endTime = endDate.toISOString();
         dispatch(setDateClick(true));
         dispatch(setSelectedEvent({
             start: startTime,
             end: endTime,
         }));
-    
-        // Show the modal
         dispatch(setShowModal(true));
     };
 
@@ -128,7 +117,6 @@ export default function LessonCalendar() {
                 onDelete={handleEventRemove}
             />
             <FullCalendar
-                ref={calendarRef}
                 plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
                 headerToolbar={{
                     left: 'prev,next today',
@@ -148,7 +136,7 @@ export default function LessonCalendar() {
                 dateClick={handleDateClick}
                 eventClick={handleEventClick}
                 eventAdd={handleEventAdd}
-                eventChange={handleEventChange} // called after events are initialized/added/changed/removed
+                eventChange={handleEventChange}
                 eventRemove={handleEventRemove}
                 timeZone="local"
 

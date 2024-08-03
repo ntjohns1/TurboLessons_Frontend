@@ -93,7 +93,7 @@ const lessonSlice = createSlice({
         state.loading = false;
         state.eventsByTeacher = action.payload;
       })
-      .addCase(fetchTeacherEvents.rejected, (state, action) => {
+      .addCase(fetchTeacherEvents.rejected, (state) => {
         state.loading = false;
       })
       .addCase(createEvent.fulfilled, (state, action) => {
