@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { Card, Toast } from "react-bootstrap";
 import { useOktaAuth } from '@okta/okta-react';
+import { fetchVideos } from '../../../service/videoService';
+import { setAccessToken } from '../../../service/axiosConfig';
 import config from '../../../config';
 
 export default function SelectVideo({ setSelected }) {
@@ -15,30 +17,20 @@ export default function SelectVideo({ setSelected }) {
     }
 
     useEffect(() => {
-        const accessToken = oktaAuth.getAccessToken();
-
-        fetch(config.resourceServer.videoUrl, {
-            method: 'GET',
-            headers: {
-                'Authorization': `Bearer ${accessToken}`,
-            },
-        })
-            .then(response => {
-                if (response.status === 200 || response.status === 204) {
-                    return response.json();
+        const getVideos = async () => {
+            try {
+                if (authState && authState.isAuthenticated) {
+                    const accessToken = await oktaAuth.getAccessToken();
+                    setAccessToken(accessToken);
+                    const data = await fetchVideos();
+                    setVideos(data);
                 }
-                return Promise.reject('Didn\'t receive expected status: 201');
-            })
-            .then((data) => {
-                console.log("Response Data:", JSON.stringify(data));
-                setVideos(data);
-            })
-            .catch((errorResponse) => {
-                console.error('Error:', errorResponse);
-                errorResponse.text().then((text) => {
-                    console.error('Error Body:', text);
-                });
-            });
+            } catch (error) {
+                console.error(error);
+            }
+        }
+        
+        getVideos();
     }, []);
 
     return (
