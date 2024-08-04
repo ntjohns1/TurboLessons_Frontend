@@ -26,9 +26,7 @@ export default function LessonCalendar() {
     const dispatch = useDispatch();
     const eventsByTeacher = useSelector((state) => state.lessons.eventsByTeacher);
     // const loading = useSelector((state) => state.lessons.loading);
-    const selectedEvent = useSelector((state) => state.lessons.selectedEvent);
     const showModal = useSelector((state) => state.lessons.showModal);
-    const dateClick = useSelector((state) => state.lessons.dateClick);
     const handleCloseModal = () => {
         dispatch(setShowModal(false));
     };
@@ -61,6 +59,7 @@ export default function LessonCalendar() {
 
         // Set the start time to 12:00 PM UTC
         utcDate.setUTCHours(12, 0, 0, 0);
+        utcDate = new Date(utcDate.getTime() + utcDate.getTimezoneOffset() * 60000)
         const startTime = utcDate.toISOString();
 
         // Create the end time (12:30 PM UTC)
@@ -116,8 +115,6 @@ export default function LessonCalendar() {
             <LessonModal
                 show={showModal}
                 onHide={() => handleCloseModal()}
-                isDateClick={dateClick}
-                event={selectedEvent}
                 onCreate={handleEventAdd}
                 onUpdate={handleEventChange}
                 onDelete={handleEventRemove}

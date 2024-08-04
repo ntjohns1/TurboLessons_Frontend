@@ -6,8 +6,9 @@ import LessonConfirm from './LessonConfirm';
 import { useSelector, useDispatch } from 'react-redux';
 import { setShowConfirm } from './LessonSlice';
 
-const LessonView = ({ event, setUpdate }) => {
+const LessonView = ({ setUpdate }) => {
     const dispatch = useDispatch();
+    const event = useSelector((state) => state.lessons.selectedEvent);
     const showConfirm = useSelector((state) => state.lessons.showConfirm);
     const handleShowConfirm = () => dispatch(setShowConfirm(true));
     const parseDate = (dateString) => {

@@ -30,7 +30,7 @@ const LessonForm = ({ setUpdate, onHide, onCreate, onUpdate }) => {
     teacher: principleName,
     teacherEmail: principleEmail,
     comments: event && event.comments ? event.comments : '',
-    durationOption: event && event.durationOption ? event.durationOption : '30m', // default duration option
+    durationOption: event && event.durationOption ? event.durationOption : '30m',
   });
 
   useEffect(() => {
