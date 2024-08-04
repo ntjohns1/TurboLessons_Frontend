@@ -18,7 +18,7 @@ import Messenger from './pages/Teachers/Messenger';
 import Lessons from './pages/Teachers/Lessons'
 import Videos from './pages/Teachers/Videos';
 import Unauthorized from './helpers/Unauthorized';
-import Calendar from './components/TeacherComponents/Lessons/Calendar';
+import LessonCalendar from './components/TeacherComponents/Lessons/LessonCalendar.jsx';
 import TeacherLayoutWrapper from './layouts/TeacherLayoutWrapper'
 import './App.css';
 import ManageSubscription from './components/TeacherComponents/Billing/ManageSubscription.jsx';
@@ -54,7 +54,7 @@ const App = () => {
               <Route path="" element={<TeacherLayoutWrapper component={AddStudent} />} />
             </Route>
             <Route path="/calendar" element={<RequiredAuth />}>
-              <Route path="" element={<TeacherLayoutWrapper component={Calendar} />} />
+              <Route path="" element={<TeacherLayoutWrapper component={LessonCalendar} />} />
             </Route>
             <Route path="/messages" element={<RequiredAuth />}>
             <Route path="" element={<TeacherLayoutWrapper component={Messenger} /> } />

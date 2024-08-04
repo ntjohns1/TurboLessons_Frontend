@@ -13,21 +13,21 @@ export default function TeacherHome() {
 
   const login = async () => oktaAuth.signInWithRedirect();
 
-  const getTokenInfo = () => {
-    if (authState && authState.isAuthenticated) {
-      const { accessToken } = authState;
-      if (accessToken && accessToken.claims) {
-        // Log the scopes
-        console.log('Groups:', accessToken.claims.groups);
-        // You can also log the entire payload of the token
-        console.log('Token Payload:', accessToken.claims);
-      }
-    }
-  }
+  // const getTokenInfo = () => {
+  //   if (authState && authState.isAuthenticated) {
+  //     const { accessToken } = authState;
+  //     if (accessToken && accessToken.claims) {
+  //       // Log the scopes
+  //       console.log('Groups:', accessToken.claims.groups);
+  //       // You can also log the entire payload of the token
+  //       console.log('Token Payload:', accessToken.claims);
+  //     }
+  //   }
+  // }
 
-  useEffect(() => {
-    getTokenInfo();
-  }, [authState]);
+  // useEffect(() => {
+  //   getTokenInfo();
+  // }, [authState]);
 
   return (
     <Container>
