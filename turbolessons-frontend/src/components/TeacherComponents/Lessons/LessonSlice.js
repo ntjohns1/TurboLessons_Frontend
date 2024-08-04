@@ -66,6 +66,7 @@ const lessonSlice = createSlice({
     showModal: false,
     showConfirm: false,
     loading: false,
+    validated: false
   },
   reducers: {
     setSelectedEvent(state, action) {
@@ -81,6 +82,9 @@ const lessonSlice = createSlice({
       state.showConfirm = action.payload;
     },
     setLoading(state, action) {
+      state.loading = action.payload;
+    },
+    setValidated(state, action) {
       state.loading = action.payload;
     },
   },
@@ -121,6 +125,7 @@ export const {
   setShowModal,
   setShowConfirm,
   setLoading,
+  setValidated
 } = lessonSlice.actions;
 
 export const selectEventById = (state, eventId) =>
