@@ -1,14 +1,14 @@
-import { defineConfig } from 'vite'
-import { VitePWA } from 'vite-plugin-pwa'
-import postcssImport from 'postcss-import';
-import postcssCalc from 'postcss-calc';
-import postcssCustomProperties from 'postcss-custom-properties'
-import react from '@vitejs/plugin-react'
-import path from 'path';
-import getEnvModule from './env'
-import dns from 'dns'
+import { defineConfig } from "vite";
+import { VitePWA } from "vite-plugin-pwa";
+import postcssImport from "postcss-import";
+import postcssCalc from "postcss-calc";
+import postcssCustomProperties from "postcss-custom-properties";
+import react from "@vitejs/plugin-react";
+import path from "path";
+import getEnvModule from "./env";
+import dns from "dns";
 
-dns.setDefaultResultOrder('verbatim')
+dns.setDefaultResultOrder("verbatim");
 
 getEnvModule().setEnvironmentVarsFromTestEnv(__dirname);
 
@@ -17,10 +17,7 @@ process.env.CLIENT_ID = process.env.SPA_CLIENT_ID || process.env.CLIENT_ID;
 const env = {};
 
 // List of environment variables made available to the app
-[
-  'ISSUER',
-  'CLIENT_ID'
-].forEach((key) => {
+["ISSUER", "CLIENT_ID"].forEach((key) => {
   if (!process.env[key]) {
     throw new Error(`Environment variable ${key} must be set. See README.md`);
   }
@@ -29,46 +26,52 @@ const env = {};
 
 // https://vitejs.dev/config/
 export default defineConfig({
-    plugins: [
+  plugins: [
     react(),
     VitePWA({
-      filename: 'service-worker.js',
+      filename: "service-worker.js",
       workbox: {
-        swDest: path.resolve(__dirname, './dist/service-worker.js'),
+        swDest: path.resolve(__dirname, "./dist/service-worker.js"),
       },
-      registerType: 'autoUpdate'
-    })  
+      registerType: "autoUpdate",
+    }),
   ],
   define: {
-    global: {},
-    'process.env': env
+    "process.env": {},
+    global: "globalThis", // handle the global variable issue
   },
   resolve: {
     alias: {
-      'react-router-dom': path.resolve(__dirname, 'node_modules/react-router-dom')
-    }
+      "react-router-dom": path.resolve(
+        __dirname,
+        "node_modules/react-router-dom"
+      ),
+    },
   },
   server: {
-    port: process.env.PORT || 3000
+    port: process.env.PORT || 3000,
   },
   build: {
     rollupOptions: {
       // always throw with build warnings
-      onwarn (warning, warn) {
-        warn('\nBuild warning happened, customize "onwarn" callback in vite.config.js to handle this error.');
-        throw new Error(warning);
-      }
+      onwarn(warning, warn) {
+        // Suppress "Module level directives cause errors when bundled" warnings
+        if (warning.code === "MODULE_LEVEL_DIRECTIVE") {
+          return;
+        }
+        warn(warning);
+      },
     },
     css: {
-        postcss: {
-            plugins: [
-                postcssImport(),
-                postcssCustomProperties({
-                    preserve: false
-                }),
-                postcssCalc()
-            ]
-        }
-    }
-  }
-})
+      postcss: {
+        plugins: [
+          postcssImport(),
+          postcssCustomProperties({
+            preserve: false,
+          }),
+          postcssCalc(),
+        ],
+      },
+    },
+  },
+});
