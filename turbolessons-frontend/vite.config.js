@@ -32,9 +32,7 @@ export default defineConfig({
       filename: "service-worker.js",
       workbox: {
         swDest: path.resolve(__dirname, "./dist/service-worker.js"),
-        dontCacheBustURLsMatching: {
-          test: new RegExp("\\.[0-9a-f]{16}\\.js$"),
-        },
+        dontCacheBustURLsMatching: new RegExp("\\.[0-9a-f]{16}\\.js$"),
       },
       registerType: "autoUpdate",
     }),
