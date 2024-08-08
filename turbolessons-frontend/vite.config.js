@@ -30,11 +30,11 @@ export default defineConfig({
     react(),
     VitePWA({
       filename: "service-worker.js",
+      registerType: "autoUpdate",
       workbox: {
         swDest: path.resolve(__dirname, "./dist/service-worker.js"),
         dontCacheBustURLsMatching: new RegExp("\\.[0-9a-f]{16}\\.js$"),
       },
-      registerType: "autoUpdate",
     }),
   ],
   define: {
