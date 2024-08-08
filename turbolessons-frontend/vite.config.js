@@ -33,7 +33,18 @@ export default defineConfig({
       registerType: "autoUpdate",
       workbox: {
         swDest: path.resolve(__dirname, "./dist/service-worker.js"),
-        dontCacheBustURLsMatching: new RegExp("\\.[0-9a-f]{16}\\.js$"),
+        runtimeCaching: [
+          {
+            urlPattern: new RegExp("\\.[0-9a-f]{16}\\.js$"),
+            handler: "CacheFirst",
+            options: {
+              cacheName: "custom-cache",
+              expiration: {
+                maxEntries: 10,
+              },
+            },
+          },
+        ],
       },
     }),
   ],
