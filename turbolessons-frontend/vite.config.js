@@ -28,14 +28,6 @@ const env = {};
 export default defineConfig({
   plugins: [
     react(),
-    VitePWA({
-      filename: "service-worker.js",
-      registerType: "autoUpdate",
-      workbox: {
-        swDest: path.resolve(__dirname, "./dist/service-worker.js"),
-        dontCacheBustURLsMatching: new RegExp("\\.[0-9a-f]{16}\\.js$"),
-      },
-    }),
   ],
   define: {
     "process.env": {},
