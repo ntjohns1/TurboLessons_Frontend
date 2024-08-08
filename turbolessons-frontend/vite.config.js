@@ -28,14 +28,13 @@ const env = {};
 export default defineConfig({
   plugins: [
     react(),
-    VitePWA({
-      filename: "service-worker.js",
-      workbox: {
-        swDest: path.resolve(__dirname, "./dist/service-worker.js"),
-        dontCacheBustURLsMatching: /\.[0-9a-f]{16}\.js$/, 
-      },
-      registerType: "autoUpdate",
-    }),
+    // VitePWA({
+    //   filename: "service-worker.js",
+    //   workbox: {
+    //     swDest: path.resolve(__dirname, "./dist/service-worker.js"),
+    //   },
+    //   registerType: "autoUpdate",
+    // }),
   ],
   define: {
     "process.env": {},
