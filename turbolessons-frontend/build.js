@@ -1,4 +1,4 @@
-// build.js
+
 const { generateSW } = require('workbox-build');
 
 // Configure the service worker generation
