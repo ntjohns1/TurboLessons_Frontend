@@ -21,6 +21,7 @@ const env = {};
   if (!process.env[key]) {
     throw new Error(`Environment variable ${key} must be set. See README.md`);
   }
+  console.log(`Environment Variable Loaded: ${key} = ${process.env[key]}`);
   env[key] = process.env[key];
 });
 
@@ -28,17 +29,9 @@ const env = {};
 export default defineConfig({
   plugins: [
     react(),
-    VitePWA({
-      filename: "service-worker.js",
-      workbox: {
-        swDest: path.resolve(__dirname, "./dist/service-worker.js"),
-        dontCacheBustURLsMatching: /\.[0-9a-f]{16}\.js$/, 
-      },
-      registerType: "autoUpdate",
-    }),
   ],
   define: {
-    "process.env": {},
+    "process.env": env,
     global: "globalThis", // handle the global variable issue
   },
   resolve: {
