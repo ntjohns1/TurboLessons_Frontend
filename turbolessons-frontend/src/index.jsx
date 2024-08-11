@@ -9,7 +9,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import store from './app/store';
 import { Provider } from 'react-redux';
 
-import registerServiceWorker from './registerServiceWorker';
+// import registerServiceWorker from './registerServiceWorker';
 
 const container = document.getElementById('root');
 const root = createRoot(container);
@@ -19,4 +19,4 @@ root.render(
       <App />
     </Provider>
   </BrowserRouter>);
-registerServiceWorker();
+// registerServiceWorker();
