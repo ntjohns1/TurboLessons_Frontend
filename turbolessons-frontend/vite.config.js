@@ -27,12 +27,11 @@ const env = {};
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  plugins: [react()],
+  plugins: [
+    react(),
+  ],
   define: {
-    "import.meta.env": {
-      VITE_ISSUER: JSON.stringify(process.env.ISSUER),
-      VITE_CLIENT_ID: JSON.stringify(process.env.CLIENT_ID),
-    },
+    "process.env": env,
     global: "globalThis", // handle the global variable issue
   },
   resolve: {
