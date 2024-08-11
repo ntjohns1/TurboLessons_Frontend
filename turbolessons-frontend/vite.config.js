@@ -29,9 +29,9 @@ const env = {};
 export default defineConfig({
   plugins: [react()],
   define: {
-    "process.env": {
-      ISSUER: JSON.stringify(process.env.ISSUER),
-      CLIENT_ID: JSON.stringify(process.env.CLIENT_ID),
+    "import.meta.env": {
+      VITE_ISSUER: JSON.stringify(process.env.ISSUER),
+      VITE_CLIENT_ID: JSON.stringify(process.env.CLIENT_ID),
     },
     global: "globalThis", // handle the global variable issue
   },
