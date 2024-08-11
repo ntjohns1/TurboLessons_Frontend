@@ -21,16 +21,18 @@ const env = {};
   if (!process.env[key]) {
     throw new Error(`Environment variable ${key} must be set. See README.md`);
   }
+  console.log(`Environment Variable Loaded: ${key} = ${process.env[key]}`);
   env[key] = process.env[key];
 });
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  plugins: [
-    react(),
-  ],
+  plugins: [react()],
   define: {
-    "process.env": {},
+    "process.env": {
+      ISSUER: JSON.stringify(process.env.ISSUER),
+      CLIENT_ID: JSON.stringify(process.env.CLIENT_ID),
+    },
     global: "globalThis", // handle the global variable issue
   },
   resolve: {
