@@ -6,8 +6,8 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 
 
 // Slice
-const billingSlice = createSlice({
-    name: "billing",
+const videoSlice = createSlice({
+    name: "videos",
     initialState: {
 
     },
@@ -21,6 +21,6 @@ const billingSlice = createSlice({
 
 export const {
 
-} = billingSlice.actions;
+} = videoSlice.actions;
 
-export default billingSlice.reducer;
+export default videoSlice.reducer;
