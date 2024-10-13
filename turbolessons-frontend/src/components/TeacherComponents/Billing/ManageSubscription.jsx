@@ -1,6 +1,7 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Container, Row, Col, Table, Form, Button, Card } from "react-bootstrap";
 import PaymentMethodModal from "./PaymentMethodModal";
+import { listAllProducts, listAllPrices, getPrice } from '../../../service/billingService';
 
 const ManageSubscription = () => {
 
@@ -8,6 +9,18 @@ const ManageSubscription = () => {
 
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
+
+  const testGetProducts = async () => {
+    const response = await listAllProducts();
+    console.log(response.data);
+    return response;
+  };
+
+
+
+  useEffect(() => {
+    const test = testGetProducts();
+  }, []);
 
   return (
     <Container >
@@ -41,7 +54,7 @@ const ManageSubscription = () => {
                       <div className="mt-3 text-center">
                         <Button variant="primary" type="submit">Update Plan</Button>
                       </div>
-                      <PaymentMethodModal show={show} handleClose={handleClose}/>
+                      <PaymentMethodModal show={show} handleClose={handleClose} />
                     </Form>
                   </Card.Body>
                 </Card>
@@ -78,7 +91,7 @@ const ManageSubscription = () => {
             <Card.Body>
               <h3>Payment Methods</h3>
               <p>Current Method: **** **** **** 1234</p>
-              <Button Button variant="primary" onClick={handleShow}>Manage Payment Methods</Button>
+              <Button variant="primary" onClick={handleShow}>Manage Payment Methods</Button>
             </Card.Body>
           </Card>
         </Col>

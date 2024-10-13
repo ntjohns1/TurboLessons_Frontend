@@ -28,104 +28,114 @@ const apiCall = async (method, uri, params = {}, errorMessage) => {
 
 // Customer
 
-// route((GET("/api/customer")), handler::listAll)
+// route((GET("/payments/api/customer")), handler::listAll)
 export const listAllCustomers = async () => {
-  return apiCall("GET", `/customer`, {}, "Error fetching customers:");
+  return apiCall("GET", `/payments/customer`, {}, "Error fetching customers:");
 };
-// route(GET("/api/customer/{id}"), handler::retrieve)
+// route(GET("/payments/api/customer/{id}"), handler::retrieve)
 export const getCustomer = async (id) => {
-  return apiCall("GET", `/customer/${id}`, {}, "Error fetching customer:");
+  return apiCall(
+    "GET",
+    `/payments/customer/${id}`,
+    {},
+    "Error fetching customer:"
+  );
 };
-// route(POST("/api/customer"), handler::create)
+// route(POST("/payments/api/customer"), handler::create)
 export const createCustomer = async (formState) => {
   return apiCall(
     "POST",
-    "/customer",
+    "/payments/customer",
     { formState },
     "Error creating customer:"
   );
 };
-// route(PUT("/api/customer/{id}"), handler::update)
+// route(PUT("/payments/api/customer/{id}"), handler::update)
 export const editCustomer = async (id, formState) => {
   return apiCall(
     "PUT",
-    `/customer/${id}`,
+    `/payments/customer/${id}`,
     { formState },
     '"Error editing customer:"'
   );
 };
-// route(DELETE("/api/customer/{id}"), handler::delete);
+// route(DELETE("/payments/api/customer/{id}"), handler::delete);
 export const deleteCustomer = async (id) => {
-  return apiCall("DELETE", `/customer/${id}`, {}, "Error deleting customer:");
+  return apiCall(
+    "DELETE",
+    `/payments/customer/${id}`,
+    {},
+    "Error deleting customer:"
+  );
 };
 
 // PaymentIntent
 
-// route((GET("/api/paymentintent")), handler::listAll)
+// route((GET("/payments/api/paymentintent")), handler::listAll)
 export const listAllPaymentIntents = async () => {
   return apiCall(
     "GET",
-    "/paymentintent",
+    "/payments/paymentintent",
     {},
     "Error fetching payment intents:"
   );
 };
 
-// route(GET("/api/paymentintent/{id}"), handler::retrieve)
+// route(GET("/payments/api/paymentintent/{id}"), handler::retrieve)
 export const getPaymentIntent = async (id) => {
   return apiCall(
     "GET",
-    `/paymentintent/${id}`,
+    `/payments/paymentintent/${id}`,
     {},
     "Error fetching payment intent:"
   );
 };
 
-// route(GET("/api/paymentintent/customer/{id}"), handler::searchByCustomer)
+// route(GET("/payments/api/paymentintent/customer/{id}"), handler::searchByCustomer)
 export const searchPaymentIntentByCustomer = async (customerId) => {
   return apiCall(
     "GET",
-    `/paymentintent/customer/${customerId}`,
+    `/payments/paymentintent/customer/${customerId}`,
     {},
     "Error fetching payment intent by customer:"
   );
 };
 
-// route(POST("/api/paymentintent"), handler::create)
+// route(POST("/payments/api/paymentintent"), handler::create)
 export const createPaymentIntent = async (formState) => {
   return apiCall(
     "POST",
-    "/paymentintent",
+    "/payments/paymentintent",
     { formState },
     "Error creating payment intent:"
   );
 };
 
-// route(PUT("/api/paymentintent/{id}"), handler::update)
+// route(PUT("/payments/api/paymentintent/{id}"), handler::update)
 export const editPaymentIntent = async (id, formState) => {
   return apiCall(
     "PUT",
-    `/paymentintent/${id}`,
+    `/payments/paymentintent/${id}`,
     { formState },
     "Error editing payment intent:"
   );
 };
 
-// route(PUT("/api/paymentintent/capture/{id}"), handler::capture)
+// route(PUT("/payments/api/paymentintent/capture/{id}"), handler::capture)
 export const capturePaymentIntent = async (id) => {
   return apiCall(
     "PUT",
-    `/paymentintent/capture/${id}`,
+    `/payments/paymentintent/capture/${id}`,
     {},
     "Error capturing payment intent:"
   );
 };
 
-// route(DELETE("/api/paymentintent/{id}"), handler::cancel)
+// route(DELETE("/payments/api/paymentintent/{id}"), handler::cancel)
 export const cancelPaymentIntent = async (id) => {
   return apiCall(
     "DELETE",
-    `/paymentintent/${id}`,
+    `/payments/paymentintent/${id}`,
     {},
     "Error canceling payment intent:"
   );
@@ -133,61 +143,61 @@ export const cancelPaymentIntent = async (id) => {
 
 // PaymentMethod
 
-// route((GET("/api/paymentmethod")), handler::listAll)
+// route((GET("/payments/api/paymentmethod")), handler::listAll)
 export const listAllPaymentMethods = async () => {
   return apiCall(
     "GET",
-    "/paymentmethod",
+    "/payments/paymentmethod",
     {},
     "Error fetching payment methods:"
   );
 };
 
-// route(GET("/api/paymentmethod/{id}"), handler::retrieve)
+// route(GET("/payments/api/paymentmethod/{id}"), handler::retrieve)
 export const getPaymentMethod = async (id) => {
   return apiCall(
     "GET",
-    `/paymentmethod/${id}`,
+    `/payments/paymentmethod/${id}`,
     {},
     "Error fetching payment method:"
   );
 };
 
-// route(GET("/api/paymentmethod/customer/{id}"), handler::searchByCustomer)
+// route(GET("/payments/api/paymentmethod/customer/{id}"), handler::searchByCustomer)
 export const searchPaymentMethodByCustomer = async (customerId) => {
   return apiCall(
     "GET",
-    `/paymentmethod/customer/${customerId}`,
+    `/payments/paymentmethod/customer/${customerId}`,
     {},
     "Error fetching payment method by customer:"
   );
 };
 
-// route(POST("/api/paymentmethod"), handler::create)
+// route(POST("/payments/api/paymentmethod"), handler::create)
 export const createPaymentMethod = async (formState) => {
   return apiCall(
     "POST",
-    "/paymentmethod",
+    "/payments/paymentmethod",
     { formState },
     "Error creating payment method:"
   );
 };
 
-// route(PUT("/api/paymentmethod/{id}"), handler::update)
+// route(PUT("/payments/api/paymentmethod/{id}"), handler::update)
 export const editPaymentMethod = async (id, formState) => {
   return apiCall(
     "PUT",
-    `/paymentmethod/${id}`,
+    `/payments/paymentmethod/${id}`,
     { formState },
     "Error editing payment method:"
   );
 };
 
-// route(DELETE("/api/paymentmethod/{id}"), handler::cancel)
+// route(DELETE("/payments/api/paymentmethod/{id}"), handler::cancel)
 export const cancelPaymentMethod = async (id) => {
   return apiCall(
     "DELETE",
-    `/paymentmethod/${id}`,
+    `/payments/paymentmethod/${id}`,
     {},
     "Error canceling payment method:"
   );
@@ -195,68 +205,99 @@ export const cancelPaymentMethod = async (id) => {
 
 // Price
 
-// route(GET("/api/price"), handler::listAll)
+// route(GET("/payments/api/price"), handler::listAll)
 export const listAllPrices = async () => {
-  return apiCall("GET", "/price", {}, "Error fetching prices:");
+  return apiCall("GET", "/payments/price", {}, "Error fetching prices:");
 };
 
-// route(GET("/api/price/{id}"), handler::retrieve)
+// route(GET("/payments/api/price/{id}"), handler::retrieve)
 export const getPrice = async (id) => {
-  return apiCall("GET", `/price/${id}`, {}, "Error fetching price:");
+  return apiCall("GET", `/payments/price/${id}`, {}, "Error fetching price:");
 };
 
-// route(POST("/api/price"), handler::create)
+// route(POST("/payments/api/price"), handler::create)
 export const createPrice = async (formState) => {
-  return apiCall("POST", "/price", { formState }, "Error creating price:");
+  return apiCall(
+    "POST",
+    "/payments/price",
+    { formState },
+    "Error creating price:"
+  );
 };
 
-// route(PUT("/api/price/{id}"), handler::update)
+// route(PUT("/payments/api/price/{id}"), handler::update)
 export const editPrice = async (id, formState) => {
-  return apiCall("PUT", `/price/${id}`, { formState }, "Error editing price:");
+  return apiCall(
+    "PUT",
+    `/payments/price/${id}`,
+    { formState },
+    "Error editing price:"
+  );
 };
 
 // Product
 
-// route((GET("/api/product")),handler::listAll)
+// route((GET("/payments/api/product")),handler::listAll)
 export const listAllProducts = async () => {
-  return apiCall("GET", "/product", {}, "Error fetching products:");
+  return apiCall("GET", "/payments/product", {}, "Error fetching products:");
 };
 
-// route(GET("/api/product/{id}"),handler::retrieve)
+// route(GET("/payments/api/product/{id}"),handler::retrieve)
 export const getProduct = async (id) => {
-  return apiCall("GET", `/product/${id}`, {}, "Error fetching product:");
+  return apiCall(
+    "GET",
+    `/payments/product/${id}`,
+    {},
+    "Error fetching product:"
+  );
 };
 
-// route(POST("/api/product"),handler::create)
+// route(POST("/payments/api/product"),handler::create)
 export const createProduct = async (formState) => {
-  return apiCall("POST", "/product", { formState }, "Error creating product:");
+  return apiCall(
+    "POST",
+    "/payments/product",
+    { formState },
+    "Error creating product:"
+  );
 };
 
-// route(PUT("/api/product/{id}"),handler::update)
+// route(PUT("/payments/api/product/{id}"),handler::update)
 export const editProduct = async (id, formState) => {
   return apiCall(
     "PUT",
-    `/product/${id}`,
+    `/payments/product/${id}`,
     { formState },
     "Error editing product:"
   );
 };
 
-// route(DELETE("/api/product/{id}"),handler::delete)
+// route(DELETE("/payments/api/product/{id}"),handler::delete)
 export const deleteProduct = async (id) => {
-  return apiCall("DELETE", `/product/${id}`, {}, "Error deleting product:");
+  return apiCall(
+    "DELETE",
+    `/payments/product/${id}`,
+    {},
+    "Error deleting product:"
+  );
 };
 
 // SetupIntent
 
 export const listAllSetupIntents = async () => {
-  return apiCall("GET", "/setupintent", {}, {}, "Error fetching setup intents");
+  return apiCall(
+    "GET",
+    "/payments/setupintent",
+    {},
+    {},
+    "Error fetching setup intents"
+  );
 };
 
 export const getSetupIntent = async (id) => {
   return apiCall(
     "GET",
-    `/setupintent/${id}`,
+    `/payments/setupintent/${id}`,
     {},
     {},
     "Error fetching setup intent"
@@ -266,7 +307,7 @@ export const getSetupIntent = async (id) => {
 export const createSetupIntent = async (formState) => {
   return apiCall(
     "POST",
-    "/setupintent",
+    "/payments/setupintent",
     {},
     formState,
     "Error creating setup intent"
@@ -276,7 +317,7 @@ export const createSetupIntent = async (formState) => {
 export const confirmSetupIntent = async (id) => {
   return apiCall(
     "PUT",
-    `/setupintent/confirm/${id}`,
+    `/payments/setupintent/confirm/${id}`,
     {},
     {},
     "Error confirming setup intent"
@@ -286,7 +327,7 @@ export const confirmSetupIntent = async (id) => {
 export const editSetupIntent = async (id, formState) => {
   return apiCall(
     "PUT",
-    `/setupintent/${id}`,
+    `/payments/setupintent/${id}`,
     {},
     formState,
     "Error editing setup intent"
@@ -296,7 +337,7 @@ export const editSetupIntent = async (id, formState) => {
 export const cancelSetupIntent = async (id) => {
   return apiCall(
     "DELETE",
-    `/setupintent/${id}`,
+    `/payments/setupintent/${id}`,
     {},
     {},
     "Error canceling setup intent"
@@ -305,46 +346,51 @@ export const cancelSetupIntent = async (id) => {
 
 // Subscription
 
-// route((GET("/api/subscription")), handler::listAll)
+// route((GET("/payments/api/subscription")), handler::listAll)
 export const listAllSubscriptions = async () => {
-  return apiCall("GET", "/subscription", {}, "Error fetching subscriptions:");
+  return apiCall(
+    "GET",
+    "/payments/subscription",
+    {},
+    "Error fetching subscriptions:"
+  );
 };
 
-// route(GET("/api/subscription/{id}"), handler::retrieve)
+// route(GET("/payments/api/subscription/{id}"), handler::retrieve)
 export const getSubscription = async (id) => {
   return apiCall(
     "GET",
-    `/subscription/${id}`,
+    `/payments/subscription/${id}`,
     {},
     "Error fetching subscription:"
   );
 };
 
-// route(POST("/api/subscription/{priceId}"), handler::create)
+// route(POST("/payments/api/subscription/{priceId}"), handler::create)
 export const createSubscription = async (priceId, formState) => {
   return apiCall(
     "POST",
-    `/subscription/${priceId}`,
+    `/payments/subscription/${priceId}`,
     { formState },
     "Error creating subscription:"
   );
 };
 
-// route(PUT("/api/subscription/{id}"), handler::update)
+// route(PUT("/payments/api/subscription/{id}"), handler::update)
 export const editSubscription = async (id, formState) => {
   return apiCall(
     "PUT",
-    `/subscription/${id}`,
+    `/payments/subscription/${id}`,
     { formState },
     "Error editing subscription:"
   );
 };
 
-// route(DELETE("/api/subscription/{id}"), handler::cancel)
+// route(DELETE("/payments/api/subscription/{id}"), handler::cancel)
 export const cancelSubscription = async (id) => {
   return apiCall(
     "DELETE",
-    `/subscription/${id}`,
+    `/payments/subscription/${id}`,
     {},
     "Error canceling subscription:"
   );
