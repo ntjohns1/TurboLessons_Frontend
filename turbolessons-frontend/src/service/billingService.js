@@ -289,7 +289,6 @@ export const listAllSetupIntents = async () => {
     "GET",
     "/payments/setupintent",
     {},
-    {},
     "Error fetching setup intents"
   );
 };
@@ -299,7 +298,6 @@ export const getSetupIntent = async (id) => {
     "GET",
     `/payments/setupintent/${id}`,
     {},
-    {},
     "Error fetching setup intent"
   );
 };
@@ -308,8 +306,7 @@ export const createSetupIntent = async (formState) => {
   return apiCall(
     "POST",
     "/payments/setupintent",
-    {},
-    formState,
+    { formState },
     "Error creating setup intent"
   );
 };
@@ -319,7 +316,6 @@ export const confirmSetupIntent = async (id) => {
     "PUT",
     `/payments/setupintent/confirm/${id}`,
     {},
-    {},
     "Error confirming setup intent"
   );
 };
@@ -328,8 +324,7 @@ export const editSetupIntent = async (id, formState) => {
   return apiCall(
     "PUT",
     `/payments/setupintent/${id}`,
-    {},
-    formState,
+    { formState },
     "Error editing setup intent"
   );
 };
@@ -338,7 +333,6 @@ export const cancelSetupIntent = async (id) => {
   return apiCall(
     "DELETE",
     `/payments/setupintent/${id}`,
-    {},
     {},
     "Error canceling setup intent"
   );

@@ -56,7 +56,7 @@ const studentSlice = createSlice({
     // selectedStudent: null,
     selectedProfile: null,
     loading: false,
-    studentFetchFailed: false,
+    error: null,
   },
   reducers: {
     setSelectedProfile(state, action) {
@@ -64,9 +64,6 @@ const studentSlice = createSlice({
     },
     setLoading(state, action) {
       state.loading = action.payload;
-    },
-    setStudentFetchFailed(state, action) {
-      state.studentFetchFailed = action.payload;
     },
   },
   extraReducers: (builder) => {
@@ -76,12 +73,11 @@ const studentSlice = createSlice({
       })
       .addCase(fetchTeacherStudents.fulfilled, (state, action) => {
         state.loading = false;
-        state.studentFetchFailed = false;
         state.studentsByTeacher = action.payload;
       })
-      .addCase(fetchTeacherStudents.rejected, (state) => {
+      .addCase(fetchTeacherStudents.rejected, (state, action) => {
         state.loading = false;
-        state.studentFetchFailed = true;
+        state.error = action.error;
       })
       .addCase(createNewStudent.fulfilled, (state, action) => {
         state.studentsByTeacher.push(action.payload);
