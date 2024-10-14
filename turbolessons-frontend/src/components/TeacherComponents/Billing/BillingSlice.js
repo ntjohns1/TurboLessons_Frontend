@@ -1,4 +1,9 @@
-import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import {
+  createSlice,
+  createAsyncThunk,
+  createEntityAdapter,
+} from "@reduxjs/toolkit";
+import { buildThunks, buildReducers } from "../../../util/reduxUtil";
 
 import {
   getCustomer,
@@ -40,76 +45,66 @@ import {
   editSubscription,
   cancelSubscription,
 } from "../../../service/billingService";
+// Entity Adapters
+
+const customerAdapter = createEntityAdapter();
+const paymentIntentAdapter = createEntityAdapter();
+const paymentMethodAdapter = createEntityAdapter();
+const priceAdapter = createEntityAdapter();
+const productAdapter = createEntityAdapter();
+const setupIntentAdapter = createEntityAdapter();
+const subscriptionAdapter = createEntityAdapter();
 
 // Thunks
 
-export const createThunks = (entityName, service) => ({
-  fetchAll: createAsyncThunk(`${entityName}/fetchAll`, async () => {
-    const response = await service.listAll();
-    return response;
-  }),
-
-  fetchOne: createAsyncThunk(`${entityName}/fetchOne`, async (id) => {
-    const response = await service.get(id);
-    return response;
-  }),
-
-  createItem: createAsyncThunk(`${entityName}/create`, async (data) => {
-    const response = await service.create(data);
-    return response;
-  }),
-
-  updateItem: createAsyncThunk(`${entityName}/update`, async ({ id, data }) => {
-    const response = await service.update(id, data);
-    return response;
-  }),
-
-  deleteItem: createAsyncThunk(`${entityName}/delete`, async (id) => {
-    const response = await service.delete(id);
-    return response;
-  }),
+// Define thunks for each entity type
+const customerThunks = buildThunks("customers", {
+  listAll: listAllCustomers,
+  get: getCustomer,
+  create: createCustomer,
+  update: editCustomer,
+  delete: deleteCustomer,
 });
 
+// export const fetchAllCustomers = createAsyncThunk(
+//   "billing/fetchAllCustomers",
+//   async () => {
+//     const response = await listAllCustomers();
+//     return response;
+//   }
+// );
 
-export const fetchAllCustomers = createAsyncThunk(
-  "billing/fetchAllCustomers",
-  async () => {
-    const response = await listAllCustomers();
-    return response;
-  }
-);
+// export const fetchCustomer = createAsyncThunk(
+//   "billing/fetchCustomer",
+//   async ({ id }) => {
+//     const response = await getCustomer(id);
+//     return response;
+//   }
+// );
 
-export const fetchCustomer = createAsyncThunk(
-  "billing/fetchCustomer",
-  async ({ id }) => {
-    const response = await getCustomer(id);
-    return response;
-  }
-);
+// export const createNewCustomer = createAsyncThunk(
+//   "billing/createCustomer",
+//   async (customerData) => {
+//     const response = await createCustomer(customerData);
+//     return response;
+//   }
+// );
 
-export const createNewCustomer = createAsyncThunk(
-  "billing/createCustomer",
-  async (customerData) => {
-    const response = await createCustomer(customerData);
-    return response;
-  }
-);
+// export const updateCustomer = createAsyncThunk(
+//   "billing/editCustomer",
+//   async ({ id, formState }) => {
+//     const response = editCustomer(id, formState);
+//     return response;
+//   }
+// );
 
-export const updateCustomer = createAsyncThunk(
-  "billing/editCustomer",
-  async ({ id, formState }) => {
-    const response = editCustomer(id, formState);
-    return response;
-  }
-);
-
-export const removeCustomer = createAsyncThunk(
-  "students/removeCustomer",
-  async (id) => {
-    const response = await deleteCustomer(id);
-    return response;
-  }
-);
+// export const removeCustomer = createAsyncThunk(
+//   "students/removeCustomer",
+//   async (id) => {
+//     const response = await deleteCustomer(id);
+//     return response;
+//   }
+// );
 
 export const fetchAllPaymentIntents = createAsyncThunk(
   "billing/fetchAllPaymentIntents",
