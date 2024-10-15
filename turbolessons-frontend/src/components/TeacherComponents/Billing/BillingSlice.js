@@ -45,8 +45,8 @@ import {
   editSubscription,
   cancelSubscription,
 } from "../../../service/billingService";
-// Entity Adapters
 
+// Entity Adapters
 const customerAdapter = createEntityAdapter();
 const paymentIntentAdapter = createEntityAdapter();
 const paymentMethodAdapter = createEntityAdapter();
@@ -57,8 +57,8 @@ const subscriptionAdapter = createEntityAdapter();
 
 // Thunks
 
-// Define thunks for each entity type
-const customerThunks = buildThunks("customers", {
+//  Customer
+const customerThunks = buildThunks("Customer", {
   listAll: listAllCustomers,
   get: getCustomer,
   create: createCustomer,
@@ -66,384 +66,146 @@ const customerThunks = buildThunks("customers", {
   delete: deleteCustomer,
 });
 
-// export const fetchAllCustomers = createAsyncThunk(
-//   "billing/fetchAllCustomers",
-//   async () => {
-//     const response = await listAllCustomers();
-//     return response;
-//   }
-// );
+// PaymentIntent
+const paymentIntentThunks = buildThunks("PaymentIntent", {
+  listAll: listAllPaymentIntents,
+  get: getPaymentIntent,
+  create: createPaymentIntent,
+  update: editPaymentIntent,
+  delete: cancelPaymentIntent,
+  searchByCustomer: searchPaymentIntentByCustomer,
+  capture: cancelPaymentIntent,
+});
 
-// export const fetchCustomer = createAsyncThunk(
-//   "billing/fetchCustomer",
-//   async ({ id }) => {
-//     const response = await getCustomer(id);
-//     return response;
-//   }
-// );
+// PaymentMethod
+const paymentMethodThunks = buildThunks("PaymentMethod", {
+  listAll: listAllPaymentMethods,
+  get: getPaymentMethod,
+  searchByCustomer: searchPaymentMethodByCustomer,
+  create: createPaymentMethod,
+  update: editPaymentMethod,
+  delete: cancelPaymentMethod,
+});
 
-// export const createNewCustomer = createAsyncThunk(
-//   "billing/createCustomer",
-//   async (customerData) => {
-//     const response = await createCustomer(customerData);
-//     return response;
-//   }
-// );
+// Price
+const priceThunks = buildThunks("Price", {
+  listAll: listAllPrices,
+  get: getPrice,
+  create: createPrice,
+  update: editPrice,
+});
 
-// export const updateCustomer = createAsyncThunk(
-//   "billing/editCustomer",
-//   async ({ id, formState }) => {
-//     const response = editCustomer(id, formState);
-//     return response;
-//   }
-// );
+//  Product
+const productThunks = buildThunks("Product", {
+  listAll: listAllProducts,
+  get: getProduct,
+  create: createProduct,
+  update: editProduct,
+  delete: deleteProduct,
+});
 
-// export const removeCustomer = createAsyncThunk(
-//   "students/removeCustomer",
-//   async (id) => {
-//     const response = await deleteCustomer(id);
-//     return response;
-//   }
-// );
+// SetupIntent
+const setupIntentThunks = buildThunks("SetupIntent", {
+  listAll: listAllSetupIntents,
+  get: getSetupIntent,
+  create: createSetupIntent,
+  update: editSetupIntent,
+  delete: cancelSetupIntent,
+  confirm: confirmSetupIntent,
+});
 
-export const fetchAllPaymentIntents = createAsyncThunk(
-  "billing/fetchAllPaymentIntents",
-  async () => {
-    const response = await listAllPaymentIntents();
-    return response;
-  }
-);
-
-export const fetchPaymentIntent = createAsyncThunk(
-  "billing/fetchPaymentIntent",
-  async ({ id }) => {
-    const response = await getPaymentIntent(id);
-    return response;
-  }
-);
-
-export const fetchPaymentIntentByCustomer = createAsyncThunk(
-  "billing/fetchPaymentIntentByCustomer",
-  async ({ customerId }) => {
-    const response = await searchPaymentIntentByCustomer(customerId);
-    return response;
-  }
-);
-
-export const createNewPaymentIntent = createAsyncThunk(
-  "billing/createPaymentIntent",
-  async (paymentIntentData) => {
-    const response = await createPaymentIntent(paymentIntentData);
-    return response;
-  }
-);
-
-export const updatePaymentIntent = createAsyncThunk(
-  "billing/editPaymentIntent",
-  async ({ id, formState }) => {
-    const response = editPaymentIntent(id, formState);
-    return response;
-  }
-);
-
-export const capturePaymentIntent = createAsyncThunk(
-  "billing/capturePaymentIntent",
-  async ({ id }) => {
-    const response = capturePaymentIntent(id);
-    return response;
-  }
-);
-
-export const deletePaymentIntent = createAsyncThunk(
-  "billing/deletePaymentIntent",
-  async ({ id }) => {
-    const response = cancelPaymentIntent(id);
-    return response;
-  }
-);
-
-export const fetchAllPaymentMethods = createAsyncThunk(
-  "billing/fetchAllPaymentMethods",
-  async () => {
-    const response = listAllPaymentMethods();
-    return response;
-  }
-);
-
-export const fetchOnePaymentMethod = createAsyncThunk(
-  "billing/fetchOnePaymentMethod",
-  async ({ id }) => {
-    const response = getPaymentMethod(id);
-    return response;
-  }
-);
-
-export const fetchPaymentMethodsByCustomer = createAsyncThunk(
-  "billing/fetchPaymentMethodsByCustomer",
-  async ({ customerId }) => {
-    const response = searchPaymentMethodByCustomer(customerId);
-    return response;
-  }
-);
-
-export const createNewPaymentMethod = createAsyncThunk(
-  "billing/createNewPaymentMethod",
-  async (formstate) => {
-    const response = await createPaymentMethod(formstate);
-    return response;
-  }
-);
-
-export const updatePaymentMethod = createAsyncThunk(
-  "billing/editPaymentMethod",
-  async ({ id, formstate }) => {
-    const response = editPaymentMethod(id, formstate);
-    return response;
-  }
-);
-
-export const deletePaymentMethod = createAsyncThunk(
-  "billing/deletePaymentMethod",
-  async ({ id }) => {
-    const response = cancelPaymentMethod(id);
-    return response;
-  }
-);
-
-export const fetchAllPrices = createAsyncThunk(
-  "billing/fetchAllPrices",
-  async () => {
-    const response = await listAllPrices();
-    return response;
-  }
-);
-
-export const fetchPrice = createAsyncThunk(
-  "billing/fetchPrice",
-  async ({ id }) => {
-    const response = await getPrice(id);
-    return response;
-  }
-);
-
-export const createNewPrice = createAsyncThunk(
-  "billing/createPrice",
-  async (productData) => {
-    const response = await createPrice(productData);
-    return response;
-  }
-);
-
-export const updatePrice = createAsyncThunk(
-  "billing/editProduct",
-  async ({ id, formState }) => {
-    const response = editPrice(id, formState);
-    return response;
-  }
-);
-
-export const fetchAllProducts = createAsyncThunk(
-  "billing/fetchAllProducts",
-  async () => {
-    const response = await listAllProducts();
-    return response;
-  }
-);
-
-export const fetchProduct = createAsyncThunk(
-  "billing/fetchProduct",
-  async ({ id }) => {
-    const response = await getProduct(id);
-    return response;
-  }
-);
-
-export const createNewProduct = createAsyncThunk(
-  "billing/createProduct",
-  async (productData) => {
-    const response = await createProduct(productData);
-    return response;
-  }
-);
-
-export const updateProduct = createAsyncThunk(
-  "billing/editProduct",
-  async ({ id, formState }) => {
-    const response = editProduct(id, formState);
-    return response;
-  }
-);
-
-export const removeProduct = createAsyncThunk(
-  "students/deleteProduct",
-  async (id) => {
-    const response = await deleteProduct(id);
-    return response;
-  }
-);
-
-export const fetchAllSetupIntents = createAsyncThunk(
-  "billing/fetchAllSetupIntents",
-  async () => {
-    const response = await listAllSetupIntents();
-    return response;
-  }
-);
-
-export const fetchSetupIntent = createAsyncThunk(
-  "billing/fetchSetupIntent",
-  async ({ id }) => {
-    const response = await getSetupIntent(id);
-    return response;
-  }
-);
-
-export const createNewSetupIntent = createAsyncThunk(
-  "billing/createSetupIntent",
-  async (setupIntentData) => {
-    const response = await createSetupIntent(setupIntentData);
-    return response;
-  }
-);
-
-export const confirmSetupIntent = createAsyncThunk(
-  "billing/editSetupIntent",
-  async ({ id }) => {
-    const response = confirmSetupIntent(id);
-    return response;
-  }
-);
-
-export const updateSetupIntent = createAsyncThunk(
-  "billing/editSetupIntent",
-  async ({ id, formState }) => {
-    const response = editSetupIntent(id, formState);
-    return response;
-  }
-);
-
-export const removeSetupIntent = createAsyncThunk(
-  "students/deleteSetupIntent",
-  async (id) => {
-    const response = await cancelSetupIntent(id);
-    return response;
-  }
-);
-
-export const fetchAllSubscriptions = createAsyncThunk(
-  "billing/fetchAllSubscriptions",
-  async () => {
-    const response = await listAllSubscriptions();
-    return response;
-  }
-);
-
-export const fetchSubscription = createAsyncThunk(
-  "billing/fetchSubscription",
-  async ({ id }) => {
-    const response = await getSubscription(id);
-    return response;
-  }
-);
-
-export const createNewSubscription = createAsyncThunk(
-  "billing/createSubscription",
-  async (customerData) => {
-    const response = await createSubscription(customerData);
-    return response;
-  }
-);
-
-export const updateSubscription = createAsyncThunk(
-  "billing/editSubscription",
-  async ({ id, formState }) => {
-    const response = editSubscription(id, formState);
-    return response;
-  }
-);
-
-export const removeSubscription = createAsyncThunk(
-  "students/removeSubscription",
-  async (id) => {
-    const response = await cancelSubscription(id);
-    return response;
-  }
-);
+// Subscription
+const subscriptionThunks = buildThunks("Subscription", {
+  listAll: listAllSubscriptions,
+  get: getSubscription,
+  create: createSubscription,
+  update: editSubscription,
+  delete: cancelSubscription,
+});
 
 // Slice
 const billingSlice = createSlice({
   name: "billing",
   initialState: {
-    customers: [],
-    paymentIntents: [],
-    paymentMethods: [],
-    prices: [],
-    products: [],
-    setupIntents: [],
-    subscriptions: [],
-    selectedCustomer: null,
-    selectedPaymentIntent: null,
-    selectedPaymentMethod: null,
-    selectedPrice: null,
-    selectedProduct: null,
-    selectedSetupIntent: null,
-    selectedSubscription: null,
-    loading: false,
-    error: null,
+    ...customerAdapter.getInitialState({ loading: false, error: null }),
+    ...paymentIntentAdapter.getInitialState({ loading: false, error: null }),
+    ...paymentMethodAdapter.getInitialState({ loading: false, error: null }),
+    ...priceAdapter.getInitialState({ loading: false, error: null }),
+    ...productAdapter.getInitialState({ loading: false, error: null }),
+    ...setupIntentAdapter.getInitialState({ loading: false, error: null }),
+    ...subscriptionAdapter.getInitialState({ loading: false, error: null }),
   },
-  reducers: {
-    setSelectedCustomer(state, action) {
-      state.selected = action.payload;
-    },
-    setSelectedPaymentIntent(state, action) {
-      state.selected = action.payload;
-    },
-    setSelectedPaymentMethod(state, action) {
-      state.selectedPaymentMethod = action.payload;
-    },
-    setSelectedPrice(state, action) {
-      state.selectedPrice = action.payload;
-    },
-    setSelectedProduct(state, action) {
-      state.selectedProduct = action.payload;
-    },
-    setSelectedSetupIntent(state, action) {
-      state.selectedSetupIntent = action.payload;
-    },
-    setSelectedSubscription(state, action) {
-      state.selectedSubscription = action.payload;
-    },
-    setLoading(state, action) {
-      state.loading = action.payload;
-    },
-  },
+    reducers: {},
   extraReducers: (builder) => {
-    builder
-      .addCase(fetchAllCustomers.pending, (state) => {
-        state.loading = true;
-      })
-      .addCase(fetchAllPaymentIntents.pending, (state) => {
-        state.loading = true;
-      })
-      .addCase(fetchAllPaymentMethods.pending, (state) => {
-        state.loading = true;
-      })
-      .addCase(fetchAllPrices.pending, (state) => {
-        state.loading = true;
-      })
-      .addCase(fetchAllProducts.pending, (state) => {
-        state.loading = true;
-      })
-      .addCase(fetchAllSetupIntents.pending, (state) => {
-        state.loading = true;
-      })
-      .addCase(fetchAllSubscriptions.pending, (state) => {
-        state.loading = true;
-      })
-      .addCase();
+    buildReducers(builder, customerThunks);
+    buildReducers(builder, paymentIntentThunks);
+    buildReducers(builder, paymentMethodThunks);
+    buildReducers(builder, priceThunks);
+    buildReducers(builder, productThunks);
+    buildReducers(builder, setupIntentThunks);
+    buildReducers(builder, subscriptionThunks);
   },
 });
 
 export const {} = billingSlice.actions;
+
+export const {
+  fetchAll: fetchAllCustomers,
+  fetchOne: fetchOneCustomer,
+  createItem: createCustomer,
+  updateItem: updateCustomer,
+  deleteItem: deleteCustomer,
+} = customerThunks;
+
+export const {
+  fetchAll: fetchAllPaymentIntents,
+  fetchOne: fetchOnePaymentIntent,
+  createItem: createPaymentIntent,
+  updateItem: updatePaymentIntent,
+  deleteItem: deletePaymentIntent,
+  fetchItemByCustomer: fetchPaymentIntentsByCustomer,
+  captureItem: capturePaymentIntent,
+} = paymentIntentThunks;
+
+export const {
+  fetchAll: fetchAllPaymentMethods,
+  fetchOne: fetchOnePaymentMethod,
+  createItem: createPaymentMethod,
+  updateItem: updatePaymentMethod,
+  deleteItem: deletePaymentMethod,
+  fetchItemByCustomer: fetchPaymentMethodsByCustomer,
+} = paymentMethodThunks;
+
+export const {
+  fetchAll: fetchAllPrices,
+  fetchOne: fetchOnePrice,
+  createItem: createPrice,
+  updateItem: updatePrice,
+} = priceThunks;
+
+export const {
+  fetchAll: fetchAllProducts,
+  fetchOne: fetchOneProduct,
+  createItem: createProduct,
+  updateItem: updateProduct,
+  deleteItem: deleteProduct,
+} = productThunks;
+
+export const {
+  fetchAll: fetchAllSetupIntents,
+  fetchOne: fetchOneSetupIntent,
+  createItem: createSetupIntent,
+  updateItem: updateSetupIntent,
+  deleteItem: deleteSetupIntent,
+  confirmItem: confirmSetupIntent,
+} = setupIntentThunks;
+
+export const {
+  fetchAll: fetchAllSubscriptions,
+  fetchOne: fetchOneSubscription,
+  createItem: createSubscription,
+  updateItem: updateSubscription,
+  deleteItem: deleteSubscription,
+} = subscriptionThunks;
 
 export default billingSlice.reducer;
