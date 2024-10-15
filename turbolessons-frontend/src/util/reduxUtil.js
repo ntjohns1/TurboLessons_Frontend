@@ -36,7 +36,7 @@ export const buildThunks = (entityName, service) => {
     );
   }
   if (service.searchByCustomer) {
-    thunks.fetchItemByCustomer = createAsyncThunk(
+    thunks.fetchItemsByCustomer = createAsyncThunk(
       `billing/fetch${entityName}sByCustomer`,
       async ({ customerId }) => {
         const response = await service.searchByCustomer(customerId);

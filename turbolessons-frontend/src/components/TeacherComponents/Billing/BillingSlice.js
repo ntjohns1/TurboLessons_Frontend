@@ -1,6 +1,5 @@
 import {
   createSlice,
-  createAsyncThunk,
   createEntityAdapter,
 } from "@reduxjs/toolkit";
 import { buildThunks, buildReducers } from "../../../util/reduxUtil";
@@ -74,7 +73,7 @@ const paymentIntentThunks = buildThunks("PaymentIntent", {
   update: editPaymentIntent,
   delete: cancelPaymentIntent,
   searchByCustomer: searchPaymentIntentByCustomer,
-  capture: cancelPaymentIntent,
+  capture: capturePaymentIntent,
 });
 
 // PaymentMethod
@@ -163,7 +162,7 @@ export const {
   createItem: createPaymentIntent,
   updateItem: updatePaymentIntent,
   deleteItem: deletePaymentIntent,
-  fetchItemByCustomer: fetchPaymentIntentsByCustomer,
+  fetchItemsByCustomer: fetchPaymentIntentsByCustomer,
   captureItem: capturePaymentIntent,
 } = paymentIntentThunks;
 
@@ -173,7 +172,7 @@ export const {
   createItem: createPaymentMethod,
   updateItem: updatePaymentMethod,
   deleteItem: deletePaymentMethod,
-  fetchItemByCustomer: fetchPaymentMethodsByCustomer,
+  fetchItemsByCustomer: fetchPaymentMethodsByCustomer,
 } = paymentMethodThunks;
 
 export const {
