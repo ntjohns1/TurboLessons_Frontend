@@ -90,7 +90,7 @@ const studentSlice = createSlice({
           state.studentsByTeacher[index] = action.payload;
         }
       })
-      .addCase(deleteStudent.fulfilled, (state, action) => {
+      .addCase(removeStudent.fulfilled, (state, action) => {
         state.studentsByTeacher = state.studentsByTeacher.filter(
           (student) => student.id !== action.payload
         );
@@ -98,7 +98,7 @@ const studentSlice = createSlice({
   },
 });
 
-export const { setSelectedProfile, setLoading, setStudentFetchFailed } =
+export const { setSelectedProfile, setLoading } =
   studentSlice.actions;
 
 export const selectStudentById = (state, studentId) =>

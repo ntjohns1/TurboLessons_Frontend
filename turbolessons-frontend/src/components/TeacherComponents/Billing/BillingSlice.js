@@ -1,7 +1,4 @@
-import {
-  createSlice,
-  createEntityAdapter,
-} from "@reduxjs/toolkit";
+import { createSlice, createEntityAdapter } from "@reduxjs/toolkit";
 import { buildThunks, buildReducers } from "../../../util/reduxUtil";
 
 import {
@@ -133,8 +130,13 @@ const billingSlice = createSlice({
     ...productAdapter.getInitialState({ loading: false, error: null }),
     ...setupIntentAdapter.getInitialState({ loading: false, error: null }),
     ...subscriptionAdapter.getInitialState({ loading: false, error: null }),
+    enrollmentFlag: false,
   },
-    reducers: {},
+  reducers: {
+    setBillingEnrollment(state, action) {
+      state.enrollmentFlag = action.payload;
+    },
+  },
   extraReducers: (builder) => {
     buildReducers(builder, customerThunks);
     buildReducers(builder, paymentIntentThunks);
@@ -146,65 +148,65 @@ const billingSlice = createSlice({
   },
 });
 
-export const {} = billingSlice.actions;
+export const { setBillingEnrollment } = billingSlice.actions;
 
 export const {
-  fetchAll: fetchAllCustomers,
-  fetchOne: fetchOneCustomer,
-  createItem: createCustomer,
-  updateItem: updateCustomer,
-  deleteItem: deleteCustomer,
+  fetchAll: fetchAllCustomersThunk,
+  fetchOne: fetchOneCustomerThunk,
+  createItem: createCustomerThunk,
+  updateItem: updateCustomerThunk,
+  deleteItem: deleteCustomerThunk,
 } = customerThunks;
 
 export const {
-  fetchAll: fetchAllPaymentIntents,
-  fetchOne: fetchOnePaymentIntent,
-  createItem: createPaymentIntent,
-  updateItem: updatePaymentIntent,
-  deleteItem: deletePaymentIntent,
-  fetchItemsByCustomer: fetchPaymentIntentsByCustomer,
-  captureItem: capturePaymentIntent,
+  fetchAll: fetchAllPaymentIntentsThunk,
+  fetchOne: fetchOnePaymentIntentThunk,
+  createItem: createPaymentIntentThunk,
+  updateItem: updatePaymentIntentThunk,
+  deleteItem: deletePaymentIntentThunk,
+  fetchItemsByCustomer: fetchPaymentIntentsByCustomerThunk,
+  captureItem: capturePaymentIntentThunk,
 } = paymentIntentThunks;
 
 export const {
-  fetchAll: fetchAllPaymentMethods,
-  fetchOne: fetchOnePaymentMethod,
-  createItem: createPaymentMethod,
-  updateItem: updatePaymentMethod,
-  deleteItem: deletePaymentMethod,
-  fetchItemsByCustomer: fetchPaymentMethodsByCustomer,
+  fetchAll: fetchAllPaymentMethodsThunk,
+  fetchOne: fetchOnePaymentMethodThunk,
+  createItem: createPaymentMethodThunk,
+  updateItem: updatePaymentMethodThunk,
+  deleteItem: deletePaymentMethodThunk,
+  fetchItemsByCustomer: fetchPaymentMethodsByCustomerThunk,
 } = paymentMethodThunks;
 
 export const {
-  fetchAll: fetchAllPrices,
-  fetchOne: fetchOnePrice,
-  createItem: createPrice,
-  updateItem: updatePrice,
+  fetchAll: fetchAllPricesThunk,
+  fetchOne: fetchOnePriceThunk,
+  createItem: createPriceThunk,
+  updateItem: updatePriceThunk,
 } = priceThunks;
 
 export const {
-  fetchAll: fetchAllProducts,
-  fetchOne: fetchOneProduct,
-  createItem: createProduct,
-  updateItem: updateProduct,
-  deleteItem: deleteProduct,
+  fetchAll: fetchAllProductsThunk,
+  fetchOne: fetchOneProductThunk,
+  createItem: createProductThunk,
+  updateItem: updateProductThunk,
+  deleteItem: deleteProductThunk,
 } = productThunks;
 
 export const {
-  fetchAll: fetchAllSetupIntents,
-  fetchOne: fetchOneSetupIntent,
-  createItem: createSetupIntent,
-  updateItem: updateSetupIntent,
-  deleteItem: deleteSetupIntent,
-  confirmItem: confirmSetupIntent,
+  fetchAll: fetchAllSetupIntentsThunk,
+  fetchOne: fetchOneSetupIntentThunk,
+  createItem: createSetupIntentThunk,
+  updateItem: updateSetupIntentThunk,
+  deleteItem: deleteSetupIntentThunk,
+  confirmItem: confirmSetupIntentThunk,
 } = setupIntentThunks;
 
 export const {
-  fetchAll: fetchAllSubscriptions,
-  fetchOne: fetchOneSubscription,
-  createItem: createSubscription,
-  updateItem: updateSubscription,
-  deleteItem: deleteSubscription,
+  fetchAll: fetchAllSubscriptionsThunk,
+  fetchOne: fetchOneSubscriptionThunk,
+  createItem: createSubscriptionThunk,
+  updateItem: updateSubscriptionThunk,
+  deleteItem: deleteSubscriptionThunk,
 } = subscriptionThunks;
 
 export default billingSlice.reducer;

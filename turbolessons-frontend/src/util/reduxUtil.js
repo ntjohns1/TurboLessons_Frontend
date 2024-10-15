@@ -3,23 +3,29 @@ import { createAsyncThunk } from "@reduxjs/toolkit";
 // Helper to generate CRUD thunks
 export const buildThunks = (entityName, service) => {
   const thunks = {
-    fetchAll: createAsyncThunk(`billing/fetchAll${entityName}s`, async () => {
-      const response = await service.listAll();
-      return response;
-    }),
-    fetchOne: createAsyncThunk(`billing/fetchOne${entityName}`, async (id) => {
-      const response = await service.get(id);
-      return response;
-    }),
+    fetchAll: createAsyncThunk(
+      `billing/fetchAll${entityName}sThunk`,
+      async () => {
+        const response = await service.listAll();
+        return response;
+      }
+    ),
+    fetchOne: createAsyncThunk(
+      `billing/fetchOne${entityName}Thunk`,
+      async (id) => {
+        const response = await service.get(id);
+        return response;
+      }
+    ),
     createItem: createAsyncThunk(
-      `billing/create${entityName}`,
+      `billing/create${entityName}Thunk`,
       async (data) => {
         const response = await service.create(data);
         return response;
       }
     ),
     updateItem: createAsyncThunk(
-      `billing/update${entityName}`,
+      `billing/update${entityName}Thunk`,
       async ({ id, data }) => {
         const response = await service.update(id, data);
         return response;
@@ -28,7 +34,7 @@ export const buildThunks = (entityName, service) => {
   };
   if (service.delete) {
     thunks.deleteItem = createAsyncThunk(
-      `billing/delete${entityName}`,
+      `billing/delete${entityName}Thunk`,
       async (id) => {
         const response = await service.delete(id);
         return response;
@@ -37,7 +43,7 @@ export const buildThunks = (entityName, service) => {
   }
   if (service.searchByCustomer) {
     thunks.fetchItemsByCustomer = createAsyncThunk(
-      `billing/fetch${entityName}sByCustomer`,
+      `billing/fetch${entityName}sByCustomerThunk`,
       async ({ customerId }) => {
         const response = await service.searchByCustomer(customerId);
         return response;
@@ -46,7 +52,7 @@ export const buildThunks = (entityName, service) => {
   }
   if (service.capture) {
     thunks.captureItem = createAsyncThunk(
-      `billing/capture${entityName}`,
+      `billing/capture${entityName}Thunk`,
       async ({ id }) => {
         const response = service.capture(id);
         return response;
@@ -55,7 +61,7 @@ export const buildThunks = (entityName, service) => {
   }
   if (service.confirm) {
     thunks.confirmItem = createAsyncThunk(
-      `billing/confirm${entityName}`,
+      `billing/confirm${entityName}Thunk`,
       async ({ id }) => {
         const response = service.confirm(id);
         return response;
@@ -99,8 +105,11 @@ export const buildReducers = (builder, entityThunks) => {
       if (index !== -1) {
         state.items[index] = action.payload;
       }
-    })
-    .addCase(entityThunks.deleteItem.fulfilled, (state, action) => {
+    });
+
+  if (entityThunks.deleteItem) {
+    builder.addCase(entityThunks.deleteItem.fulfilled, (state, action) => {
       state.items = state.items.filter((item) => item.id !== action.payload);
     });
+  }
 };
