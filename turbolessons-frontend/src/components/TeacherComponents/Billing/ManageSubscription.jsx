@@ -1,9 +1,21 @@
 import React, { useState, useEffect } from "react";
 import { Container, Row, Col, Table, Form, Button, Card } from "react-bootstrap";
+import { useDispatch, useSelector } from 'react-redux';
+import { useParams } from 'react-router-dom';
 import PaymentMethodModal from "./PaymentMethodModal";
 import { listAllProducts, listAllPrices, getPrice } from '../../../service/billingService';
+import SubscriptionDetails from "./SubscriptiopnDetails";
+import { createCustomerThunk } from "./BillingSlice";
 
 const ManageSubscription = () => {
+
+  // pseudocode:
+
+  // fetch stripe customer using Student ID TODO
+  const id = useParams().id;
+  // if no stripe customer account attached to student data, render component to create Stripe account
+  // if customer account exists but no subscription, render form to create subscription
+  // if subscription exists, render data in UI Layout below:
 
   const [show, setShow] = useState(false);
 
@@ -29,14 +41,7 @@ const ManageSubscription = () => {
           <Card className="mb-3">
             <Row>
               <Col md={6}>
-                <Card className="m-3">
-                  <Card.Body>
-                    <Card.Title>Subscription Details</Card.Title>
-                    <Card.Text>Status: Active</Card.Text>
-                    <Card.Text>Plan: Monthly - $60</Card.Text>
-                    <Card.Text>Renewal Date: 01/07/2024</Card.Text>
-                  </Card.Body>
-                </Card>
+                <SubscriptionDetails />
               </Col>
               <Col md={6}>
                 <Card className="m-3">
