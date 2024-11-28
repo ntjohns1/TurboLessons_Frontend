@@ -4,6 +4,7 @@ import { buildThunks, buildReducers } from "../../../util/reduxUtil";
 import {
   getCustomer,
   listAllCustomers,
+  searchCustomerByOktaId,
   createCustomer,
   editCustomer,
   deleteCustomer,
@@ -57,6 +58,7 @@ const subscriptionAdapter = createEntityAdapter();
 const customerThunks = buildThunks("Customer", {
   listAll: listAllCustomers,
   get: getCustomer,
+  searchByCustomer: searchCustomerByOktaId,
   create: createCustomer,
   update: editCustomer,
   delete: deleteCustomer,
@@ -138,13 +140,13 @@ const billingSlice = createSlice({
     },
   },
   extraReducers: (builder) => {
-    buildReducers(builder, customerThunks);
-    buildReducers(builder, paymentIntentThunks);
-    buildReducers(builder, paymentMethodThunks);
-    buildReducers(builder, priceThunks);
-    buildReducers(builder, productThunks);
-    buildReducers(builder, setupIntentThunks);
-    buildReducers(builder, subscriptionThunks);
+    buildReducers(builder, customerThunks, customerAdapter);
+    buildReducers(builder, paymentIntentThunks, paymentIntentAdapter);
+    buildReducers(builder, paymentMethodThunks, paymentMethodAdapter);
+    buildReducers(builder, priceThunks, priceAdapter);
+    buildReducers(builder, productThunks, productAdapter);
+    buildReducers(builder, setupIntentThunks, setupIntentAdapter);
+    buildReducers(builder, subscriptionThunks, subscriptionAdapter);
   },
 });
 
@@ -156,6 +158,7 @@ export const {
   createItem: createCustomerThunk,
   updateItem: updateCustomerThunk,
   deleteItem: deleteCustomerThunk,
+  fetchItemsByCustomer: fetchCustomersByCustomerThunk,
 } = customerThunks;
 
 export const {

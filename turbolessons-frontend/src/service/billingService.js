@@ -41,6 +41,17 @@ export const getCustomer = async (id) => {
     "Error fetching customer:"
   );
 };
+
+// route(GET("/api/payments/customer/lookup/{id}"), handler::search)
+export const searchCustomerByOktaId = async (id) => {
+  return apiCall(
+    "GET",
+    `/payments/customer/lookup/${id}`,
+    {},
+    "Error fetching customer:"
+  );
+};
+
 // route(POST("/payments/api/customer"), handler::create)
 export const createCustomer = async (formState) => {
   return apiCall(

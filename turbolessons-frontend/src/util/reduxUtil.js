@@ -71,14 +71,15 @@ export const buildThunks = (entityName, service) => {
   return thunks;
 };
 
-export const buildReducers = (builder, entityThunks) => {
+export const buildReducers = (builder, entityThunks, adapter) => {
   builder
     .addCase(entityThunks.fetchAll.pending, (state) => {
       state.loading = true;
     })
     .addCase(entityThunks.fetchAll.fulfilled, (state, action) => {
       state.loading = false;
-      state.items = action.payload;
+      adapter.setAll(state, action.payload);
+      console.log("Entities after fetchAll:", state.entities); // Log entities
     })
     .addCase(entityThunks.fetchAll.rejected, (state) => {
       state.loading = false;
@@ -89,27 +90,30 @@ export const buildReducers = (builder, entityThunks) => {
     })
     .addCase(entityThunks.fetchOne.fulfilled, (state, action) => {
       state.loading = false;
-      state.selectedItem = action.payload;
+      adapter.upsertOne(state, action.payload); // Use `upsertOne` for single updates
     })
     .addCase(entityThunks.fetchOne.rejected, (state) => {
       state.loading = false;
     })
 
     .addCase(entityThunks.createItem.fulfilled, (state, action) => {
-      state.items.push(action.payload);
+      adapter.addOne(state, action.payload); // Use `addOne` for new items
     })
     .addCase(entityThunks.updateItem.fulfilled, (state, action) => {
-      const index = state.items.findIndex(
-        (item) => item.id === action.payload.id
-      );
-      if (index !== -1) {
-        state.items[index] = action.payload;
-      }
+      adapter.upsertOne(state, action.payload); // Use `upsertOne` for updates
     });
 
   if (entityThunks.deleteItem) {
     builder.addCase(entityThunks.deleteItem.fulfilled, (state, action) => {
-      state.items = state.items.filter((item) => item.id !== action.payload);
+      adapter.removeOne(state, action.payload.id); // Use `removeOne` to delete
     });
+  }
+  if (entityThunks.fetchItemsByCustomer) {
+    builder.addCase(
+      entityThunks.fetchItemsByCustomer.fulfilled,
+      (state, action) => {
+        adapter.setAll(state, [action.payload]); // Wrap single object in an array
+      }
+    );
   }
 };

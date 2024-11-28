@@ -9,16 +9,42 @@
 
 */
 
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Button, Card, Form, Row, Col } from 'react-bootstrap';
+import { useDispatch, useSelector } from 'react-redux';
 import { Link, useParams } from 'react-router-dom';
 import { useStudentContext } from '../../../util/context/StudentContext';
 import Loading from '../../../helpers/Loading';
 import '../../../App'
+import { fetchCustomersByCustomerThunk } from "./BillingSlice";
+import { setAccessToken } from "../../../service/axiosConfig";
+import { useOktaAuth } from '@okta/okta-react';
 
 export default function BillingOverview() {
+    // requirement: function to lookup customerId from okta_id
+    // Fetch customer data by ID
+    // If no data, render a button linking to NewSubscriptionForm.jsx
+    // If data exists, 
+    const { authState, oktaAuth } = useOktaAuth();
+    const accessToken = oktaAuth.getAccessToken();
+    const dispatch = useDispatch();
+    const paramsId = useParams().id;
+    const billingState = useSelector((state) => state.billing);
 
-    const id = useParams().id;
+    useEffect(() => {
+        setAccessToken(accessToken);
+        dispatch(fetchCustomersByCustomerThunk({ customerId: paramsId })).then((response) => {
+            console.log("Thunk Response:", response.payload); // Log the response from the thunk
+        });
+
+    }, []);
+    
+    useEffect(() => {
+
+        console.log("Billing State Entities After Thunk Dispatch:", billingState.entities);
+    }, [billingState.entities]);
+
+    console.log();
 
     return (
         <Card>
@@ -52,7 +78,7 @@ export default function BillingOverview() {
                 </Form>
             </Card.Body>
             <Card.Footer>
-                <Button as={Link} to={`/students/${id}/billing`} variant='darkblue'>Manage Billing</Button>
+                <Button as={Link} to={`/students/${paramsId}/billing`} variant='darkblue'>Manage Billing</Button>
             </Card.Footer>
         </Card>
     )

@@ -4,6 +4,12 @@ import { createCustomerThunk } from "./BillingSlice";
 
 
 function NewSubscriptionForm() {
+    const dispatch = useDispatch();
+    const handleCreateStripeCustomer = () => {
+        dispatch(createCustomerThunk(
+            
+        ))
+    }
     return (
         <Form>
             <Row className='m-2'>
