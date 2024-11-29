@@ -89,29 +89,29 @@ export const buildReducers = (builder, entityThunks, adapter) => {
     })
     .addCase(entityThunks.fetchOne.fulfilled, (state, action) => {
       state.loading = false;
-      adapter.upsertOne(state, action.payload); // Use `upsertOne` for single updates
+      adapter.upsertOne(state, action.payload);
     })
     .addCase(entityThunks.fetchOne.rejected, (state) => {
       state.loading = false;
     })
 
     .addCase(entityThunks.createItem.fulfilled, (state, action) => {
-      adapter.addOne(state, action.payload); // Use `addOne` for new items
+      adapter.addOne(state, action.payload);
     })
     .addCase(entityThunks.updateItem.fulfilled, (state, action) => {
-      adapter.upsertOne(state, action.payload); // Use `upsertOne` for updates
+      adapter.upsertOne(state, action.payload);
     });
 
   if (entityThunks.deleteItem) {
     builder.addCase(entityThunks.deleteItem.fulfilled, (state, action) => {
-      adapter.removeOne(state, action.payload.id); // Use `removeOne` to delete
+      adapter.removeOne(state, action.payload.id);
     });
   }
   if (entityThunks.fetchItemsByCustomer) {
     builder.addCase(
       entityThunks.fetchItemsByCustomer.fulfilled,
       (state, action) => {
-        adapter.setAll(state, [action.payload]); // Wrap single object in an array
+        adapter.setAll(state, [action.payload]);
       }
     );
   }

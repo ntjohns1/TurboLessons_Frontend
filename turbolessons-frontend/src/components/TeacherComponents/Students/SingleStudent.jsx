@@ -18,7 +18,7 @@ export default function SingleStudent() {
   useEffect(() => {
     const fetchProfile = async () => {
       try {
-        const accessToken = await oktaAuth.getAccessToken();
+        const accessToken = oktaAuth.getAccessToken();
         setAccessToken(accessToken);
         const data = await getStudentProfile(id, accessToken);
         setStudent(data);
