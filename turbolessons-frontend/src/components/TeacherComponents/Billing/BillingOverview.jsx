@@ -25,26 +25,7 @@ export default function BillingOverview() {
     // Fetch customer data by ID
     // If no data, render a button linking to NewSubscriptionForm.jsx
     // If data exists, 
-    const { authState, oktaAuth } = useOktaAuth();
-    const accessToken = oktaAuth.getAccessToken();
-    const dispatch = useDispatch();
     const paramsId = useParams().id;
-    const billingState = useSelector((state) => state.billing);
-
-    useEffect(() => {
-        setAccessToken(accessToken);
-        dispatch(fetchCustomersByCustomerThunk({ customerId: paramsId })).then((response) => {
-            console.log("Thunk Response:", response.payload); // Log the response from the thunk
-        });
-
-    }, []);
-    
-    useEffect(() => {
-
-        console.log("Billing State Entities After Thunk Dispatch:", billingState.entities);
-    }, [billingState.entities]);
-
-    console.log();
 
     return (
         <Card>

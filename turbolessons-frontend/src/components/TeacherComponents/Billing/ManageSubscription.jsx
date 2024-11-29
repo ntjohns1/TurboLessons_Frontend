@@ -3,16 +3,17 @@ import { Container, Row, Col, Table, Form, Button, Card } from "react-bootstrap"
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import PaymentMethodModal from "./PaymentMethodModal";
-import { listAllProducts, listAllPrices, getPrice } from '../../../service/billingService';
 import SubscriptionDetails from "./SubscriptiopnDetails";
-import { createCustomerThunk } from "./BillingSlice";
+import { createCustomerThunk, fetchCustomersByCustomerThunk } from "./BillingSlice";
+import { setAccessToken } from "../../../service/axiosConfig";
+import { useOktaAuth } from '@okta/okta-react';
+
 
 const ManageSubscription = () => {
 
   // pseudocode:
 
   // fetch stripe customer using Student ID TODO
-  const id = useParams().id;
   // if no stripe customer account attached to student data, render component to create Stripe account
   // if customer account exists but no subscription, render form to create subscription
   // if subscription exists, render data in UI Layout below:
@@ -22,17 +23,24 @@ const ManageSubscription = () => {
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
 
-  const testGetProducts = async () => {
-    const response = await listAllProducts();
-    console.log(response.data);
-    return response;
-  };
-
-
+  const { authState, oktaAuth } = useOktaAuth();
+  const accessToken = oktaAuth.getAccessToken();
+  const dispatch = useDispatch();
+  const paramsId = useParams().id;
+  const billingState = useSelector((state) => state.billing);
 
   useEffect(() => {
-    const test = testGetProducts();
+    setAccessToken(accessToken);
+    dispatch(fetchCustomersByCustomerThunk({ customerId: paramsId })).then((response) => {
+      console.log("Thunk Response:", response.payload); // Log the response from the thunk
+    });
+
   }, []);
+
+  useEffect(() => {
+
+    console.log("Billing State Entities After Thunk Dispatch:", billingState.entities);
+  }, [billingState.entities]);
 
   return (
     <Container >
