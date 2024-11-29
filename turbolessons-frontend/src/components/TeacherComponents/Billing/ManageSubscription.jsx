@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import PaymentMethodModal from "./PaymentMethodModal";
 import SubscriptionDetails from "./SubscriptiopnDetails";
-import { createCustomerThunk, fetchCustomersByCustomerThunk } from "./BillingSlice";
+import { createCustomerThunk, searchCustomersBySysIdThunk } from "./BillingSlice";
 import { setAccessToken } from "../../../service/axiosConfig";
 import { useOktaAuth } from '@okta/okta-react';
 
@@ -31,7 +31,7 @@ const ManageSubscription = () => {
 
   useEffect(() => {
     setAccessToken(accessToken);
-    dispatch(fetchCustomersByCustomerThunk({ customerId: paramsId })).then((response) => {
+    dispatch(searchCustomersBySysIdThunk({ customerId: paramsId })).then((response) => {
       console.log("Thunk Response:", response.payload); // Log the response from the thunk
     });
 

@@ -158,7 +158,7 @@ export const {
   createItem: createCustomerThunk,
   updateItem: updateCustomerThunk,
   deleteItem: deleteCustomerThunk,
-  fetchItemsByCustomer: fetchCustomersByCustomerThunk,
+  fetchItemsByCustomer: searchCustomersBySysIdThunk,
 } = customerThunks;
 
 export const {

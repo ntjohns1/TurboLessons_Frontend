@@ -43,7 +43,7 @@ export const buildThunks = (entityName, service) => {
   }
   if (service.searchByCustomer) {
     thunks.fetchItemsByCustomer = createAsyncThunk(
-      `billing/fetch${entityName}sByCustomerThunk`,
+      `billing/search${entityName}sBySystemIdThunk`,
       async ({ customerId }) => {
         const response = await service.searchByCustomer(customerId);
         return response;
@@ -79,7 +79,6 @@ export const buildReducers = (builder, entityThunks, adapter) => {
     .addCase(entityThunks.fetchAll.fulfilled, (state, action) => {
       state.loading = false;
       adapter.setAll(state, action.payload);
-      console.log("Entities after fetchAll:", state.entities); // Log entities
     })
     .addCase(entityThunks.fetchAll.rejected, (state) => {
       state.loading = false;

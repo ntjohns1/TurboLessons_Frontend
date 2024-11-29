@@ -16,7 +16,6 @@ import { Link, useParams } from 'react-router-dom';
 import { useStudentContext } from '../../../util/context/StudentContext';
 import Loading from '../../../helpers/Loading';
 import '../../../App'
-import { fetchCustomersByCustomerThunk } from "./BillingSlice";
 import { setAccessToken } from "../../../service/axiosConfig";
 import { useOktaAuth } from '@okta/okta-react';
 
