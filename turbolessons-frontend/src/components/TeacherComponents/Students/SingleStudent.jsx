@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import { useOktaAuth } from '@okta/okta-react';
 import { Card, Container, Row, Col, CardImg } from 'react-bootstrap';
@@ -21,6 +22,8 @@ export default function SingleStudent() {
         const accessToken = oktaAuth.getAccessToken();
         setAccessToken(accessToken);
         const data = await getStudentProfile(id, accessToken);
+        console.log(data);
+        
         setStudent(data);
       } catch (error) {
         console.error('Error fetching student profile:', error);

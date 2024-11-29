@@ -54,13 +54,36 @@ const studentSlice = createSlice({
   initialState: {
     studentsByTeacher: [],
     // selectedStudent: null,
-    selectedProfile: null,
+    formState: {
+      city: "",
+      displayName: "",
+      email: "",
+      firstName: "",
+      lastName: "",
+      login: "",
+      middleName: "",
+      mobilePhone: "",
+      primaryPhone: "",
+      state: "",
+      streetAddress: "",
+      userType: "",
+      zipCode: "",
+    },
+    isUpdate: false,
+    studentProfile: {},
     loading: false,
     error: null,
   },
   reducers: {
-    setSelectedProfile(state, action) {
-      state.selectedProfile = action.payload;
+    setStudentProfile(state, action) {
+      state.studentProfile = action.payload;
+    },
+    setFormField(state, action) {
+      const { field, value } = action.payload;
+      state.formState[field] = value;
+    },
+    setIsUpdate(state, action) {
+      state.isUpdate = action.payload;
     },
     setLoading(state, action) {
       state.loading = action.payload;
@@ -98,10 +121,10 @@ const studentSlice = createSlice({
   },
 });
 
-export const { setSelectedProfile, setLoading } =
+export const { setStudentProfile, setIsUpdate, setLoading } =
   studentSlice.actions;
 
 export const selectStudentById = (state, studentId) =>
-    state.students.studentsByTeacher.find((student) => student.id === studentId);
+  state.students.studentsByTeacher.find((student) => student.id === studentId);
 
 export default studentSlice.reducer;
