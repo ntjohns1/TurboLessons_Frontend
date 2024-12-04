@@ -53,6 +53,7 @@ const studentSlice = createSlice({
   name: "students",
   initialState: {
     studentsByTeacher: [],
+    studentsLoaded: false,
     // selectedStudent: null,
     formState: {
       city: "",
@@ -97,6 +98,7 @@ const studentSlice = createSlice({
       .addCase(fetchTeacherStudents.fulfilled, (state, action) => {
         state.loading = false;
         state.studentsByTeacher = action.payload;
+        state.studentsLoaded = true;
       })
       .addCase(fetchTeacherStudents.rejected, (state, action) => {
         state.loading = false;

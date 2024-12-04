@@ -62,6 +62,7 @@ const lessonSlice = createSlice({
   initialState: {
     eventsByTeacher: [],
     selectedEvent: null,
+    eventsLoaded: false,
     dateClick: false,
     showModal: false,
     showConfirm: false,
@@ -96,6 +97,7 @@ const lessonSlice = createSlice({
       .addCase(fetchTeacherEvents.fulfilled, (state, action) => {
         state.loading = false;
         state.eventsByTeacher = action.payload;
+        state.eventsLoaded = true;
       })
       .addCase(fetchTeacherEvents.rejected, (state) => {
         state.loading = false;

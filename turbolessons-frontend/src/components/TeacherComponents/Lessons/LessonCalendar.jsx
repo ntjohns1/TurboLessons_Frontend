@@ -27,7 +27,9 @@ export default function LessonCalendar() {
     const dispatch = useDispatch();
     const eventsByTeacher = useSelector((state) => state.lessons.eventsByTeacher);
     // const loading = useSelector((state) => state.lessons.loading);
+    const eventsLoaded = useSelector((state) => state.lessons.eventsLoaded)
     const showModal = useSelector((state) => state.lessons.showModal);
+    const teacher = authState.idToken.claims.name;
     const handleCloseModal = () => {
         dispatch(setShowModal(false));
     };
@@ -38,11 +40,10 @@ export default function LessonCalendar() {
 
     useEffect(() => {
         if (authState.isAuthenticated) {
-            const teacher = authState.idToken.claims.name;
             setAccessToken(accessToken);
             dispatch(fetchTeacherEvents({ teacher }));
         }
-    }, [authState, dispatch, handleCloseModal]);
+    }, [authState, accessToken, teacher, dispatch, eventsLoaded]);
 
 
     const events = useCallback(() => {
