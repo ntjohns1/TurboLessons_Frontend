@@ -89,6 +89,23 @@ const studentSlice = createSlice({
     setLoading(state, action) {
       state.loading = action.payload;
     },
+    resetFormState(state) {
+      state.formState = {
+        city: "",
+        displayName: "",
+        email: "",
+        firstName: "",
+        lastName: "",
+        login: "",
+        middleName: "",
+        mobilePhone: "",
+        primaryPhone: "",
+        state: "",
+        streetAddress: "",
+        userType: "",
+        zipCode: "",
+      };
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -123,7 +140,7 @@ const studentSlice = createSlice({
   },
 });
 
-export const { setStudentProfile, setIsUpdate, setLoading } =
+export const { setStudentProfile, setIsUpdate, setLoading, resetFormState } =
   studentSlice.actions;
 
 export const selectStudentById = (state, studentId) =>

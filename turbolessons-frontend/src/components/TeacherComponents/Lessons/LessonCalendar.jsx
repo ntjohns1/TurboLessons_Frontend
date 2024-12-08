@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useEffect, useRef } from 'react'
+import React, { useCallback, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
 import { Container } from 'react-bootstrap'
 import FullCalendar from '@fullcalendar/react'
@@ -15,7 +15,7 @@ import {
     setSelectedEvent,
     setDateClick,
     setShowModal,
-    setLoading
+
 } from './LessonSlice';
 import { setAccessToken } from "../../../service/axiosConfig";
 

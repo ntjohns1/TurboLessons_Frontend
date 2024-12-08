@@ -14,7 +14,7 @@ export default function StudentTable() {
     // populate table with list of students
     // const { students, studentFetchFailed } = useStudentContext();
     const dispatch = useDispatch();
-    const students = useSelector((state) => state.students.studentsByTeacher)
+    const students = useSelector((state) => state.students.studentsByTeacher);
     const studentsLoaded = useSelector((state) => state.students.studentsLoaded);
     const { authState, oktaAuth } = useOktaAuth();
     const accessToken = oktaAuth.getAccessToken();

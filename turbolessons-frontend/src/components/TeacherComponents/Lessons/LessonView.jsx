@@ -4,9 +4,9 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import LessonConfirm from './LessonConfirm';
 import { useSelector, useDispatch } from 'react-redux';
-import { setShowConfirm } from './LessonSlice';
+import { setShowConfirm, setUpdate } from './LessonSlice';
 
-const LessonView = ({ setUpdate }) => {
+const LessonView = () => {
     const dispatch = useDispatch();
     const event = useSelector((state) => state.lessons.selectedEvent);
     const showConfirm = useSelector((state) => state.lessons.showConfirm);
@@ -72,7 +72,7 @@ const LessonView = ({ setUpdate }) => {
                             className="mx-3"
                             variant="secondary"
                             style={{ cursor: 'pointer' }}
-                            onClick={() => setUpdate(true)}
+                            onClick={() => dispatch(setUpdate(true))}
                         >
                             Edit
                         </Button>
