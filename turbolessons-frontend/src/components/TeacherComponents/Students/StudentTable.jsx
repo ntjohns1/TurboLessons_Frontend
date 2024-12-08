@@ -2,8 +2,7 @@ import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Card, Toast, Button } from 'react-bootstrap';
 import { useOktaAuth } from '@okta/okta-react';
-import { Link } from 'react-router-dom';
-// import { useStudentContext } from '../../../util/context/StudentContext';
+import { Link, useNavigate } from 'react-router-dom';
 import Loading from '../../../helpers/Loading';
 import '../../../App'
 import { fetchTeacherStudents } from './StudentSlice';
@@ -11,16 +10,15 @@ import { setAccessToken } from '../../../service/axiosConfig';
 
 
 export default function StudentTable() {
-    // populate table with list of students
-    // const { students, studentFetchFailed } = useStudentContext();
     const dispatch = useDispatch();
+    const navigate = useNavigate();
     const students = useSelector((state) => state.students.studentsByTeacher);
     const studentsLoaded = useSelector((state) => state.students.studentsLoaded);
     const { authState, oktaAuth } = useOktaAuth();
     const accessToken = oktaAuth.getAccessToken();
     const principle = authState && authState.idToken && authState.idToken.claims.name;
-    
-    
+
+
     useEffect(() => {
         if (authState && authState.isAuthenticated) {
             setAccessToken(accessToken);
@@ -29,7 +27,7 @@ export default function StudentTable() {
     }, [authState, accessToken, principle, studentsLoaded, dispatch])
 
     function goToStudent(studentId) {
-        document.location.replace(`/students/${studentId}`);
+        navigate(`/students/${studentId}`);
     }
 
     return (
