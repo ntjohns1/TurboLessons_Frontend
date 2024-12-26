@@ -10,7 +10,16 @@ import { useOktaAuth } from '@okta/okta-react';
 
 
 const ManageSubscription = () => {
-
+  /*
+      - Requirements:
+          - Viewing current subscription status and details.
+          - Updating subscription plans.
+          - Viewing billing history.
+          - Adding or updating payment methods.
+          - Handling payment processing and errors.
+  
+  
+  */
   // pseudocode:
 
   // fetch stripe customer using Student ID TODO

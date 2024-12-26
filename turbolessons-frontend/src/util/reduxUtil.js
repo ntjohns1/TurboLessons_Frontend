@@ -108,11 +108,32 @@ export const buildReducers = (builder, entityThunks, adapter) => {
     });
   }
   if (entityThunks.fetchItemsByCustomer) {
-    builder.addCase(
-      entityThunks.fetchItemsByCustomer.fulfilled,
-      (state, action) => {
-        adapter.setAll(state, [action.payload]);
-      }
-    );
+    builder
+      .addCase(entityThunks.fetchItemsByCustomer.pending, (state) => {
+        state.loading = true; // Set loading to true
+      })
+      .addCase(entityThunks.fetchItemsByCustomer.fulfilled, (state, action) => {
+        state.loading = false; // Set loading to false
+        console.log("Payload received in fulfilled:", action.payload); // Debug the payload
+
+        // if (Array.isArray(action.payload)) {
+        //   adapter.setAll(state, action.payload);
+        //   state.stripeCustomerId = action.payload[0]?.id || null; // Extract first customer ID
+        //   state.stripeCustomerSubscription = action.payload[0]?.subscriptions[0] || null;
+        // }
+        // else
+        if (action.payload) {
+          adapter.setAll(state, [action.payload]);
+          state.stripeCustomerId = action.payload.id || null;
+          state.stripeCustomerSubscription =
+            action.payload.subscriptions[0] || null;
+        } else {
+          state.stripeCustomerId = null;
+          state.stripeCustomerSubscription = null;
+        }
+      })
+      .addCase(entityThunks.fetchItemsByCustomer.rejected, (state) => {
+        state.loading = false;
+      });
   }
 };

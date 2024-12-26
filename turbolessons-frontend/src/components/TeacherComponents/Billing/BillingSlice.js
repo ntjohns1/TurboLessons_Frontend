@@ -133,6 +133,8 @@ const billingSlice = createSlice({
     ...setupIntentAdapter.getInitialState({ loading: false, error: null }),
     ...subscriptionAdapter.getInitialState({ loading: false, error: null }),
     enrollmentFlag: false,
+    stripeCustomerId: "",
+    stripeCustomerSubscription: "",
   },
   reducers: {
     setBillingEnrollment(state, action) {
