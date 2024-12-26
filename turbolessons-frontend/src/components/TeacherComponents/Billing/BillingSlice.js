@@ -140,6 +140,10 @@ const billingSlice = createSlice({
     setBillingEnrollment(state, action) {
       state.enrollmentFlag = action.payload;
     },
+    resetCustomer(state) {
+      state.stripeCustomerId = "";
+      state.stripeCustomerSubscription = "";
+    },
   },
   extraReducers: (builder) => {
     buildReducers(builder, customerThunks, customerAdapter);
@@ -152,7 +156,7 @@ const billingSlice = createSlice({
   },
 });
 
-export const { setBillingEnrollment } = billingSlice.actions;
+export const { setBillingEnrollment, resetCustomer } = billingSlice.actions;
 
 export const {
   fetchAll: fetchAllCustomersThunk,

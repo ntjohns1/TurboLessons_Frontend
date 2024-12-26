@@ -8,7 +8,7 @@ import Loading from '../../../helpers/Loading';
 import '../../../App'
 import { setAccessToken } from "../../../service/axiosConfig";
 import { useOktaAuth } from '@okta/okta-react';
-import { searchCustomersBySysIdThunk } from "./BillingSlice"; // Path to BillingSlice.js
+import { searchCustomersBySysIdThunk, resetCustomer } from "./BillingSlice"; // Path to BillingSlice.js
 export default function BillingOverview() {
     // Fetch customer data by ID 
     // If no data (404 response) render a card with a message and button to create a stripe customer
@@ -29,6 +29,9 @@ export default function BillingOverview() {
                 console.log("Thunk Response:", response.payload);
             });
         }
+        return () => {
+            dispatch(resetCustomer());
+        };
     }, []);
 
     useEffect(() => {
