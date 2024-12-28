@@ -8,6 +8,8 @@ const apiCall = async (method, uri, params = {}, errorMessage) => {
         response = await api.get(uri);
         break;
       case "POST":
+        console.log("service layer params: " + JSON.stringify(params, null, 2));
+
         response = await api.post(uri, params);
         break;
       case "PUT":
@@ -54,10 +56,22 @@ export const searchCustomerByOktaId = async (id) => {
 
 // route(POST("/payments/api/customer"), handler::create)
 export const createCustomer = async (formState) => {
+  const { metadata = {}, ...rest } = formState;
+  const correctedPayload = {
+    ...rest,
+    metadata: {
+      ...metadata,
+      okta_id: formState["metadata.okta_id"], // Add okta_id to metadata
+    },
+  };
+
+  console.log("Corrected service layer params: ", JSON.stringify(correctedPayload, null, 2));
+
+
   return apiCall(
     "POST",
     "/payments/customer",
-    { formState },
+    correctedPayload,
     "Error creating customer:"
   );
 };

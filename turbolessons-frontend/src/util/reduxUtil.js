@@ -114,14 +114,6 @@ export const buildReducers = (builder, entityThunks, adapter) => {
       })
       .addCase(entityThunks.fetchItemsByCustomer.fulfilled, (state, action) => {
         state.loading = false; // Set loading to false
-        console.log("Payload received in fulfilled:", action.payload); // Debug the payload
-
-        // if (Array.isArray(action.payload)) {
-        //   adapter.setAll(state, action.payload);
-        //   state.stripeCustomerId = action.payload[0]?.id || null; // Extract first customer ID
-        //   state.stripeCustomerSubscription = action.payload[0]?.subscriptions[0] || null;
-        // }
-        // else
         if (action.payload) {
           adapter.setAll(state, [action.payload]);
           state.stripeCustomerId = action.payload.id || null;

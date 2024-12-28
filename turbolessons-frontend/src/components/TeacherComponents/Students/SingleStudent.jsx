@@ -8,8 +8,10 @@ import { setAccessToken } from '../../../service/axiosConfig';
 import EditStudent from './EditStudent';
 import StudentInfo from './StudentInfo';
 import BillingOverview from '../Billing/BillingOverview';
+import { setStudentProfile } from './StudentSlice';
 
 export default function SingleStudent() {
+  const dispatch = useDispatch();
   const { authState, oktaAuth } = useOktaAuth();
   const [isUpdate, setIsUpdate] = useState(false);
   const [student, setStudent] = useState({});
@@ -23,8 +25,9 @@ export default function SingleStudent() {
         setAccessToken(accessToken);
         const data = await getStudentProfile(id, accessToken);
         console.log(data);
-        
+
         setStudent(data);
+        dispatch(setStudentProfile(data));
       } catch (error) {
         console.error('Error fetching student profile:', error);
       }

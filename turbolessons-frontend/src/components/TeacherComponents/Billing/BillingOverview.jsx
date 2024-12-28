@@ -84,7 +84,7 @@ export default function BillingOverview() {
                     <Card.Text>
                         We couldn't find your customer data for the user. Please create a new Stripe customer.
                     </Card.Text>
-                    <Button variant="primary" onClick={() => console.log('Create Customer Flow')}>
+                    <Button as={Link} to={`/students/${paramsId}/create_stripe_account`} variant="primary">
                         Create Customer
                     </Button>
                 </Card.Body>

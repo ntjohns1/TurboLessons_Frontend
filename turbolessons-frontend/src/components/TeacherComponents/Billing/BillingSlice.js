@@ -135,6 +135,21 @@ const billingSlice = createSlice({
     enrollmentFlag: false,
     stripeCustomerId: "",
     stripeCustomerSubscription: "",
+    customerFormState: {
+      name: "",
+      email: "",
+      phone: "",
+      address: {
+        line1: "",
+        line2: "",
+        city: "",
+        postalCode: "",
+        country: "",
+      },
+      defaultPaymentMethod: "",
+      description: "",
+      metadata: {},
+    },
   },
   reducers: {
     setBillingEnrollment(state, action) {
@@ -143,6 +158,32 @@ const billingSlice = createSlice({
     resetCustomer(state) {
       state.stripeCustomerId = "";
       state.stripeCustomerSubscription = "";
+    },
+    updateCustomerFormState(state, action) {
+      const { field, value } = action.payload;
+      if (field.startsWith("address.")) {
+        const addressField = field.split(".")[1];
+        state.customerFormState.address[addressField] = value;
+      } else {
+        state.customerFormState[field] = value;
+      }
+    },
+    resetCustomerFormState(state) {
+      state.customerFormState = {
+        name: "",
+        email: "",
+        phone: "",
+        address: {
+          line1: "",
+          line2: "",
+          city: "",
+          postalCode: "",
+          country: "",
+        },
+        defaultPaymentMethod: "",
+        description: "",
+        metadata: {},
+      };
     },
   },
   extraReducers: (builder) => {
@@ -156,7 +197,12 @@ const billingSlice = createSlice({
   },
 });
 
-export const { setBillingEnrollment, resetCustomer } = billingSlice.actions;
+export const {
+  setBillingEnrollment,
+  resetCustomer,
+  updateCustomerFormState,
+  resetCustomerFormState,
+} = billingSlice.actions;
 
 export const {
   fetchAll: fetchAllCustomersThunk,
