@@ -7,7 +7,15 @@ export const buildThunks = (entityName, service) => {
       `billing/fetchAll${entityName}sThunk`,
       async () => {
         const response = await service.listAll();
-        return response;
+        console.log(`Raw response for ${entityName}:`, response);
+
+        // Transform response to extract the `data` array
+        const transformedData = response.data.map((item) => ({
+          id: item.id, // Ensure an `id` exists
+          ...item,
+        }));
+        console.log(`Transformed ${entityName} Data:`, transformedData);
+        return transformedData;
       }
     ),
     fetchOne: createAsyncThunk(
@@ -71,14 +79,17 @@ export const buildThunks = (entityName, service) => {
   return thunks;
 };
 
-export const buildReducers = (builder, entityThunks, adapter) => {
+export const buildReducers = (builder, entityThunks, adapter, namespace) => {
   builder
     .addCase(entityThunks.fetchAll.pending, (state) => {
       state.loading = true;
     })
     .addCase(entityThunks.fetchAll.fulfilled, (state, action) => {
+      if (!state.entities[namespace]) {
+        state.entities[namespace] = adapter.getInitialState();
+      }
+      adapter.setAll(state.entities[namespace], action.payload);
       state.loading = false;
-      adapter.setAll(state, action.payload);
     })
     .addCase(entityThunks.fetchAll.rejected, (state) => {
       state.loading = false;
@@ -115,7 +126,12 @@ export const buildReducers = (builder, entityThunks, adapter) => {
       .addCase(entityThunks.fetchItemsByCustomer.fulfilled, (state, action) => {
         state.loading = false; // Set loading to false
         if (action.payload) {
-          adapter.setAll(state, [action.payload]);
+          const customerNamespace = "customers"; // Specify explicitly
+          if (!state.entities[customerNamespace]) {
+            state.entities[customerNamespace] = adapter.getInitialState();
+          }
+          adapter.setAll(state.entities[customerNamespace], [action.payload]);
+          // adapter.setAll(state, [action.payload]);
           state.stripeCustomerId = action.payload.id || null;
           state.stripeCustomerSubscription =
             action.payload.subscriptions[0] || null;

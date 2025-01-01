@@ -22,6 +22,7 @@ import TeacherLayoutWrapper from './layouts/TeacherLayoutWrapper'
 import './App.css';
 import ManageSubscription from './components/TeacherComponents/Billing/ManageSubscription.jsx';
 import CreateStripeCustomer from './components/TeacherComponents/Billing/CreateStripeCustomer.jsx';
+import NewSubscriptionForm from './components/TeacherComponents/Billing/NewSubscriptionForm.jsx';
 
 const oktaAuth = new OktaAuth(config.oidc);
 
@@ -50,6 +51,9 @@ const App = () => {
           </Route>
           <Route path="/students/:id/create_stripe_account" element={<RequiredAuth />}>
             <Route path="" element={<TeacherLayoutWrapper component={CreateStripeCustomer} />} />
+          </Route>
+          <Route path="/students/:id/create_subscription" element={<RequiredAuth />}>
+            <Route path="" element={<TeacherLayoutWrapper component={NewSubscriptionForm} />} />
           </Route>
           <Route path="/addStudent" element={<RequiredAuth />}>
             <Route path="" element={<TeacherLayoutWrapper component={AddStudent} />} />

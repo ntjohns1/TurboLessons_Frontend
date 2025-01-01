@@ -47,7 +47,12 @@ import {
 const customerAdapter = createEntityAdapter();
 const paymentIntentAdapter = createEntityAdapter();
 const paymentMethodAdapter = createEntityAdapter();
-const priceAdapter = createEntityAdapter();
+const priceAdapter = createEntityAdapter({
+  selectId: (price) => {
+    console.log("Resolving ID for:", price);
+    return price.id;
+  },
+});
 const productAdapter = createEntityAdapter();
 const setupIntentAdapter = createEntityAdapter();
 const subscriptionAdapter = createEntityAdapter();
@@ -125,13 +130,17 @@ const subscriptionThunks = buildThunks("Subscription", {
 const billingSlice = createSlice({
   name: "billing",
   initialState: {
-    ...customerAdapter.getInitialState({ loading: false, error: null }),
-    ...paymentIntentAdapter.getInitialState({ loading: false, error: null }),
-    ...paymentMethodAdapter.getInitialState({ loading: false, error: null }),
-    ...priceAdapter.getInitialState({ loading: false, error: null }),
-    ...productAdapter.getInitialState({ loading: false, error: null }),
-    ...setupIntentAdapter.getInitialState({ loading: false, error: null }),
-    ...subscriptionAdapter.getInitialState({ loading: false, error: null }),
+    entities: {
+      customers: customerAdapter.getInitialState({}),
+      paymentIntents: paymentIntentAdapter.getInitialState({}),
+      paymentMethods: paymentMethodAdapter.getInitialState({}),
+      prices: priceAdapter.getInitialState({}),
+      products: productAdapter.getInitialState({}),
+      setupIntents: setupIntentAdapter.getInitialState({}),
+      subscriptions: subscriptionAdapter.getInitialState({}),
+    },
+    loading: false,
+    error: null,
     enrollmentFlag: false,
     stripeCustomerId: "",
     stripeCustomerSubscription: "",
@@ -149,6 +158,11 @@ const billingSlice = createSlice({
       defaultPaymentMethod: "",
       description: "",
       metadata: {},
+    },
+    subscriptionFormState: {
+      customerId: "",
+      items: [],
+      defaultPaymentMethod: "",
     },
   },
   reducers: {
@@ -185,15 +199,50 @@ const billingSlice = createSlice({
         metadata: {},
       };
     },
+    updateSubscriptionFormState(state, action) {
+      const { field, value } = action.payload;
+      if (field === "items") {
+        state.subscriptionFormState[field] = [...value];
+      } else {
+        state.subscriptionFormState[field] = value;
+      }
+    },
+    resetSubscriptionFormState(state) {
+      state.subscriptionFormState = {
+        customerId: "",
+        items: [],
+        defaultPaymentMethod: "",
+      };
+    },
   },
   extraReducers: (builder) => {
-    buildReducers(builder, customerThunks, customerAdapter);
-    buildReducers(builder, paymentIntentThunks, paymentIntentAdapter);
-    buildReducers(builder, paymentMethodThunks, paymentMethodAdapter);
-    buildReducers(builder, priceThunks, priceAdapter);
-    buildReducers(builder, productThunks, productAdapter);
-    buildReducers(builder, setupIntentThunks, setupIntentAdapter);
-    buildReducers(builder, subscriptionThunks, subscriptionAdapter);
+    buildReducers(builder, customerThunks, customerAdapter, "customers");
+    buildReducers(
+      builder,
+      paymentIntentThunks,
+      paymentIntentAdapter,
+      "paymentIntents"
+    );
+    buildReducers(
+      builder,
+      paymentMethodThunks,
+      paymentMethodAdapter,
+      "paymentMethods"
+    );
+    buildReducers(builder, priceThunks, priceAdapter, "prices");
+    buildReducers(builder, productThunks, productAdapter, "products");
+    buildReducers(
+      builder,
+      setupIntentThunks,
+      setupIntentAdapter,
+      "setupIntents"
+    );
+    buildReducers(
+      builder,
+      subscriptionThunks,
+      subscriptionAdapter,
+      "subscriptions"
+    );
   },
 });
 
@@ -202,6 +251,8 @@ export const {
   resetCustomer,
   updateCustomerFormState,
   resetCustomerFormState,
+  updateSubscriptionFormState,
+  resetSubscriptionFormState,
 } = billingSlice.actions;
 
 export const {

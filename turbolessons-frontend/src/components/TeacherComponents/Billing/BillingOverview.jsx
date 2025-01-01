@@ -103,7 +103,7 @@ export default function BillingOverview() {
                         Email: {customer.email} <br /> */}
                         You don't have an active subscription. Start your subscription today!
                     </Card.Text>
-                    <Button variant="primary" onClick={() => console.log('Start Subscription Flow')}>
+                    <Button as={Link} to={`/students/${paramsId}/create_subscription`} variant="primary">
                         Start Subscription
                     </Button>
                 </Card.Body>

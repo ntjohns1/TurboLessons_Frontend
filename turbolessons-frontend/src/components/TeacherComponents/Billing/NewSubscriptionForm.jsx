@@ -1,72 +1,112 @@
-import { Button, Card, Col, Form, Row } from 'react-bootstrap';
-import { useDispatch, useSelector } from 'react-redux';
-import { createCustomerThunk } from "./BillingSlice";
+import React, { useEffect } from "react";
+import { Form, Button, Row, Col } from "react-bootstrap";
+import { useDispatch, useSelector } from "react-redux";
+import {
+    updateSubscriptionFormState,
+    resetSubscriptionFormState,
+    fetchAllPricesThunk,
+} from "./BillingSlice";
 
-
-function NewSubscriptionForm() {
+const NewSubscriptionForm = () => {
     const dispatch = useDispatch();
-    const handleCreateStripeCustomer = () => {
-        dispatch(createCustomerThunk(
-            
-        ))
-    }
+
+    // Fetch subscription form state and price list from Redux
+    const subscriptionFormState = useSelector((state) => state.billing.subscriptionFormState);
+    // const prices = useSelector((state) => Object.values(state.billing.entities.prices || {}));
+    const prices = useSelector((state) => {
+        const priceState = state.billing.entities.prices;
+        return priceState ? Object.values(priceState.entities || {}) : [];
+    });
+    // Dispatch the thunk to fetch prices on component mount
+    useEffect(() => {
+        dispatch(fetchAllPricesThunk());
+    }, [dispatch]);
+
+    useEffect(() => {
+        console.log("Prices in Redux:", prices); // Ensure prices are fetched and populated
+      }, [prices]);
+
+    const handleChange = (e) => {
+        const { name, value } = e.target;
+        dispatch(updateSubscriptionFormState({ field: name, value }));
+    };
+
+    const handleItemsChange = (e, index) => {
+        const updatedItems = [...subscriptionFormState.items];
+        updatedItems[index] = e.target.value;
+        dispatch(updateSubscriptionFormState({ field: "items", value: updatedItems }));
+    };
+
+    const addNewItem = () => {
+        dispatch(
+            updateSubscriptionFormState({
+                field: "items",
+                value: [...subscriptionFormState.items, ""],
+            })
+        );
+    };
+
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        console.log("Submitting subscription:", subscriptionFormState);
+        // Dispatch the appropriate action to create the subscription
+    };
+
     return (
-        <Form>
-            <Row className='m-2'>
-                <Col>
-                    <Card>
-                        <Card.Title className='mt-3 p-1 text-center'>Subscription Status</Card.Title>
-                        <Card.Body>
-                            <Card.Text className='p-1 text-center'>
-                                <Row>
-                                    <Col>
-                                        Weekly Lesson - 60min
-                                    </Col>
-                                    <Col>
-                                        $60
-                                    </Col>
-                                </Row>
-                            </Card.Text>
-                        </Card.Body>
-                    </Card>
-                </Col>
-            </Row>
-            <Row className='m-2'>
-                <Col className='d-flex justify-content-center'>
-                    <Button className='w-100'>Card</Button>
-                </Col>
-                <Col className='d-flex justify-content-center'>
-                    <Button className='w-100'>Bank Account</Button>
-                </Col>
-            </Row>
-            <Row className='m-2'>
-                <Col>
-                    <Form.Control placeholder="CardNumber" />
-                </Col>
-            </Row>
-            <Row className='m-2'>
-                <Col>
-                    <Form.Control placeholder="Expiration Date" />
-                </Col>
-                <Col>
-                    <Form.Control placeholder="Security Code" />
-                </Col>
-            </Row>
-            <Row className='m-2'>
-                <Col>
-                    <Form.Select placeholder="Country">
-                        <option>US</option>
-                        <option>Canada</option>
-                        <option>Mexico</option>
-                        <option>UK</option>
-                    </Form.Select>
-                </Col>
-                <Col>
-                    <Form.Control placeholder="Zip Code" />
-                </Col>
-            </Row>
+        <Form onSubmit={handleSubmit}>
+            <Form.Group controlId="customerId">
+                <Form.Label>Customer ID</Form.Label>
+                <Form.Control
+                    type="text"
+                    name="customerId"
+                    value={subscriptionFormState.customerId}
+                    onChange={handleChange}
+                    required
+                />
+            </Form.Group>
+            <Form.Label>Subscription Items</Form.Label>
+            {prices.length > 0 ? (
+                subscriptionFormState.items.map((item, index) => (
+                    <Row key={index}>
+                        <Col>
+                            <Form.Select
+                                value={item}
+                                onChange={(e) => handleItemsChange(e, index)}
+                                placeholder={`Select Price ID ${index + 1}`}
+                            >
+                                <option value="">Select Price</option>
+                                {prices.map((price) => (
+                                    <option key={price.id} value={price.id}>
+                                        {price.unitAmount / 100} {price.currency.toUpperCase()}
+                                    </option>
+                                ))}
+                            </Form.Select>
+                        </Col>
+                    </Row>
+                ))
+            ) : (
+                <div>Loading prices...</div>
+            )}
+            <Button variant="link" onClick={addNewItem}>
+                Add Item
+            </Button>
+            <Form.Group controlId="defaultPaymentMethod">
+                <Form.Label>Default Payment Method</Form.Label>
+                <Form.Control
+                    type="text"
+                    name="defaultPaymentMethod"
+                    value={subscriptionFormState.defaultPaymentMethod}
+                    onChange={handleChange}
+                />
+            </Form.Group>
+            <Button variant="primary" type="submit">
+                Create Subscription
+            </Button>
+            <Button variant="secondary" onClick={() => dispatch(resetSubscriptionFormState())}>
+                Reset Form
+            </Button>
         </Form>
     );
-}
+};
 
 export default NewSubscriptionForm;

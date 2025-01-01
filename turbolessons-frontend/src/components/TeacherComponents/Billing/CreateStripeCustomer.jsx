@@ -78,11 +78,9 @@ const CreateStripeCustomer = () => {
         if (authState && authState.isAuthenticated) {
             const accessToken = oktaAuth.getAccessToken();
             setAccessToken(accessToken);
-            console.log(customerFormState);
-
-            const actionResult = await dispatch(createCustomerThunk(customerFormState));
+            const actionResult = dispatch(createCustomerThunk(customerFormState));
             if (createCustomerThunk.fulfilled.match(actionResult)) {
-                setSuccessMessage("Customer created successfully!"); // Set success message
+                setSuccessMessage("Customer created successfully!");
             }
         }
     };
