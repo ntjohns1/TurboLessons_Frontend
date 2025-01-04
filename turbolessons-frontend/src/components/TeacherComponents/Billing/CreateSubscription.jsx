@@ -5,6 +5,7 @@ import {
     updateSubscriptionFormState,
     resetSubscriptionFormState,
     fetchAllPricesThunk,
+    resetCustomer
 } from "./BillingSlice";
 
 const NewSubscriptionForm = () => {
@@ -12,7 +13,7 @@ const NewSubscriptionForm = () => {
 
     // Fetch subscription form state and price list from Redux
     const subscriptionFormState = useSelector((state) => state.billing.subscriptionFormState);
-    // const prices = useSelector((state) => Object.values(state.billing.entities.prices || {}));
+    const stripeCustomerId = useSelector((state) => state.billing.stripeCustomerId)
     const prices = useSelector((state) => {
         const priceState = state.billing.entities.prices;
         return priceState ? Object.values(priceState.entities || {}) : [];
@@ -20,11 +21,14 @@ const NewSubscriptionForm = () => {
     // Dispatch the thunk to fetch prices on component mount
     useEffect(() => {
         dispatch(fetchAllPricesThunk());
+        return () => {
+            dispatch(resetCustomer());
+        };
     }, [dispatch]);
 
     useEffect(() => {
         console.log("Prices in Redux:", prices); // Ensure prices are fetched and populated
-      }, [prices]);
+    }, [prices]);
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -59,9 +63,8 @@ const NewSubscriptionForm = () => {
                 <Form.Control
                     type="text"
                     name="customerId"
-                    value={subscriptionFormState.customerId}
-                    onChange={handleChange}
-                    required
+                    value={stripeCustomerId}
+                    readOnly={true}
                 />
             </Form.Group>
             <Form.Label>Subscription Items</Form.Label>

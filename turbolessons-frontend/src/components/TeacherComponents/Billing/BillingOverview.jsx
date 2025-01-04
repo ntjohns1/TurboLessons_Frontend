@@ -26,12 +26,9 @@ export default function BillingOverview() {
             setAccessToken(accessToken)
             //     dispatch(searchCustomerByOktaId({ paramsId }))
             dispatch(searchCustomersBySysIdThunk({ customerId: paramsId })).then((response) => {
-                console.log("Thunk Response:", response.payload);
+                console.log("searchCustomerBySysIdThunk Response:", response.payload);
             });
         }
-        return () => {
-            dispatch(resetCustomer());
-        };
     }, []);
 
     useEffect(() => {

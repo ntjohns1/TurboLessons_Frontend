@@ -42,6 +42,7 @@ import {
   editSubscription,
   cancelSubscription,
 } from "../../../service/billingService";
+import { setLoading } from "../Students/StudentSlice";
 
 // Entity Adapters
 const customerAdapter = createEntityAdapter();
@@ -80,6 +81,7 @@ const paymentIntentThunks = buildThunks("PaymentIntent", {
   capture: capturePaymentIntent,
 });
 
+// TODO: remove create & update
 // PaymentMethod
 const paymentMethodThunks = buildThunks("PaymentMethod", {
   listAll: listAllPaymentMethods,
@@ -213,6 +215,12 @@ const billingSlice = createSlice({
         items: [],
         defaultPaymentMethod: "",
       };
+    },
+    setError(state, action) {
+      state.error = action.payload;
+    },
+    setLoading(state, action) {
+      state.loading = action.payload;
     },
   },
   extraReducers: (builder) => {
