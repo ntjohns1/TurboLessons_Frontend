@@ -8,6 +8,12 @@ import './util/fonts/fonts.css'
 import 'bootstrap/dist/css/bootstrap.min.css';
 import store from './app/store';
 import { Provider } from 'react-redux';
+import { Elements } from "@stripe/react-stripe-js";
+import { loadStripe } from "@stripe/stripe-js";
+import config from './config';
+
+const stripePromise = loadStripe(config.oidc.stripeApiKey);
+
 
 // import registerServiceWorker from './registerServiceWorker';
 
@@ -16,7 +22,9 @@ const root = createRoot(container);
 root.render(
   <BrowserRouter>
     <Provider store={store}>
-      <App />
+      <Elements stripe={stripePromise}>
+        <App />
+      </Elements>
     </Provider>
   </BrowserRouter>);
 // registerServiceWorker();

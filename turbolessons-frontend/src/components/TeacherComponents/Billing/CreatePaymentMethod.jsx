@@ -3,7 +3,6 @@ import React from "react";
 import { useStripe, useElements, CardElement } from "@stripe/react-stripe-js";
 import { useDispatch, useSelector } from "react-redux";
 
-
 export default function PaymentMethodModal({ show, handleClose }) {
   const dispatch = useDispatch();
   const stripe = useStripe();

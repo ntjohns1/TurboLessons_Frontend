@@ -22,7 +22,7 @@ import TeacherLayoutWrapper from './layouts/TeacherLayoutWrapper'
 import './App.css';
 import ManageSubscription from './components/TeacherComponents/Billing/ManageSubscription.jsx';
 import CreateStripeCustomer from './components/TeacherComponents/Billing/CreateStripeCustomer.jsx';
-import NewSubscriptionForm from './components/TeacherComponents/Billing/NewSubscriptionForm.jsx';
+import NewSubscriptionForm from './components/TeacherComponents/Billing/CreateSubscription.jsx';
 
 const oktaAuth = new OktaAuth(config.oidc);
 

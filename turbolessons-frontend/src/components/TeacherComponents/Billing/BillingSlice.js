@@ -42,7 +42,6 @@ import {
   editSubscription,
   cancelSubscription,
 } from "../../../service/billingService";
-import { setLoading } from "../Students/StudentSlice";
 
 // Entity Adapters
 const customerAdapter = createEntityAdapter();
@@ -118,7 +117,6 @@ const setupIntentThunks = buildThunks("SetupIntent", {
   delete: cancelSetupIntent,
   confirm: confirmSetupIntent,
 });
-
 // Subscription
 const subscriptionThunks = buildThunks("Subscription", {
   listAll: listAllSubscriptions,
@@ -261,6 +259,8 @@ export const {
   resetCustomerFormState,
   updateSubscriptionFormState,
   resetSubscriptionFormState,
+  setError,
+  setLoading,
 } = billingSlice.actions;
 
 export const {
