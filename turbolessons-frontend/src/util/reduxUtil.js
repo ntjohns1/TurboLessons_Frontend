@@ -54,6 +54,7 @@ export const buildThunks = (entityName, service) => {
       `billing/search${entityName}sBySystemIdThunk`,
       async ({ customerId }) => {
         const response = await service.searchByCustomer(customerId);
+        console.log(`Raw search response for ${entityName}:`, response);
         return response;
       }
     );
@@ -126,15 +127,21 @@ export const buildReducers = (builder, entityThunks, adapter, namespace) => {
       .addCase(entityThunks.fetchItemsByCustomer.fulfilled, (state, action) => {
         state.loading = false; // Set loading to false
         if (action.payload) {
-          const customerNamespace = "customers"; // Specify explicitly
-          if (!state.entities[customerNamespace]) {
-            state.entities[customerNamespace] = adapter.getInitialState();
+          if (!state.entities[namespace]) {
+            state.entities[namespace] = adapter.getInitialState();
           }
-          adapter.setAll(state.entities[customerNamespace], [action.payload]);
           // adapter.setAll(state, [action.payload]);
-          state.stripeCustomerId = action.payload.id || null;
-          state.stripeCustomerSubscription =
-            action.payload.subscriptions[0] || null;
+          if (namespace === "customers") {
+            state.stripeCustomerId = action.payload.id || null;
+            state.stripeCustomerSubscription =
+              action.payload.subscriptions[0] || null;
+            console.log("Updated stripeCustomerId:", state.stripeCustomerId);
+            adapter.setAll(state.entities[namespace], [action.payload]);
+          } else if (namespace === "paymentMethods") {
+            adapter.setAll(state.entities[namespace], action.payload.data);
+          } else {
+            adapter.setAll(state.entities[namespace], [action.payload]);
+          }
         } else {
           state.stripeCustomerId = null;
           state.stripeCustomerSubscription = null;

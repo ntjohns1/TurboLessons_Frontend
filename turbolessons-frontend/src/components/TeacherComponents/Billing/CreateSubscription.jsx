@@ -1,15 +1,19 @@
 import React, { useEffect } from "react";
+import { useOktaAuth } from "@okta/okta-react";
+import { setAccessToken } from "../../../service/axiosConfig";
 import { Form, Button, Row, Col } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import {
     updateSubscriptionFormState,
     resetSubscriptionFormState,
     fetchAllPricesThunk,
-    resetCustomer
+    resetCustomer,
+    fetchPaymentMethodsByCustomerThunk,
 } from "./BillingSlice";
 
 const NewSubscriptionForm = () => {
     const dispatch = useDispatch();
+    const { authState, oktaAuth } = useOktaAuth();
 
     // Fetch subscription form state and price list from Redux
     const subscriptionFormState = useSelector((state) => state.billing.subscriptionFormState);
@@ -20,15 +24,21 @@ const NewSubscriptionForm = () => {
     });
     // Dispatch the thunk to fetch prices on component mount
     useEffect(() => {
+        const accessToken = oktaAuth.getAccessToken();
+
+        setAccessToken(accessToken);
+        if (stripeCustomerId) {
+            console.log("Dispatching fetchPaymentMethodsByCustomerThunk with stripeCustomerId:", stripeCustomerId);
+            dispatch(fetchPaymentMethodsByCustomerThunk({ customerId: stripeCustomerId }));
+        } else {
+            console.warn("stripeCustomerId is undefined, skipping fetchPaymentMethodsByCustomerThunk");
+        }
         dispatch(fetchAllPricesThunk());
+
         return () => {
             dispatch(resetCustomer());
         };
     }, [dispatch]);
-
-    useEffect(() => {
-        console.log("Prices in Redux:", prices); // Ensure prices are fetched and populated
-    }, [prices]);
 
     const handleChange = (e) => {
         const { name, value } = e.target;

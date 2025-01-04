@@ -46,7 +46,12 @@ import {
 // Entity Adapters
 const customerAdapter = createEntityAdapter();
 const paymentIntentAdapter = createEntityAdapter();
-const paymentMethodAdapter = createEntityAdapter();
+const paymentMethodAdapter = createEntityAdapter({
+  selectId: (paymentMethod) => {
+    console.log("Resolving ID for:", paymentMethod.id);
+    return paymentMethod.id;
+  },
+});
 const priceAdapter = createEntityAdapter({
   selectId: (price) => {
     console.log("Resolving ID for:", price);
@@ -140,10 +145,12 @@ const billingSlice = createSlice({
       subscriptions: subscriptionAdapter.getInitialState({}),
     },
     loading: false,
+    successMessage: "",
     error: null,
     enrollmentFlag: false,
     stripeCustomerId: "",
     stripeCustomerSubscription: "",
+    stripeCustomerPaymentMethods: [],
     customerFormState: {
       name: "",
       email: "",
@@ -214,11 +221,14 @@ const billingSlice = createSlice({
         defaultPaymentMethod: "",
       };
     },
-    setError(state, action) {
-      state.error = action.payload;
-    },
     setLoading(state, action) {
       state.loading = action.payload;
+    },
+    setSuccessMessage(state, action) {
+      state.loading = action.payload;
+    },
+    setError(state, action) {
+      state.error = action.payload;
     },
   },
   extraReducers: (builder) => {
@@ -259,8 +269,9 @@ export const {
   resetCustomerFormState,
   updateSubscriptionFormState,
   resetSubscriptionFormState,
-  setError,
   setLoading,
+  setSuccessMessage,
+  setError,
 } = billingSlice.actions;
 
 export const {
