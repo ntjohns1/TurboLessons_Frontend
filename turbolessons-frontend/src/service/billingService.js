@@ -218,6 +218,24 @@ export const editPaymentMethod = async (id, formState) => {
   );
 };
 
+export const attachPaymentMethod = async (id, customerId) => {
+  return apiCall(
+    "PUT",
+    `/payments/paymentmethod/attach/${id}/${customerId}`,
+    {},
+    "Error attaching payment method: "
+  );
+};
+
+export const detachPaymentMethod = async (id, customerId) => {
+  return apiCall(
+    "PUT",
+    `/payments/paymentmethod/detach/${id}`,
+    {},
+    "Error attaching payment method: "
+  );
+};
+
 // route(DELETE("/payments/api/paymentmethod/{id}"), handler::cancel)
 export const cancelPaymentMethod = async (id) => {
   return apiCall(

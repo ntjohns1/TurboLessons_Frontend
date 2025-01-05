@@ -21,6 +21,8 @@ import {
   createPaymentMethod,
   editPaymentMethod,
   cancelPaymentMethod,
+  attachPaymentMethod,
+  detachPaymentMethod,
   listAllPrices,
   getPrice,
   createPrice,
@@ -99,6 +101,8 @@ const paymentMethodThunks = buildThunks("PaymentMethod", {
   create: createPaymentMethod,
   update: editPaymentMethod,
   delete: cancelPaymentMethod,
+  attach: attachPaymentMethod,
+  detach: detachPaymentMethod,
 });
 
 // Price

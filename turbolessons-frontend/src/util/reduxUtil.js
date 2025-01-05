@@ -86,6 +86,24 @@ export const buildThunks = (entityName, service) => {
       }
     );
   }
+  if (service.attach) {
+    thunks.attachItem = createAsyncThunk(
+      `billing/attach${entityName}Thunk`,
+      async ({ id, customerId }) => {
+        const response = service.attach(id, customerId);
+        return response;
+      }
+    );
+  }
+  if (service.detach) {
+    thunks.detachItem = createAsyncThunk(
+      `billing/detach${entityName}Thunk`,
+      async ({ id }) => {
+        const response = service.detach(id);
+        return response;
+      }
+    );
+  }
   return thunks;
 };
 
