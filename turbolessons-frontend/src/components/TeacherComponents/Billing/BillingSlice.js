@@ -59,7 +59,12 @@ const priceAdapter = createEntityAdapter({
   },
 });
 const productAdapter = createEntityAdapter();
-const setupIntentAdapter = createEntityAdapter();
+const setupIntentAdapter = createEntityAdapter({
+  selectId: (setupIntent) => {
+    console.log("Resolving ID for:", setupIntent);
+    return setupIntent.id;
+  },
+});
 const subscriptionAdapter = createEntityAdapter();
 
 // Thunks
@@ -179,6 +184,7 @@ const billingSlice = createSlice({
     resetCustomer(state) {
       state.stripeCustomerId = "";
       state.stripeCustomerSubscription = "";
+      state.stripeCustomerPaymentMethods = [];
     },
     updateCustomerFormState(state, action) {
       const { field, value } = action.payload;

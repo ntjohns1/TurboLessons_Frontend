@@ -8,7 +8,7 @@ import Loading from '../../../helpers/Loading';
 import '../../../App'
 import { setAccessToken } from "../../../service/axiosConfig";
 import { useOktaAuth } from '@okta/okta-react';
-import { searchCustomersBySysIdThunk, resetCustomer } from "./BillingSlice"; // Path to BillingSlice.js
+import { searchCustomersBySysIdThunk, resetCustomer, fetchPaymentMethodsByCustomerThunk } from "./BillingSlice"; // Path to BillingSlice.js
 export default function BillingOverview() {
     // Fetch customer data by ID 
     // If no data (404 response) render a card with a message and button to create a stripe customer
@@ -120,7 +120,7 @@ export default function BillingOverview() {
                         Plan: {subscription.planName} <br />
                         Status: {subscription.status} */}
                     </Card.Text>
-                    <Button variant="secondary" onClick={() => console.log('Update Payment Method')}>
+                    <Button variant="secondary" onClick={() => console.log(dispatch(fetchPaymentMethodsByCustomerThunk({ customerId: stripeCustomerId })))}>
                         Update Payment Method
                     </Button>
                 </Card.Body>

@@ -28,7 +28,16 @@ export const buildThunks = (entityName, service) => {
     createItem: createAsyncThunk(
       `billing/create${entityName}Thunk`,
       async (data) => {
+        console.log(entityName);
+
+        console.log(data);
+
         const response = await service.create(data);
+        console.log(
+          "createSetupIntentThunk Response: " +
+            JSON.stringify(response, null, 2)
+        );
+
         return response;
       }
     ),
@@ -108,7 +117,7 @@ export const buildReducers = (builder, entityThunks, adapter, namespace) => {
     })
 
     .addCase(entityThunks.createItem.fulfilled, (state, action) => {
-      adapter.addOne(state, action.payload);
+      adapter.addOne(state.entities[namespace], action.payload);
     })
     .addCase(entityThunks.updateItem.fulfilled, (state, action) => {
       adapter.upsertOne(state, action.payload);
@@ -138,6 +147,7 @@ export const buildReducers = (builder, entityThunks, adapter, namespace) => {
             console.log("Updated stripeCustomerId:", state.stripeCustomerId);
             adapter.setAll(state.entities[namespace], [action.payload]);
           } else if (namespace === "paymentMethods") {
+            state.stripeCustomerPaymentMethods = action.payload.data;
             adapter.setAll(state.entities[namespace], action.payload.data);
           } else {
             adapter.setAll(state.entities[namespace], [action.payload]);

@@ -2,14 +2,16 @@ import { Button, Spinner, Alert, Card } from 'react-bootstrap';
 import React from "react";
 import { useStripe, useElements, CardElement } from "@stripe/react-stripe-js";
 import { useDispatch, useSelector } from "react-redux";
+import { createSetupIntentThunk } from "./BillingSlice";
 
-export default function PaymentMethodModal({ show, handleClose }) {
+export default function CreatePaymentMethod({ show, handleClose }) {
   const dispatch = useDispatch();
   const stripe = useStripe();
   const elements = useElements();
   const error = useSelector((state) => state.billing.error);
   const loading = useSelector((state) => state.billing.loading);
   const successMessage = useSelector((state) => state.billing.successMessage);
+  const stripeCustomerId = useSelector((state) => state.billing.stripeCustomerId)
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -24,21 +26,27 @@ export default function PaymentMethodModal({ show, handleClose }) {
 
     try {
       // Step 1: Create a SetupIntent
-      const { clientSecret } = await dispatch(createSetupIntentThunk({ customerId })).unwrap();
+      const { clientSecret } = await dispatch(createSetupIntentThunk({ customerId: stripeCustomerId })).unwrap();
 
+      console.log("client secret: " + clientSecret);
       // Step 2: Confirm the SetupIntent with Stripe.js
       const cardElement = elements.getElement(CardElement);
-
+      
       const { setupIntent, error } = await stripe.confirmCardSetup(clientSecret, {
         payment_method: {
           card: cardElement,
           billing_details: {
-            name: "Customer Name", // Optional: Replace with dynamic data if available
+            name: "Jocelyn Rynwold",
           },
         },
       });
 
+      console.log(setupIntent);
+      
+
       if (error) {
+        console.log(error.message);
+        
         throw new Error(error.message);
       }
 

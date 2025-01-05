@@ -10,8 +10,9 @@ import {
     resetCustomer,
     fetchPaymentMethodsByCustomerThunk,
 } from "./BillingSlice";
+import CreatePaymentMethod from "./CreatePaymentMethod";
 
-const NewSubscriptionForm = () => {
+const CreateSubscription = () => {
     const dispatch = useDispatch();
     const { authState, oktaAuth } = useOktaAuth();
 
@@ -22,19 +23,13 @@ const NewSubscriptionForm = () => {
         const priceState = state.billing.entities.prices;
         return priceState ? Object.values(priceState.entities || {}) : [];
     });
+    const customerPaymentMethods = useSelector((state) => state.billing.stripeCustomerPaymentMethods)
     // Dispatch the thunk to fetch prices on component mount
     useEffect(() => {
         const accessToken = oktaAuth.getAccessToken();
-
         setAccessToken(accessToken);
-        if (stripeCustomerId) {
-            console.log("Dispatching fetchPaymentMethodsByCustomerThunk with stripeCustomerId:", stripeCustomerId);
-            dispatch(fetchPaymentMethodsByCustomerThunk({ customerId: stripeCustomerId }));
-        } else {
-            console.warn("stripeCustomerId is undefined, skipping fetchPaymentMethodsByCustomerThunk");
-        }
+        dispatch(fetchPaymentMethodsByCustomerThunk({ customerId: stripeCustomerId }));
         dispatch(fetchAllPricesThunk());
-
         return () => {
             dispatch(resetCustomer());
         };
@@ -77,6 +72,7 @@ const NewSubscriptionForm = () => {
                     readOnly={true}
                 />
             </Form.Group>
+
             <Form.Label>Subscription Items</Form.Label>
             {prices.length > 0 ? (
                 subscriptionFormState.items.map((item, index) => (
@@ -103,15 +99,27 @@ const NewSubscriptionForm = () => {
             <Button variant="link" onClick={addNewItem}>
                 Add Item
             </Button>
+
             <Form.Group controlId="defaultPaymentMethod">
                 <Form.Label>Default Payment Method</Form.Label>
-                <Form.Control
-                    type="text"
-                    name="defaultPaymentMethod"
-                    value={subscriptionFormState.defaultPaymentMethod}
-                    onChange={handleChange}
-                />
+                {customerPaymentMethods && customerPaymentMethods.length > 0 ? (
+                    <Form.Select
+                        name="defaultPaymentMethod"
+                        value={subscriptionFormState.defaultPaymentMethod}
+                        onChange={handleChange}
+                    >
+                        <option value="">Select Payment Method</option>
+                        {customerPaymentMethods.map((method) => (
+                            <option key={method.id} value={method.id}>
+                                {method.type} - {method.details}
+                            </option>
+                        ))}
+                    </Form.Select>
+                ) : (
+                    <CreatePaymentMethod />
+                )}
             </Form.Group>
+
             <Button variant="primary" type="submit">
                 Create Subscription
             </Button>
@@ -122,4 +130,4 @@ const NewSubscriptionForm = () => {
     );
 };
 
-export default NewSubscriptionForm;
+export default CreateSubscription;
