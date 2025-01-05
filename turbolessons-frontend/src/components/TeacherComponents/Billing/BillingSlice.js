@@ -310,6 +310,8 @@ export const {
   updateItem: updatePaymentMethodThunk,
   deleteItem: deletePaymentMethodThunk,
   fetchItemsByCustomer: fetchPaymentMethodsByCustomerThunk,
+  attachItem: attachPaymentMethodThunk,
+  detachItem: detachPaymentMethodThunk,
 } = paymentMethodThunks;
 
 export const {

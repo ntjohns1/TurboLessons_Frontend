@@ -179,4 +179,23 @@ export const buildReducers = (builder, entityThunks, adapter, namespace) => {
         state.loading = false;
       });
   }
+  if (entityThunks.attachItem) {
+    builder.addCase(entityThunks.attachItem.fulfilled, (state, action) => {
+      console.log(action.payload);
+      
+      const newPaymentMethod = action.payload;
+
+
+      // Add the new payment method to the existing array
+      if (Array.isArray(state.stripeCustomerPaymentMethods)) {
+        state.stripeCustomerPaymentMethods = [
+          ...state.stripeCustomerPaymentMethods,
+          newPaymentMethod,
+        ];
+      } else {
+        // Initialize the array if it doesn't exist
+        state.stripeCustomerPaymentMethods = [newPaymentMethod];
+      }
+    });
+  }
 };

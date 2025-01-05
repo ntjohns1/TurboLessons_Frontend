@@ -1,8 +1,8 @@
 import { Button, Spinner, Alert, Card } from 'react-bootstrap';
-import React from "react";
+import React, {useEffect} from "react";
 import { useStripe, useElements, CardElement } from "@stripe/react-stripe-js";
 import { useDispatch, useSelector } from "react-redux";
-import { createSetupIntentThunk } from "./BillingSlice";
+import { createSetupIntentThunk, attachPaymentMethodThunk, setSuccessMessage } from "./BillingSlice";
 
 export default function CreatePaymentMethod({ show, handleClose }) {
   const dispatch = useDispatch();
@@ -11,7 +11,13 @@ export default function CreatePaymentMethod({ show, handleClose }) {
   const error = useSelector((state) => state.billing.error);
   const loading = useSelector((state) => state.billing.loading);
   const successMessage = useSelector((state) => state.billing.successMessage);
-  const stripeCustomerId = useSelector((state) => state.billing.stripeCustomerId)
+  const stripeCustomerId = useSelector((state) => state.billing.stripeCustomerId);
+  const customerAdapter = useSelector((state) => state.billing.entities["customers"]);
+
+  useEffect(() => {
+    console.log(stripeCustomerId);
+    console.log(customerAdapter.entities[stripeCustomerId].name);
+}, [stripeCustomerId]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -31,22 +37,30 @@ export default function CreatePaymentMethod({ show, handleClose }) {
       console.log("client secret: " + clientSecret);
       // Step 2: Confirm the SetupIntent with Stripe.js
       const cardElement = elements.getElement(CardElement);
-      
+
       const { setupIntent, error } = await stripe.confirmCardSetup(clientSecret, {
         payment_method: {
           card: cardElement,
           billing_details: {
-            name: "Jocelyn Rynwold",
+            name: customerAdapter.entities[stripeCustomerId].name,
           },
         },
       });
 
-      console.log(setupIntent);
-      
 
+      console.log("Confirmed SetupIntent:", setupIntent);
+
+      // Step 3: Attach the payment method to the customer
+      await dispatch(
+        attachPaymentMethodThunk({
+          id: setupIntent.payment_method,
+          customerId: stripeCustomerId,
+        })
+      );
+      dispatch(setSuccessMessage("Payment method saved and attached successfully!"));
       if (error) {
         console.log(error.message);
-        
+
         throw new Error(error.message);
       }
 

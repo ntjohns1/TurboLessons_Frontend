@@ -227,7 +227,7 @@ export const attachPaymentMethod = async (id, customerId) => {
   );
 };
 
-export const detachPaymentMethod = async (id, customerId) => {
+export const detachPaymentMethod = async (id) => {
   return apiCall(
     "PUT",
     `/payments/paymentmethod/detach/${id}`,
