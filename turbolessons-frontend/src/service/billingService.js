@@ -8,8 +8,6 @@ const apiCall = async (method, uri, params = {}, errorMessage) => {
         response = await api.get(uri);
         break;
       case "POST":
-        console.log("service layer params: " + JSON.stringify(params, null, 2));
-
         response = await api.post(uri, params);
         break;
       case "PUT":
@@ -65,8 +63,10 @@ export const createCustomer = async (formState) => {
     },
   };
 
-  console.log("Corrected service layer params: ", JSON.stringify(correctedPayload, null, 2));
-
+  console.log(
+    "Corrected service layer params: ",
+    JSON.stringify(correctedPayload, null, 2)
+  );
 
   return apiCall(
     "POST",
@@ -404,11 +404,23 @@ export const getSubscription = async (id) => {
 };
 
 // route(POST("/payments/api/subscription/{priceId}"), handler::create)
-export const createSubscription = async (priceId, formState) => {
+export const createSubscription = async (formState) => {
+  console.log("paramsreceived in createSubscription thunk:" + formState);
+
+  const subscriptionDto = {
+    customer: formState.customerId,
+    items: formState.items, // Already a list of price IDs
+    defaultPaymentMethod: formState.defaultPaymentMethod,
+    cancelAtPeriodEnd: false, // Or use a value from formState if available
+    cancelAt: null, // Or a timestamp if available
+  };
+
+  console.log("Final API payload:", subscriptionDto);
+
   return apiCall(
     "POST",
-    `/payments/subscription/${priceId}`,
-    { formState },
+    `/payments/subscription`,
+    subscriptionDto,
     "Error creating subscription:"
   );
 };

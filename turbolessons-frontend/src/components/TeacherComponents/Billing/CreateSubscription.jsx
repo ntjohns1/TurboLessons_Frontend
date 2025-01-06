@@ -1,14 +1,16 @@
 import React, { useEffect } from "react";
 import { useOktaAuth } from "@okta/okta-react";
 import { setAccessToken } from "../../../service/axiosConfig";
-import { Form, Button, Row, Col } from "react-bootstrap";
+import { Form, Button, Modal, Row, Col } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import {
     updateSubscriptionFormState,
     resetSubscriptionFormState,
-    fetchAllPricesThunk,
     resetCustomer,
     fetchPaymentMethodsByCustomerThunk,
+    createSubscriptionThunk,
+    fetchAllProductsThunk,
+    setShow
 } from "./BillingSlice";
 import CreatePaymentMethod from "./CreatePaymentMethod";
 
@@ -16,27 +18,41 @@ const CreateSubscription = () => {
     const dispatch = useDispatch();
     const { authState, oktaAuth } = useOktaAuth();
 
-    // Fetch subscription form state and price list from Redux
+    const loading = useSelector((state) => state.billing.loading);
     const subscriptionFormState = useSelector((state) => state.billing.subscriptionFormState);
-    const stripeCustomerId = useSelector((state) => state.billing.stripeCustomerId)
-    const prices = useSelector((state) => {
-        const priceState = state.billing.entities.prices;
-        return priceState ? Object.values(priceState.entities || {}) : [];
-    });
-    const customerPaymentMethods = useSelector((state) => state.billing.stripeCustomerPaymentMethods)
+    const stripeCustomerId = useSelector((state) => state.billing.stripeCustomerId);
+    const customerAdapter = useSelector((state) => state.billing.entities["customers"]);
+    const products = useSelector((state) => Object.values(state.billing.entities["products"].entities));
+    const customerPaymentMethods = useSelector((state) => state.billing.stripeCustomerPaymentMethods);
+    const showPaymentMethodModal = useSelector((state) => state.billing.show);
+    const setShowPaymentMethodModal = (show) => dispatch(setShow(show));
+    const accessToken = oktaAuth.getAccessToken();
     // Dispatch the thunk to fetch prices on component mount
     useEffect(() => {
-        const accessToken = oktaAuth.getAccessToken();
         setAccessToken(accessToken);
+        if (stripeCustomerId) {
+            dispatch(updateSubscriptionFormState({ field: "customerId", value: stripeCustomerId }));
+        }
         dispatch(fetchPaymentMethodsByCustomerThunk({ customerId: stripeCustomerId }));
-        dispatch(fetchAllPricesThunk());
+        dispatch(fetchAllProductsThunk());
         return () => {
             dispatch(resetCustomer());
         };
-    }, [dispatch]);
+    }, [dispatch, stripeCustomerId]);
+
+    // useEffect(() => {
+    //     console.log(products);
+    //     console.log(customerAdapter.entities[stripeCustomerId].name);
+    // }, [products]);
+
+    const handleModalClose = () => {
+        setShowPaymentMethodModal(false);
+        dispatch(fetchPaymentMethodsByCustomerThunk({ customerId: stripeCustomerId }));
+    };
 
     const handleChange = (e) => {
         const { name, value } = e.target;
+        setAccessToken(accessToken);
         dispatch(updateSubscriptionFormState({ field: name, value }));
     };
 
@@ -59,74 +75,92 @@ const CreateSubscription = () => {
         e.preventDefault();
         console.log("Submitting subscription:", subscriptionFormState);
         // Dispatch the appropriate action to create the subscription
+
+        dispatch(createSubscriptionThunk(subscriptionFormState));
     };
 
     return (
-        <Form onSubmit={handleSubmit}>
-            <Form.Group controlId="customerId">
-                <Form.Label>Customer ID</Form.Label>
-                <Form.Control
-                    type="text"
-                    name="customerId"
-                    value={stripeCustomerId}
-                    readOnly={true}
-                />
-            </Form.Group>
+        <>
+            {loading ? (
+                <div className="text-center">
+                    <div className="spinner-border" role="status">
+                        <span className="sr-only">Loading...</span>
+                    </div>
+                    <p>Loading subscription details...</p>
+                </div>
+            ) : (
+                <Form onSubmit={handleSubmit}>
+                    {/* Display Customer Name */}
+                    <h3>Customer: {customerAdapter.entities[stripeCustomerId]?.name || "Loading..."}</h3>
 
-            <Form.Label>Subscription Items</Form.Label>
-            {prices.length > 0 ? (
-                subscriptionFormState.items.map((item, index) => (
-                    <Row key={index}>
-                        <Col>
+                    {/* Subscription Items */}
+                    <Form.Label>Subscription Items</Form.Label>
+                    {products.length > 0 ? (
+                        subscriptionFormState.items.map((item, index) => (
+                            <Row key={index}>
+                                <Col>
+                                    <Form.Select
+                                        value={item}
+                                        onChange={(e) => handleItemsChange(e, index)}
+                                        placeholder={`Select Price ID ${index + 1}`}
+                                    >
+                                        <option value="">Select Lesson Type</option>
+                                        {products.map((product) => (
+                                            <option key={product.id} value={product.defaultPrice}>
+                                                {product.description}
+                                            </option>
+                                        ))}
+                                    </Form.Select>
+                                </Col>
+                            </Row>
+                        ))
+                    ) : (
+                        <div>Loading products...</div>
+                    )}
+                    <Button variant="link" onClick={addNewItem}>
+                        Add Item
+                    </Button>
+
+                    {/* Default Payment Method */}
+                    <Form.Group controlId="defaultPaymentMethod">
+                        <Form.Label>Default Payment Method</Form.Label>
+                        {customerPaymentMethods && customerPaymentMethods.length > 0 ? (
                             <Form.Select
-                                value={item}
-                                onChange={(e) => handleItemsChange(e, index)}
-                                placeholder={`Select Price ID ${index + 1}`}
+                                name="defaultPaymentMethod"
+                                value={subscriptionFormState.defaultPaymentMethod}
+                                onChange={handleChange}
                             >
-                                <option value="">Select Price</option>
-                                {prices.map((price) => (
-                                    <option key={price.id} value={price.id}>
-                                        {price.unitAmount / 100} {price.currency.toUpperCase()}
+                                <option value="">Select Payment Method</option>
+                                {customerPaymentMethods.map((method) => (
+                                    <option key={method.id} value={method.id}>
+                                        {method.type} - {method.card?.last4 || "N/A"}
                                     </option>
                                 ))}
                             </Form.Select>
-                        </Col>
-                    </Row>
-                ))
-            ) : (
-                <div>Loading prices...</div>
+                        ) : (
+                            <Button variant="link" onClick={() => setShowPaymentMethodModal(true)}>
+                                Add New Payment Method
+                            </Button>
+                        )}
+                    </Form.Group>
+
+                    <Button variant="primary" type="submit">
+                        Create Subscription
+                    </Button>
+                    <Button variant="secondary" onClick={() => dispatch(resetSubscriptionFormState())}>
+                        Reset Form
+                    </Button>
+                    <Modal show={showPaymentMethodModal} onHide={handleModalClose}>
+                        <Modal.Header closeButton>
+                            <Modal.Title>Add a Payment Method</Modal.Title>
+                        </Modal.Header>
+                        <Modal.Body>
+                            <CreatePaymentMethod onSuccess={handleModalClose} />
+                        </Modal.Body>
+                    </Modal>
+                </Form>
             )}
-            <Button variant="link" onClick={addNewItem}>
-                Add Item
-            </Button>
-
-            <Form.Group controlId="defaultPaymentMethod">
-                <Form.Label>Default Payment Method</Form.Label>
-                {customerPaymentMethods && customerPaymentMethods.length > 0 ? (
-                    <Form.Select
-                        name="defaultPaymentMethod"
-                        value={subscriptionFormState.defaultPaymentMethod}
-                        onChange={handleChange}
-                    >
-                        <option value="">Select Payment Method</option>
-                        {customerPaymentMethods.map((method) => (
-                            <option key={method.id} value={method.id}>
-                                {method.type} - {method.details}
-                            </option>
-                        ))}
-                    </Form.Select>
-                ) : (
-                    <CreatePaymentMethod />
-                )}
-            </Form.Group>
-
-            <Button variant="primary" type="submit">
-                Create Subscription
-            </Button>
-            <Button variant="secondary" onClick={() => dispatch(resetSubscriptionFormState())}>
-                Reset Form
-            </Button>
-        </Form>
+        </>
     );
 };
 

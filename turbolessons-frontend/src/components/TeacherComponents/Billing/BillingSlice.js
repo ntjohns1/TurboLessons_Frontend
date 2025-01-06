@@ -157,6 +157,7 @@ const billingSlice = createSlice({
     successMessage: "",
     error: null,
     enrollmentFlag: false,
+    show: false,
     stripeCustomerId: "",
     stripeCustomerSubscription: "",
     stripeCustomerPaymentMethods: [],
@@ -234,6 +235,9 @@ const billingSlice = createSlice({
     setLoading(state, action) {
       state.loading = action.payload;
     },
+    setShow(state, action) {
+      state.show = action.payload;
+    },
     setSuccessMessage(state, action) {
       state.loading = action.payload;
     },
@@ -280,6 +284,7 @@ export const {
   updateSubscriptionFormState,
   resetSubscriptionFormState,
   setLoading,
+  setShow,
   setSuccessMessage,
   setError,
 } = billingSlice.actions;

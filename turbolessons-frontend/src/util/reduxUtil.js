@@ -34,7 +34,7 @@ export const buildThunks = (entityName, service) => {
 
         const response = await service.create(data);
         console.log(
-          "createSetupIntentThunk Response: " +
+          `create${entityName}Thunk Response: ` +
             JSON.stringify(response, null, 2)
         );
 
@@ -180,22 +180,27 @@ export const buildReducers = (builder, entityThunks, adapter, namespace) => {
       });
   }
   if (entityThunks.attachItem) {
-    builder.addCase(entityThunks.attachItem.fulfilled, (state, action) => {
-      console.log(action.payload);
-      
-      const newPaymentMethod = action.payload;
+    builder
+      .addCase(entityThunks.attachItem.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(entityThunks.attachItem.fulfilled, (state, action) => {
+        state.loading = false;
+        console.log(action.payload);
 
+        const newPaymentMethod = action.payload;
 
-      // Add the new payment method to the existing array
-      if (Array.isArray(state.stripeCustomerPaymentMethods)) {
-        state.stripeCustomerPaymentMethods = [
-          ...state.stripeCustomerPaymentMethods,
-          newPaymentMethod,
-        ];
-      } else {
-        // Initialize the array if it doesn't exist
-        state.stripeCustomerPaymentMethods = [newPaymentMethod];
-      }
-    });
+        if (Array.isArray(state.stripeCustomerPaymentMethods)) {
+          state.stripeCustomerPaymentMethods = [
+            ...state.stripeCustomerPaymentMethods,
+            newPaymentMethod,
+          ];
+        } else {
+          state.stripeCustomerPaymentMethods = [newPaymentMethod];
+        }
+      })
+      .addCase(entityThunks.attachItem.rejected, (state) => {
+        state.loading = false;
+      });
   }
 };

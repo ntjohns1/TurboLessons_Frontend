@@ -4,7 +4,7 @@ import { useStripe, useElements, CardElement } from "@stripe/react-stripe-js";
 import { useDispatch, useSelector } from "react-redux";
 import { createSetupIntentThunk, attachPaymentMethodThunk, setSuccessMessage } from "./BillingSlice";
 
-export default function CreatePaymentMethod({ show, handleClose }) {
+export default function CreatePaymentMethod({ onSuccess }) {
   const dispatch = useDispatch();
   const stripe = useStripe();
   const elements = useElements();
@@ -16,7 +16,7 @@ export default function CreatePaymentMethod({ show, handleClose }) {
 
   useEffect(() => {
     console.log(stripeCustomerId);
-    console.log(customerAdapter.entities[stripeCustomerId].name);
+    // console.log(customerAdapter.entities[stripeCustomerId].name);
 }, [stripeCustomerId]);
 
   const handleSubmit = async (e) => {
@@ -58,6 +58,9 @@ export default function CreatePaymentMethod({ show, handleClose }) {
         })
       );
       dispatch(setSuccessMessage("Payment method saved and attached successfully!"));
+      if (onSuccess) {
+        onSuccess(); // Notify the parent component to update UI
+      }
       if (error) {
         console.log(error.message);
 
