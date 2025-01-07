@@ -7,14 +7,13 @@ export const buildThunks = (entityName, service) => {
       `billing/fetchAll${entityName}sThunk`,
       async () => {
         const response = await service.listAll();
-        console.log(`Raw response for ${entityName}:`, response);
 
         // Transform response to extract the `data` array
         const transformedData = response.data.map((item) => ({
-          id: item.id, // Ensure an `id` exists
+          id: item.id,
           ...item,
         }));
-        console.log(`Transformed ${entityName} Data:`, transformedData);
+
         return transformedData;
       }
     ),
@@ -28,10 +27,6 @@ export const buildThunks = (entityName, service) => {
     createItem: createAsyncThunk(
       `billing/create${entityName}Thunk`,
       async (data) => {
-        console.log(entityName);
-
-        console.log(data);
-
         const response = await service.create(data);
         console.log(
           `create${entityName}Thunk Response: ` +
@@ -63,7 +58,6 @@ export const buildThunks = (entityName, service) => {
       `billing/search${entityName}sBySystemIdThunk`,
       async ({ customerId }) => {
         const response = await service.searchByCustomer(customerId);
-        console.log(`Raw search response for ${entityName}:`, response);
         return response;
       }
     );
@@ -136,6 +130,7 @@ export const buildReducers = (builder, entityThunks, adapter, namespace) => {
 
     .addCase(entityThunks.createItem.fulfilled, (state, action) => {
       adapter.addOne(state.entities[namespace], action.payload);
+      state.successMessage = `${namespace} created successfully.`;
     })
     .addCase(entityThunks.updateItem.fulfilled, (state, action) => {
       adapter.upsertOne(state, action.payload);
@@ -162,7 +157,7 @@ export const buildReducers = (builder, entityThunks, adapter, namespace) => {
             state.stripeCustomerId = action.payload.id || null;
             state.stripeCustomerSubscription =
               action.payload.subscriptions[0] || null;
-            console.log("Updated stripeCustomerId:", state.stripeCustomerId);
+
             adapter.setAll(state.entities[namespace], [action.payload]);
           } else if (namespace === "paymentMethods") {
             state.stripeCustomerPaymentMethods = action.payload.data;
@@ -186,7 +181,6 @@ export const buildReducers = (builder, entityThunks, adapter, namespace) => {
       })
       .addCase(entityThunks.attachItem.fulfilled, (state, action) => {
         state.loading = false;
-        console.log(action.payload);
 
         const newPaymentMethod = action.payload;
 
@@ -198,6 +192,7 @@ export const buildReducers = (builder, entityThunks, adapter, namespace) => {
         } else {
           state.stripeCustomerPaymentMethods = [newPaymentMethod];
         }
+        state.successMessage = "";
       })
       .addCase(entityThunks.attachItem.rejected, (state) => {
         state.loading = false;
