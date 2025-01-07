@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from "react";
-import { Card, Form, Row, Col, Button, Alert } from "react-bootstrap";
+import { Card, Form, Row, Col, Button, Alert, Spinner } from "react-bootstrap";
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
-import { createCustomerThunk, updateCustomerFormState, resetCustomerFormState } from "./BillingSlice";
+import { createCustomerThunk, updateCustomerFormState, resetCustomerFormState, setSuccessMessage } from "./BillingSlice";
+import { fetchStudentProfile } from "../Students/StudentSlice";
 import { setAccessToken } from "../../../service/axiosConfig";
 import { useOktaAuth } from '@okta/okta-react';
 
@@ -11,8 +12,7 @@ const CreateStripeCustomer = () => {
     const { authState, oktaAuth } = useOktaAuth();
 
     // Local state for success feedback
-    const [successMessage, setSuccessMessage] = useState("");
-
+    const successMessage = useSelector((state) => state.billing.successMessage);
     // Select the customer form state from Redux
     const customerFormState = useSelector((state) => state.billing.customerFormState) || {
         name: "",
@@ -28,14 +28,28 @@ const CreateStripeCustomer = () => {
         },
         description: "",
     };
-
+    const loading = useSelector((state) => state.students.loading);
     const studentProfile = useSelector((state) => state.students.studentProfile);
     const id = useParams().id;
 
     useEffect(() => {
-        if (studentProfile) {
-            dispatch(resetCustomerFormState());
+        const fetchProfile = async () => {
+            try {
+                const accessToken = oktaAuth.getAccessToken();
+                setAccessToken(accessToken);
+                await dispatch(fetchStudentProfile({ id })).unwrap();
+            } catch (error) {
+                console.error('Error fetching student profile:', error);
+            }
+        };
 
+        if (authState.isAuthenticated) {
+            fetchProfile();
+        }
+    }, [authState, oktaAuth, dispatch, id]);
+
+    useEffect(() => {
+        if (studentProfile) {
             const initialState = {
                 name: `${studentProfile.firstName} ${studentProfile.lastName}` || "",
                 email: studentProfile.email || "",
@@ -54,6 +68,8 @@ const CreateStripeCustomer = () => {
                 subscriptions: [],
             };
 
+            // Reset and update the form state
+            dispatch(resetCustomerFormState());
             Object.entries(initialState).forEach(([field, value]) => {
                 if (typeof value === "object" && value !== null) {
                     Object.entries(value).forEach(([subField, subValue]) => {
@@ -64,7 +80,7 @@ const CreateStripeCustomer = () => {
                 }
             });
         }
-    }, [studentProfile, dispatch]);
+    }, [studentProfile, dispatch, id]);
 
     // Handle input changes
     const handleChange = (e) => {
@@ -80,17 +96,29 @@ const CreateStripeCustomer = () => {
             setAccessToken(accessToken);
             const actionResult = dispatch(createCustomerThunk(customerFormState));
             if (createCustomerThunk.fulfilled.match(actionResult)) {
-                setSuccessMessage("Customer created successfully!");
+                dispatch(setSuccessMessage("Customer created successfully!"));
             }
         }
     };
+
+    if (loading) {
+        return (
+            <Card>
+                <Card.Body className="d-flex justify-content-center align-items-center">
+                    <Spinner animation="border" role="status">
+                        <span className="visually-hidden">Loading...</span>
+                    </Spinner>
+                </Card.Body>
+            </Card>
+        );
+    }
 
     return (
         <Card>
             <Card.Header>Create New Customer</Card.Header>
             <Card.Body>
                 {successMessage && (
-                    <Alert variant="success" onClose={() => setSuccessMessage("")} dismissible>
+                    <Alert variant="success" onClose={() => dispatch(setSuccessMessage(""))} dismissible>
                         {successMessage}
                     </Alert>
                 )}

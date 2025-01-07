@@ -121,6 +121,17 @@ const studentSlice = createSlice({
         state.loading = false;
         state.error = action.error;
       })
+      .addCase(fetchStudentProfile.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(fetchStudentProfile.fulfilled, (state, action) => {
+        state.loading = false;
+        state.studentProfile = action.payload; // Store the resolved data
+      })
+      .addCase(fetchStudentProfile.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.error;
+      })
       .addCase(createNewStudent.fulfilled, (state, action) => {
         state.studentsByTeacher.push(action.payload);
       })

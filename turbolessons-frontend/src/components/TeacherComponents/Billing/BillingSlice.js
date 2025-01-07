@@ -239,7 +239,7 @@ const billingSlice = createSlice({
       state.show = action.payload;
     },
     setSuccessMessage(state, action) {
-      state.loading = action.payload;
+      state.successMessage = action.payload;
     },
     setError(state, action) {
       state.error = action.payload;
