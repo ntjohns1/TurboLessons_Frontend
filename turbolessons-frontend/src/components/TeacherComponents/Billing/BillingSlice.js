@@ -238,6 +238,10 @@ const billingSlice = createSlice({
     setShow(state, action) {
       state.show = action.payload;
     },
+    resetModal(state) {
+      state.successMessage = "";
+      state.show = false;
+    },
     setSuccessMessage(state, action) {
       state.successMessage = action.payload;
     },
@@ -285,6 +289,7 @@ export const {
   resetSubscriptionFormState,
   setLoading,
   setShow,
+  resetModal,
   setSuccessMessage,
   setError,
 } = billingSlice.actions;

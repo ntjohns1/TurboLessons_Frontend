@@ -2,8 +2,10 @@ import React, { useEffect, useState } from "react";
 import { Card, Form, Row, Col, Button, Alert, Spinner } from "react-bootstrap";
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
-import { createCustomerThunk, updateCustomerFormState, resetCustomerFormState, setSuccessMessage, setShow } from "./BillingSlice";
+import { createCustomerThunk, updateCustomerFormState, resetCustomerFormState, setSuccessMessage, setShow, resetModal } from "./BillingSlice";
 import { fetchStudentProfile } from "../Students/StudentSlice";
+import SuccessModal from "../../../helpers/SuccessModal";
+import Loading from "../../../helpers/Loading";
 import { setAccessToken } from "../../../service/axiosConfig";
 import { useOktaAuth } from '@okta/okta-react';
 
@@ -92,9 +94,16 @@ const CreateStripeCustomer = () => {
         if (authState && authState.isAuthenticated) {
             const accessToken = oktaAuth.getAccessToken();
             setAccessToken(accessToken);
-            const actionResult = dispatch(createCustomerThunk(customerFormState));
-            if (createCustomerThunk.fulfilled.match(actionResult)) {
-                dispatch(setSuccessMessage("Customer created successfully!"));
+            try {
+                // Dispatch and unwrap the thunk result
+                const result = await dispatch(createCustomerThunk(customerFormState)).unwrap();
+
+                console.log("Customer created successfully:", result);
+                dispatch(setShow(true));
+                dispatch(resetCustomerFormState());
+            } catch (error) {
+                // Handle rejected thunk
+                console.error("Customer creation failed:", error);
             }
         }
     };
@@ -103,9 +112,10 @@ const CreateStripeCustomer = () => {
         return (
             <Card>
                 <Card.Body className="d-flex justify-content-center align-items-center">
-                    <Spinner animation="border" role="status">
+                    {/* <Spinner animation="border" role="status">
                         <span className="visually-hidden">Loading...</span>
-                    </Spinner>
+                    </Spinner> */}
+                    <Loading />
                 </Card.Body>
             </Card>
         );
@@ -116,9 +126,13 @@ const CreateStripeCustomer = () => {
             <Card.Header>Create New Customer</Card.Header>
             <Card.Body>
                 {successMessage && (
-                    <Alert variant="success" onClose={() => dispatch(setSuccessMessage(""))} dismissible>
-                        {successMessage}
-                    </Alert>
+                    <SuccessModal
+                        show={show}
+                        message={successMessage}
+                        onClose={() => {
+                            dispatch(resetModal("")); // Clear success message
+                        }}
+                    />
                 )}
                 <Form onSubmit={handleSubmit}>
                     <Form.Group controlId="name">
