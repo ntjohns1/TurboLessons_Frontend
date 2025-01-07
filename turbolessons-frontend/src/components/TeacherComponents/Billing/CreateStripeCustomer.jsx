@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Card, Form, Row, Col, Button, Alert, Spinner } from "react-bootstrap";
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
-import { createCustomerThunk, updateCustomerFormState, resetCustomerFormState, setSuccessMessage } from "./BillingSlice";
+import { createCustomerThunk, updateCustomerFormState, resetCustomerFormState, setSuccessMessage, setShow } from "./BillingSlice";
 import { fetchStudentProfile } from "../Students/StudentSlice";
 import { setAccessToken } from "../../../service/axiosConfig";
 import { useOktaAuth } from '@okta/okta-react';
@@ -10,10 +10,6 @@ import { useOktaAuth } from '@okta/okta-react';
 const CreateStripeCustomer = () => {
     const dispatch = useDispatch();
     const { authState, oktaAuth } = useOktaAuth();
-
-    // Local state for success feedback
-    const successMessage = useSelector((state) => state.billing.successMessage);
-    // Select the customer form state from Redux
     const customerFormState = useSelector((state) => state.billing.customerFormState) || {
         name: "",
         email: "",
@@ -28,6 +24,8 @@ const CreateStripeCustomer = () => {
         },
         description: "",
     };
+    const successMessage = useSelector((state) => state.billing.successMessage);
+    const show = useSelector((state) => state.billing.show)
     const loading = useSelector((state) => state.students.loading);
     const studentProfile = useSelector((state) => state.students.studentProfile);
     const id = useParams().id;
