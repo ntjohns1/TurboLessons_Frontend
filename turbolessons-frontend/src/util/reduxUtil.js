@@ -192,6 +192,7 @@ export const buildReducers = (builder, entityThunks, adapter, namespace) => {
         } else {
           state.stripeCustomerPaymentMethods = [newPaymentMethod];
         }
+        state.successMessage = "";
       })
       .addCase(entityThunks.attachItem.rejected, (state) => {
         state.loading = false;

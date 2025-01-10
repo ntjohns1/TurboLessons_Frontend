@@ -1,4 +1,5 @@
 import React, { useEffect } from "react";
+import { useParams } from 'react-router-dom';
 import { useOktaAuth } from "@okta/okta-react";
 import { setAccessToken } from "../../../service/axiosConfig";
 import { Form, Button, Modal, Row, Col } from "react-bootstrap";
@@ -10,6 +11,7 @@ import {
     fetchPaymentMethodsByCustomerThunk,
     createSubscriptionThunk,
     fetchAllProductsThunk,
+    searchCustomersBySysIdThunk,
     setShow
 } from "./BillingSlice";
 import CreatePaymentMethod from "./CreatePaymentMethod";
@@ -27,7 +29,15 @@ const CreateSubscription = () => {
     const showPaymentMethodModal = useSelector((state) => state.billing.show);
     const setShowPaymentMethodModal = (show) => dispatch(setShow(show));
     const accessToken = oktaAuth.getAccessToken();
-    // Dispatch the thunk to fetch prices on component mount
+    const id = useParams().id;
+
+    useEffect(() => {
+        if (!customerAdapter.entities[stripeCustomerId]) {
+            setAccessToken(accessToken);
+            dispatch(searchCustomersBySysIdThunk({ customerId: id }));
+        }
+    }, []);
+
     useEffect(() => {
         setAccessToken(accessToken);
         if (stripeCustomerId) {
@@ -35,15 +45,12 @@ const CreateSubscription = () => {
         }
         dispatch(fetchPaymentMethodsByCustomerThunk({ customerId: stripeCustomerId }));
         dispatch(fetchAllProductsThunk());
-        return () => {
-            dispatch(resetCustomer());
-        };
     }, [dispatch, stripeCustomerId]);
 
-    // useEffect(() => {
-    //     console.log(products);
-    //     console.log(customerAdapter.entities[stripeCustomerId].name);
-    // }, [products]);
+    useEffect(() => {
+        console.log("customerAdapter.entities:", customerAdapter.entities);
+        console.log("stripeCustomerId:", stripeCustomerId);
+    }, [customerAdapter, stripeCustomerId]);
 
     const handleModalClose = () => {
         setShowPaymentMethodModal(false);
@@ -74,9 +81,9 @@ const CreateSubscription = () => {
     const handleSubmit = (e) => {
         e.preventDefault();
         console.log("Submitting subscription:", subscriptionFormState);
-        // Dispatch the appropriate action to create the subscription
 
         dispatch(createSubscriptionThunk(subscriptionFormState));
+        dispatch(resetCustomer());
     };
 
     return (
@@ -90,7 +97,7 @@ const CreateSubscription = () => {
                 </div>
             ) : (
                 <Form onSubmit={handleSubmit}>
-                    {/* Display Customer Name */}
+                    {/* Customer Name */}
                     <h3>Customer: {customerAdapter.entities[stripeCustomerId]?.name || "Loading..."}</h3>
 
                     {/* Subscription Items */}

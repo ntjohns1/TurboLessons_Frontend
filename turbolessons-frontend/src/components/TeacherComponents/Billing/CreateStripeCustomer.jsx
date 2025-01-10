@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { Card, Form, Row, Col, Button, Alert, Spinner } from "react-bootstrap";
 import { useDispatch, useSelector } from 'react-redux';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import { createCustomerThunk, updateCustomerFormState, resetCustomerFormState, setSuccessMessage, setShow, resetModal } from "./BillingSlice";
 import { fetchStudentProfile } from "../Students/StudentSlice";
 import SuccessModal from "../../../helpers/SuccessModal";
@@ -12,6 +12,7 @@ import { useOktaAuth } from '@okta/okta-react';
 const CreateStripeCustomer = () => {
     const dispatch = useDispatch();
     const { authState, oktaAuth } = useOktaAuth();
+    const navigate = useNavigate();
     const customerFormState = useSelector((state) => state.billing.customerFormState) || {
         name: "",
         email: "",
@@ -68,7 +69,7 @@ const CreateStripeCustomer = () => {
                 subscriptions: [],
             };
 
-            // Reset and update the form state
+
             dispatch(resetCustomerFormState());
             Object.entries(initialState).forEach(([field, value]) => {
                 if (typeof value === "object" && value !== null) {
@@ -82,31 +83,35 @@ const CreateStripeCustomer = () => {
         }
     }, [studentProfile, dispatch, id]);
 
-    // Handle input changes
+
     const handleChange = (e) => {
         const { name, value } = e.target;
         dispatch(updateCustomerFormState({ field: name, value }));
     };
 
-    // Handle form submission
     const handleSubmit = async (e) => {
         e.preventDefault();
         if (authState && authState.isAuthenticated) {
             const accessToken = oktaAuth.getAccessToken();
             setAccessToken(accessToken);
             try {
-                // Dispatch and unwrap the thunk result
+
                 const result = await dispatch(createCustomerThunk(customerFormState)).unwrap();
 
                 console.log("Customer created successfully:", result);
                 dispatch(setShow(true));
-                dispatch(resetCustomerFormState());
             } catch (error) {
-                // Handle rejected thunk
+
                 console.error("Customer creation failed:", error);
             }
         }
     };
+
+    const handleClose = () => {
+        dispatch(resetModal("")); // Clear success message
+        dispatch(resetCustomerFormState());
+        navigate(`/students/${id}`)
+    }
 
     if (loading) {
         return (
@@ -114,7 +119,7 @@ const CreateStripeCustomer = () => {
                 <Card.Body className="d-flex justify-content-center align-items-center">
                     {/* <Spinner animation="border" role="status">
                         <span className="visually-hidden">Loading...</span>
-                    </Spinner> */}
+                        </Spinner> */}
                     <Loading />
                 </Card.Body>
             </Card>
@@ -129,9 +134,7 @@ const CreateStripeCustomer = () => {
                     <SuccessModal
                         show={show}
                         message={successMessage}
-                        onClose={() => {
-                            dispatch(resetModal("")); // Clear success message
-                        }}
+                        onClose={handleClose}
                     />
                 )}
                 <Form onSubmit={handleSubmit}>
