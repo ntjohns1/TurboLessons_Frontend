@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import { Card, Form, Row, Col, Button, Alert, Spinner } from "react-bootstrap";
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams, useNavigate } from 'react-router-dom';
-import { createCustomerThunk, updateCustomerFormState, resetCustomerFormState, setSuccessMessage, setShowSuccessModal } from "./BillingSlice";
+import { createCustomerThunk, updateCustomerFormState, resetCustomerFormState, setShowSuccessModal } from "./BillingSlice";
 import { fetchStudentProfile } from "../Students/StudentSlice";
 import SuccessModal from "../../../helpers/SuccessModal";
 import Loading from "../../../helpers/Loading";
@@ -107,7 +107,7 @@ const CreateStripeCustomer = () => {
         }
     };
 
-    const handleClose = () => {        
+    const handleClose = () => {
         dispatch(resetCustomerFormState());
         navigate(`/students/${id}`)
     }
@@ -116,9 +116,6 @@ const CreateStripeCustomer = () => {
         return (
             <Card>
                 <Card.Body className="d-flex justify-content-center align-items-center">
-                    {/* <Spinner animation="border" role="status">
-                        <span className="visually-hidden">Loading...</span>
-                        </Spinner> */}
                     <Loading />
                 </Card.Body>
             </Card>

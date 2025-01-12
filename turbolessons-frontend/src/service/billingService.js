@@ -32,6 +32,7 @@ const apiCall = async (method, uri, params = {}, errorMessage) => {
 export const listAllCustomers = async () => {
   return apiCall("GET", `/payments/customer`, {}, "Error fetching customers:");
 };
+
 // route(GET("/payments/api/customer/{id}"), handler::retrieve)
 export const getCustomer = async (id) => {
   return apiCall(
@@ -59,15 +60,9 @@ export const createCustomer = async (formState) => {
     ...rest,
     metadata: {
       ...metadata,
-      okta_id: formState["metadata.okta_id"], // Add okta_id to metadata
+      okta_id: formState["metadata.okta_id"],
     },
   };
-
-  console.log(
-    "Corrected service layer params: ",
-    JSON.stringify(correctedPayload, null, 2)
-  );
-
   return apiCall(
     "POST",
     "/payments/customer",
@@ -75,6 +70,7 @@ export const createCustomer = async (formState) => {
     "Error creating customer:"
   );
 };
+
 // route(PUT("/payments/api/customer/{id}"), handler::update)
 export const editCustomer = async (id, formState) => {
   return apiCall(
@@ -84,6 +80,7 @@ export const editCustomer = async (id, formState) => {
     '"Error editing customer:"'
   );
 };
+
 // route(DELETE("/payments/api/customer/{id}"), handler::delete);
 export const deleteCustomer = async (id) => {
   return apiCall(
@@ -405,17 +402,14 @@ export const getSubscription = async (id) => {
 
 // route(POST("/payments/api/subscription/{priceId}"), handler::create)
 export const createSubscription = async (formState) => {
-  console.log("paramsreceived in createSubscription thunk:" + formState);
 
   const subscriptionDto = {
     customer: formState.customerId,
-    items: formState.items, // Already a list of price IDs
+    items: formState.items, 
     defaultPaymentMethod: formState.defaultPaymentMethod,
-    cancelAtPeriodEnd: false, // Or use a value from formState if available
-    cancelAt: null, // Or a timestamp if available
+    cancelAtPeriodEnd: false,
+    cancelAt: null,
   };
-
-  console.log("Final API payload:", subscriptionDto);
 
   return apiCall(
     "POST",

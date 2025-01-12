@@ -1,14 +1,11 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 
-// Helper to generate CRUD thunks
 export const buildThunks = (entityName, service) => {
   const thunks = {
     fetchAll: createAsyncThunk(
       `billing/fetchAll${entityName}sThunk`,
       async () => {
         const response = await service.listAll();
-
-        // Transform response to extract the `data` array
         const transformedData = response.data.map((item) => ({
           id: item.id,
           ...item,
@@ -24,26 +21,28 @@ export const buildThunks = (entityName, service) => {
         return response;
       }
     ),
-    createItem: createAsyncThunk(
+  };
+
+  if (service.create) {
+    thunks.createItem = createAsyncThunk(
       `billing/create${entityName}Thunk`,
       async (data) => {
         const response = await service.create(data);
-        console.log(
-          `create${entityName}Thunk Response: ` +
-            JSON.stringify(response, null, 2)
-        );
-
         return response;
       }
-    ),
-    updateItem: createAsyncThunk(
+    );
+  }
+
+  if (service.update) {
+    thunks.updateItem = createAsyncThunk(
       `billing/update${entityName}Thunk`,
       async ({ id, data }) => {
         const response = await service.update(id, data);
         return response;
       }
-    ),
-  };
+    );
+  }
+
   if (service.delete) {
     thunks.deleteItem = createAsyncThunk(
       `billing/delete${entityName}Thunk`,
@@ -53,6 +52,7 @@ export const buildThunks = (entityName, service) => {
       }
     );
   }
+
   if (service.searchByCustomer) {
     thunks.fetchItemsByCustomer = createAsyncThunk(
       `billing/search${entityName}sBySystemIdThunk`,
@@ -62,6 +62,7 @@ export const buildThunks = (entityName, service) => {
       }
     );
   }
+
   if (service.capture) {
     thunks.captureItem = createAsyncThunk(
       `billing/capture${entityName}Thunk`,
@@ -71,6 +72,7 @@ export const buildThunks = (entityName, service) => {
       }
     );
   }
+
   if (service.confirm) {
     thunks.confirmItem = createAsyncThunk(
       `billing/confirm${entityName}Thunk`,
@@ -80,6 +82,7 @@ export const buildThunks = (entityName, service) => {
       }
     );
   }
+
   if (service.attach) {
     thunks.attachItem = createAsyncThunk(
       `billing/attach${entityName}Thunk`,
@@ -89,6 +92,7 @@ export const buildThunks = (entityName, service) => {
       }
     );
   }
+
   if (service.detach) {
     thunks.detachItem = createAsyncThunk(
       `billing/detach${entityName}Thunk`,
@@ -98,6 +102,7 @@ export const buildThunks = (entityName, service) => {
       }
     );
   }
+
   return thunks;
 };
 
@@ -146,20 +151,18 @@ export const buildReducers = (builder, entityThunks, adapter, namespace) => {
   if (entityThunks.fetchItemsByCustomer) {
     builder
       .addCase(entityThunks.fetchItemsByCustomer.pending, (state) => {
-        state.loading = true; // Set loading to true
+        state.loading = true;
       })
       .addCase(entityThunks.fetchItemsByCustomer.fulfilled, (state, action) => {
-        state.loading = false; // Set loading to false
+        state.loading = false;
         if (action.payload) {
           if (!state.entities[namespace]) {
             state.entities[namespace] = adapter.getInitialState();
           }
-          // adapter.setAll(state, [action.payload]);
           if (namespace === "customers") {
             state.stripeCustomerId = action.payload.id || null;
             state.stripeCustomerSubscription =
               action.payload.subscriptions[0] || null;
-
             adapter.setAll(state.entities[namespace], [action.payload]);
           } else if (namespace === "paymentMethods") {
             state.stripeCustomerPaymentMethods = action.payload.data;

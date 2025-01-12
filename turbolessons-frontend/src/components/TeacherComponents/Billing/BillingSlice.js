@@ -54,20 +54,17 @@ const customerAdapter = createEntityAdapter();
 const paymentIntentAdapter = createEntityAdapter();
 const paymentMethodAdapter = createEntityAdapter({
   selectId: (paymentMethod) => {
-    console.log("Resolving ID for:", paymentMethod.id);
     return paymentMethod.id;
   },
 });
 const priceAdapter = createEntityAdapter({
   selectId: (price) => {
-    console.log("Resolving ID for:", price);
     return price.id;
   },
 });
 const productAdapter = createEntityAdapter();
 const setupIntentAdapter = createEntityAdapter({
   selectId: (setupIntent) => {
-    console.log("Resolving ID for:", setupIntent);
     return setupIntent.id;
   },
 });
@@ -357,24 +354,6 @@ export const {
   deleteItem: deleteSubscriptionThunk,
 } = subscriptionThunks;
 
-// Selector to fetch a customer by metadata.okta_id
-export const selectCustomerBySysId = createSelector(
-  [
-    (state) => state.billing.entities["customers"].entities, // Access the customers' entities
-    (_, oktaId) => oktaId, // Get the oktaId passed as an argument
-  ],
-  (customers, oktaId) => {
-    console.log("Customers:", customers); // Log all customers for debugging
-    console.log("Searching for oktaId:", oktaId); // Log the oktaId being searched
-    if (!customers) return null;
-
-    return (
-      Object.values(customers).find(
-        (customer) => customer.metadata?.okta_id === oktaId
-      ) || null
-    );
-  }
-);
 
 export const selectProducts = createSelector(
   (state) => state.billing.entities["products"].entities,
@@ -387,3 +366,19 @@ export const selectPaymentMethods = createSelector(
 );
 
 export default billingSlice.reducer;
+
+// Selector to fetch a customer by metadata.okta_id
+// export const selectCustomerBySysId = createSelector(
+//   [
+//     (state) => state.billing.entities["customers"].entities, // Access the customers' entities
+//     (_, oktaId) => oktaId, // Get the oktaId passed as an argument
+//   ],
+//   (customers, oktaId) => {
+//     if (!customers) return null;
+//     return (
+//       Object.values(customers).find(
+//         (customer) => customer.metadata?.okta_id === oktaId
+//       ) || null
+//     );
+//   }
+// );

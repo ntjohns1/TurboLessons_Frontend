@@ -21,6 +21,7 @@ import CreatePaymentMethod from "./CreatePaymentMethod";
 import SuccessModal from "../../../helpers/SuccessModal";
 
 const CreateSubscription = () => {
+
     const dispatch = useDispatch();
     const { authState, oktaAuth } = useOktaAuth();
     const navigate = useNavigate();
@@ -30,8 +31,7 @@ const CreateSubscription = () => {
     const customer = Object.values(customerAdapter.entities).find(
         (c) => c.metadata?.okta_id === id
     );
-    const stripeCustomerId = customer.id;
-
+    const stripeCustomerId = customer?.id;
     const products = useSelector(selectProducts);
     const customerPaymentMethods = useSelector(selectPaymentMethods);
     const showPaymentMethodModal = useSelector((state) => state.billing.showPaymentMethodModal);
@@ -54,15 +54,6 @@ const CreateSubscription = () => {
         dispatch(fetchPaymentMethodsByCustomerThunk({ customerId: stripeCustomerId }));
         dispatch(fetchAllProductsThunk());
     }, [dispatch, stripeCustomerId]);
-
-    useEffect(() => {
-        // console.log("customerAdapter.entities:", customerAdapter.entities);
-        // console.log("stripeCustomerId:", stripeCustomerId);
-        // console.log("testCustomer:", customer);
-        // console.log("paymentMethods:", customerPaymentMethods);
-        console.log("showPaymentMethodModal:", showPaymentMethodModal);
-
-    }, [dispatch]);
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -92,9 +83,7 @@ const CreateSubscription = () => {
             const accessToken = oktaAuth.getAccessToken();
             setAccessToken(accessToken);
             try {
-
                 const result = await dispatch(createSubscriptionThunk(subscriptionFormState)).unwrap();
-                console.log("Subscription created successfully:", result);
                 dispatch(setShowSuccessModal(true));
             } catch (error) {
 
@@ -114,7 +103,6 @@ const CreateSubscription = () => {
         dispatch(setSuccessMessage(""));
         dispatch(setShowSuccessModal(false));
         dispatch(resetSubscriptionFormState());
-        // dispatch(resetModal());
         navigate(`/students/${id}`)
     }
 

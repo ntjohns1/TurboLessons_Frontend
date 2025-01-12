@@ -1,19 +1,16 @@
 
 
 import React, { useEffect } from 'react';
-import { Button, Card, Form, Row, Col } from 'react-bootstrap';
+import { Button, Card } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link, useParams } from 'react-router-dom';
-import Loading from '../../../helpers/Loading';
 import '../../../App'
 import { setAccessToken } from "../../../service/axiosConfig";
 import { useOktaAuth } from '@okta/okta-react';
-import { searchCustomersBySysIdThunk, fetchPaymentMethodsByCustomerThunk } from "./BillingSlice"; // Path to BillingSlice.js
+import { searchCustomersBySysIdThunk, fetchPaymentMethodsByCustomerThunk } from "./BillingSlice";
+
 export default function BillingOverview() {
-    // Fetch customer data by ID 
-    // If no data (404 response) render a card with a message and button to create a stripe customer
-    // If a customer exists but no subscription, render a button that navigates to newSubscriptionForm
-    // If a customer exists with a subscription, render the billing components and a button that navigates to ManageSubscription
+
     const dispatch = useDispatch();
     const paramsId = useParams().id;
     const { authState, oktaAuth } = useOktaAuth();
@@ -24,6 +21,7 @@ export default function BillingOverview() {
     );
 
     const stripeCustomerId = customer ? customer.id : "";
+
     // Todo: This should handle multiple subscriptions
     const stripeSubscriptionId = customer ? customer.subscriptions[0] : "";
 
@@ -31,16 +29,9 @@ export default function BillingOverview() {
     useEffect(() => {
         if (authState && authState.isAuthenticated) {
             setAccessToken(accessToken)
-            dispatch(searchCustomersBySysIdThunk({ customerId: paramsId })).then((response) => {
-                console.log("searchCustomerBySysIdThunk Response:", response.payload);
-            });
+            dispatch(searchCustomersBySysIdThunk({ customerId: paramsId }));
         }
     }, []);
-
-    useEffect(() => {
-        console.log(stripeCustomerId);
-        console.log(stripeSubscriptionId);
-    }, [stripeCustomerId]);
 
     // No resolved Stripe customer ID
     if (!stripeCustomerId) {

@@ -2,9 +2,9 @@ import { Button, Spinner, Alert, Card } from 'react-bootstrap';
 import React, { useEffect } from "react";
 import { useStripe, useElements, CardElement } from "@stripe/react-stripe-js";
 import { useDispatch, useSelector } from "react-redux";
-import { createSetupIntentThunk, attachPaymentMethodThunk, setSuccessMessage  } from "./BillingSlice";
+import { createSetupIntentThunk, attachPaymentMethodThunk, setSuccessMessage } from "./BillingSlice";
 
-export default function CreatePaymentMethod({ sysId, onSuccess }) {
+export default function CreatePaymentMethod({ sysId }) {
   const dispatch = useDispatch();
   const stripe = useStripe();
   const elements = useElements();
@@ -14,15 +14,8 @@ export default function CreatePaymentMethod({ sysId, onSuccess }) {
   const customerAdapter = useSelector((state) => state.billing.entities["customers"]);
   const customer = Object.values(customerAdapter.entities).find(
     (c) => c.metadata?.okta_id === sysId
-);
-const stripeCustomerId = customer?.id;
-
-  useEffect(() => {
-    console.log("CardElement mounted");
-    return () => {
-      console.log("CardElement unmounted");
-    };
-  }, []);
+  );
+  const stripeCustomerId = customer?.id;
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -36,22 +29,18 @@ const stripeCustomerId = customer?.id;
       dispatch({ type: "billing/setLoading", payload: false });
       return;
     }
-
     try {
-      // Step 1: Create a SetupIntent
+
+      // Create a SetupIntent
       const { clientSecret } = await dispatch(
         createSetupIntentThunk({ customerId: stripeCustomerId })
       ).unwrap();
 
-      console.log("client secret:", clientSecret);
-
-      // Step 2: Confirm the SetupIntent
+      // Confirm the SetupIntent
       const cardElement = elements.getElement(CardElement);
-      console.log("cardElement", cardElement);
       if (!cardElement) {
         throw new Error("Card details are missing.");
       }
-
       const { setupIntent, error } = await stripe.confirmCardSetup(clientSecret, {
         payment_method: {
           card: cardElement,
@@ -60,26 +49,18 @@ const stripeCustomerId = customer?.id;
           },
         },
       });
-
       if (error) {
         console.error("SetupIntent confirmation error:", error.message);
         throw new Error(error.message);
       }
 
-      console.log("Confirmed SetupIntent:", setupIntent);
-
-      // Step 3: Attach the payment method to the customer
+      // Attach the payment method to the customer
       await dispatch(
         attachPaymentMethodThunk({
           id: setupIntent.payment_method,
           customerId: stripeCustomerId,
         })
       );
-
-      // if (onSuccess) {
-      //   onSuccess();
-      // }
-
       dispatch(setSuccessMessage("Payment method saved successfully."));
     } catch (err) {
       console.error("Error in handleSubmit:", err.message);

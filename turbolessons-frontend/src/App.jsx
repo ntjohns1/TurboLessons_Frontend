@@ -28,7 +28,6 @@ import NewSubscriptionForm from './components/TeacherComponents/Billing/CreateSu
 
 const oktaAuth = new OktaAuth(config.oidc);
 const stripePromise = loadStripe(config.oidc.stripeApiKey);
-console.log("stripePromise:", stripePromise);
 
 const App = () => {
   const navigate = useNavigate();
