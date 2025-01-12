@@ -1,9 +1,8 @@
 import { Button, Spinner, Alert, Card } from 'react-bootstrap';
 import React, { useEffect } from "react";
-import { useParams } from 'react-router-dom';
 import { useStripe, useElements, CardElement } from "@stripe/react-stripe-js";
 import { useDispatch, useSelector } from "react-redux";
-import { createSetupIntentThunk, attachPaymentMethodThunk, setSuccessMessage } from "./BillingSlice";
+import { createSetupIntentThunk, attachPaymentMethodThunk, setSuccessMessage  } from "./BillingSlice";
 
 export default function CreatePaymentMethod({ sysId, onSuccess }) {
   const dispatch = useDispatch();
@@ -12,37 +11,64 @@ export default function CreatePaymentMethod({ sysId, onSuccess }) {
   const error = useSelector((state) => state.billing.error);
   const loading = useSelector((state) => state.billing.loading);
   const successMessage = useSelector((state) => state.billing.successMessage);
-  const stripeCustomerId = useSelector((state) => state.billing.stripeCustomerId);
   const customerAdapter = useSelector((state) => state.billing.entities["customers"]);
+  const customer = Object.values(customerAdapter.entities).find(
+    (c) => c.metadata?.okta_id === sysId
+);
+const stripeCustomerId = customer?.id;
+
+  useEffect(() => {
+    console.log("CardElement mounted");
+    return () => {
+      console.log("CardElement unmounted");
+    };
+  }, []);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     dispatch({ type: "billing/setError", payload: null });
     dispatch({ type: "billing/setLoading", payload: true });
-    dispatch({ type: "billing/setSuccessMessage", payload: "" })
+    dispatch({ type: "billing/setSuccessMessage", payload: "" });
+
     if (!stripe || !elements) {
+      console.error("Stripe.js is not initialized.");
       dispatch({ type: "billing/setError", payload: "Stripe.js has not loaded yet." });
       dispatch({ type: "billing/setLoading", payload: false });
       return;
     }
 
     try {
-      // Create a SetupIntent
-      const { clientSecret } = await dispatch(createSetupIntentThunk({ customerId: stripeCustomerId })).unwrap();
+      // Step 1: Create a SetupIntent
+      const { clientSecret } = await dispatch(
+        createSetupIntentThunk({ customerId: stripeCustomerId })
+      ).unwrap();
 
-      console.log("client secret: " + clientSecret);
-      // Confirm the SetupIntent
+      console.log("client secret:", clientSecret);
+
+      // Step 2: Confirm the SetupIntent
       const cardElement = elements.getElement(CardElement);
+      console.log("cardElement", cardElement);
+      if (!cardElement) {
+        throw new Error("Card details are missing.");
+      }
 
       const { setupIntent, error } = await stripe.confirmCardSetup(clientSecret, {
         payment_method: {
           card: cardElement,
           billing_details: {
-            name: customerAdapter.entities[stripeCustomerId].name,
+            name: customerAdapter.entities[stripeCustomerId]?.name || "Unknown Customer",
           },
         },
       });
 
+      if (error) {
+        console.error("SetupIntent confirmation error:", error.message);
+        throw new Error(error.message);
+      }
+
+      console.log("Confirmed SetupIntent:", setupIntent);
+
+      // Step 3: Attach the payment method to the customer
       await dispatch(
         attachPaymentMethodThunk({
           id: setupIntent.payment_method,
@@ -50,17 +76,13 @@ export default function CreatePaymentMethod({ sysId, onSuccess }) {
         })
       );
 
-      if (onSuccess) {
-        onSuccess();
-      }
-      if (error) {
-        console.log(error.message);
+      // if (onSuccess) {
+      //   onSuccess();
+      // }
 
-        throw new Error(error.message);
-      }
-
-      dispatch({ type: "billing/setSuccessMessage", payload: "Payment method saved successfully" })
+      dispatch(setSuccessMessage("Payment method saved successfully."));
     } catch (err) {
+      console.error("Error in handleSubmit:", err.message);
       dispatch({ type: "billing/setError", payload: err.message });
     } finally {
       dispatch({ type: "billing/setLoading", payload: false });

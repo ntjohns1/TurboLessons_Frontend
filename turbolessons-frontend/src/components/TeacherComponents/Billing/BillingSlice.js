@@ -1,4 +1,8 @@
-import { createSlice, createEntityAdapter } from "@reduxjs/toolkit";
+import {
+  createSlice,
+  createEntityAdapter,
+  createSelector,
+} from "@reduxjs/toolkit";
 import { buildThunks, buildReducers } from "../../../util/reduxUtil";
 
 import {
@@ -158,9 +162,8 @@ const billingSlice = createSlice({
     error: null,
     enrollmentFlag: false,
     show: false,
-    stripeCustomerId: "",
-    stripeCustomerSubscription: "",
-    stripeCustomerPaymentMethods: [],
+    showPaymentMethodModal: false,
+    showSuccessModal: false,
     customerFormState: {
       name: "",
       email: "",
@@ -185,11 +188,6 @@ const billingSlice = createSlice({
   reducers: {
     setBillingEnrollment(state, action) {
       state.enrollmentFlag = action.payload;
-    },
-    resetCustomer(state) {
-      state.stripeCustomerId = "";
-      state.stripeCustomerSubscription = "";
-      state.stripeCustomerPaymentMethods = [];
     },
     updateCustomerFormState(state, action) {
       const { field, value } = action.payload;
@@ -238,9 +236,11 @@ const billingSlice = createSlice({
     setShow(state, action) {
       state.show = action.payload;
     },
-    resetModal(state) {
-      state.successMessage = "";
-      state.show = false;
+    setShowPaymentMethodModal(state, action) {
+      state.showPaymentMethodModal = action.payload;
+    },
+    setShowSuccessModal(state, action) {
+      state.showSuccessModal = action.payload;
     },
     setSuccessMessage(state, action) {
       state.successMessage = action.payload;
@@ -282,16 +282,17 @@ const billingSlice = createSlice({
 
 export const {
   setBillingEnrollment,
-  resetCustomer,
   updateCustomerFormState,
   resetCustomerFormState,
   updateSubscriptionFormState,
   resetSubscriptionFormState,
   setLoading,
   setShow,
-  resetModal,
+  resetSuccessModal,
   setSuccessMessage,
   setError,
+  setShowPaymentMethodModal,
+  setShowSuccessModal,
 } = billingSlice.actions;
 
 export const {
@@ -355,5 +356,34 @@ export const {
   updateItem: updateSubscriptionThunk,
   deleteItem: deleteSubscriptionThunk,
 } = subscriptionThunks;
+
+// Selector to fetch a customer by metadata.okta_id
+export const selectCustomerBySysId = createSelector(
+  [
+    (state) => state.billing.entities["customers"].entities, // Access the customers' entities
+    (_, oktaId) => oktaId, // Get the oktaId passed as an argument
+  ],
+  (customers, oktaId) => {
+    console.log("Customers:", customers); // Log all customers for debugging
+    console.log("Searching for oktaId:", oktaId); // Log the oktaId being searched
+    if (!customers) return null;
+
+    return (
+      Object.values(customers).find(
+        (customer) => customer.metadata?.okta_id === oktaId
+      ) || null
+    );
+  }
+);
+
+export const selectProducts = createSelector(
+  (state) => state.billing.entities["products"].entities,
+  (entities) => Object.values(entities || {})
+);
+
+export const selectPaymentMethods = createSelector(
+  (state) => state.billing.entities["paymentMethods"].entities,
+  (entities) => Object.values(entities || {})
+);
 
 export default billingSlice.reducer;

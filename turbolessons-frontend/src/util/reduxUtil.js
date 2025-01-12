@@ -130,7 +130,9 @@ export const buildReducers = (builder, entityThunks, adapter, namespace) => {
 
     .addCase(entityThunks.createItem.fulfilled, (state, action) => {
       adapter.addOne(state.entities[namespace], action.payload);
-      state.successMessage = `${namespace} created successfully.`;
+      if (namespace !== "setupIntents") {
+        state.successMessage = `${namespace} created successfully.`;
+      }
     })
     .addCase(entityThunks.updateItem.fulfilled, (state, action) => {
       adapter.upsertOne(state, action.payload);

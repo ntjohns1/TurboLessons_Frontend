@@ -8,7 +8,7 @@ import Loading from '../../../helpers/Loading';
 import '../../../App'
 import { setAccessToken } from "../../../service/axiosConfig";
 import { useOktaAuth } from '@okta/okta-react';
-import { searchCustomersBySysIdThunk, resetCustomer, fetchPaymentMethodsByCustomerThunk } from "./BillingSlice"; // Path to BillingSlice.js
+import { searchCustomersBySysIdThunk, fetchPaymentMethodsByCustomerThunk } from "./BillingSlice"; // Path to BillingSlice.js
 export default function BillingOverview() {
     // Fetch customer data by ID 
     // If no data (404 response) render a card with a message and button to create a stripe customer
@@ -16,15 +16,21 @@ export default function BillingOverview() {
     // If a customer exists with a subscription, render the billing components and a button that navigates to ManageSubscription
     const dispatch = useDispatch();
     const paramsId = useParams().id;
-    const stripeCustomerId = useSelector((state) => state.billing.stripeCustomerId);
-    const stripeSubscriptionId = useSelector((state) => state.billing.stripeCustomerSubscription)
     const { authState, oktaAuth } = useOktaAuth();
+
+    const customerAdapter = useSelector((state) => state.billing.entities["customers"]);
+    const customer = Object.values(customerAdapter.entities).find(
+        (c) => c.metadata?.okta_id === paramsId
+    );
+
+    const stripeCustomerId = customer ? customer.id : "";
+    // Todo: This should handle multiple subscriptions
+    const stripeSubscriptionId = customer ? customer.subscriptions[0] : "";
 
     const accessToken = oktaAuth.getAccessToken();
     useEffect(() => {
         if (authState && authState.isAuthenticated) {
             setAccessToken(accessToken)
-            //     dispatch(searchCustomerByOktaId({ paramsId }))
             dispatch(searchCustomersBySysIdThunk({ customerId: paramsId })).then((response) => {
                 console.log("searchCustomerBySysIdThunk Response:", response.payload);
             });
@@ -36,42 +42,6 @@ export default function BillingOverview() {
         console.log(stripeSubscriptionId);
     }, [stripeCustomerId]);
 
-    // return (
-    //     <Card>
-    //         <Card.Header>Billing Details</Card.Header>
-    //         <Card.Body>
-    //             <Form>
-    //                 <Form.Group as={Row} className="mb-1" controlId="formPlaintextEmail">
-    //                     <Form.Label column sm="5">
-    //                         Status
-    //                     </Form.Label>
-    //                     <Col sm="7">
-    //                         <Form.Control plaintext readOnly defaultValue={"Active"} />
-    //                     </Col>
-    //                 </Form.Group>
-    //                 <Form.Group as={Row} className="mb-1" controlId="formPlaintextEmail">
-    //                     <Form.Label column sm="5">
-    //                         Last Bill Date
-    //                     </Form.Label>
-    //                     <Col sm="7">
-    //                         <Form.Control plaintext readOnly defaultValue={"06/01"} />
-    //                     </Col>
-    //                 </Form.Group>
-    //                 <Form.Group as={Row} className="mb-1" controlId="formPlaintextEmail">
-    //                     <Form.Label column sm="5">
-    //                         Active Since
-    //                     </Form.Label>
-    //                     <Col sm="7">
-    //                         <Form.Control plaintext readOnly defaultValue={"06/01"} />
-    //                     </Col>
-    //                 </Form.Group>
-    //             </Form>
-    //         </Card.Body>
-    //         <Card.Footer>
-    //             <Button as={Link} to={`/students/${paramsId}/billing`} variant='darkblue'>Manage Billing</Button>
-    //         </Card.Footer>
-    //     </Card>
-    // )
     // No resolved Stripe customer ID
     if (!stripeCustomerId) {
         return (

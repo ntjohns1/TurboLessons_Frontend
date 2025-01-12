@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import { Card, Form, Row, Col, Button, Alert, Spinner } from "react-bootstrap";
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams, useNavigate } from 'react-router-dom';
-import { createCustomerThunk, updateCustomerFormState, resetCustomerFormState, setSuccessMessage, setShow, resetModal } from "./BillingSlice";
+import { createCustomerThunk, updateCustomerFormState, resetCustomerFormState, setSuccessMessage, setShowSuccessModal } from "./BillingSlice";
 import { fetchStudentProfile } from "../Students/StudentSlice";
 import SuccessModal from "../../../helpers/SuccessModal";
 import Loading from "../../../helpers/Loading";
@@ -28,7 +28,7 @@ const CreateStripeCustomer = () => {
         description: "",
     };
     const successMessage = useSelector((state) => state.billing.successMessage);
-    const show = useSelector((state) => state.billing.show)
+    const show = useSelector((state) => state.billing.showSuccessModal);
     const loading = useSelector((state) => state.students.loading);
     const studentProfile = useSelector((state) => state.students.studentProfile);
     const id = useParams().id;
@@ -99,7 +99,7 @@ const CreateStripeCustomer = () => {
                 const result = await dispatch(createCustomerThunk(customerFormState)).unwrap();
 
                 console.log("Customer created successfully:", result);
-                dispatch(setShow(true));
+                dispatch(setShowSuccessModal(true));
             } catch (error) {
 
                 console.error("Customer creation failed:", error);
@@ -107,8 +107,7 @@ const CreateStripeCustomer = () => {
         }
     };
 
-    const handleClose = () => {
-        dispatch(resetModal("")); // Clear success message
+    const handleClose = () => {        
         dispatch(resetCustomerFormState());
         navigate(`/students/${id}`)
     }
