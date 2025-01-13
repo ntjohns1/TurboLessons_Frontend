@@ -165,16 +165,6 @@ export const cancelPaymentIntent = async (id) => {
 
 // PaymentMethod
 
-// route((GET("/payments/api/paymentmethod")), handler::listAll)
-export const listAllPaymentMethods = async () => {
-  return apiCall(
-    "GET",
-    "/payments/paymentmethod",
-    {},
-    "Error fetching payment methods:"
-  );
-};
-
 // route(GET("/payments/api/paymentmethod/{id}"), handler::retrieve)
 export const getPaymentMethod = async (id) => {
   return apiCall(
@@ -192,26 +182,6 @@ export const searchPaymentMethodByCustomer = async (customerId) => {
     `/payments/paymentmethod/customer/${customerId}`,
     {},
     "Error fetching payment method by customer:"
-  );
-};
-
-// route(POST("/payments/api/paymentmethod"), handler::create)
-export const createPaymentMethod = async (formState) => {
-  return apiCall(
-    "POST",
-    "/payments/paymentmethod",
-    { formState },
-    "Error creating payment method:"
-  );
-};
-
-// route(PUT("/payments/api/paymentmethod/{id}"), handler::update)
-export const editPaymentMethod = async (id, formState) => {
-  return apiCall(
-    "PUT",
-    `/payments/paymentmethod/${id}`,
-    { formState },
-    "Error editing payment method:"
   );
 };
 

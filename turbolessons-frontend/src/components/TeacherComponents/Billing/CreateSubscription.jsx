@@ -47,6 +47,12 @@ const CreateSubscription = () => {
     }, []);
 
     useEffect(() => {
+        if (stripeCustomerId && !subscriptionFormState.customerId) {
+            dispatch(updateSubscriptionFormState({ field: "customerId", value: stripeCustomerId }));
+        }
+    }, [subscriptionFormState.customerId, stripeCustomerId]);
+
+    useEffect(() => {
         setAccessToken(accessToken);
         if (stripeCustomerId) {
             dispatch(updateSubscriptionFormState({ field: "customerId", value: stripeCustomerId }));
@@ -59,12 +65,16 @@ const CreateSubscription = () => {
         const { name, value } = e.target;
         setAccessToken(accessToken);
         dispatch(updateSubscriptionFormState({ field: name, value }));
+        console.log(subscriptionFormState);
+
     };
 
     const handleItemsChange = (e, index) => {
         const updatedItems = [...subscriptionFormState.items];
         updatedItems[index] = e.target.value;
         dispatch(updateSubscriptionFormState({ field: "items", value: updatedItems }));
+        console.log(subscriptionFormState);
+
     };
 
     const addNewItem = () => {
@@ -74,6 +84,13 @@ const CreateSubscription = () => {
                 value: [...subscriptionFormState.items, ""],
             })
         );
+    };
+
+    const disabled = () => {
+        const { customerId, items, defaultPaymentMethod } = subscriptionFormState;
+        const hasValidItems = items.length > 0 && items.some(item => item.trim() !== "");
+        const hasValidPaymentMethod = defaultPaymentMethod && defaultPaymentMethod.trim() !== "";
+        return !customerId || !hasValidItems || !hasValidPaymentMethod;
     };
 
     const handleSubmit = async (e) => {
@@ -100,8 +117,8 @@ const CreateSubscription = () => {
     };
 
     const handleSuccessModalClose = () => {
-        dispatch(setSuccessMessage(""));
         dispatch(setShowSuccessModal(false));
+        dispatch(setSuccessMessage(""));
         dispatch(resetSubscriptionFormState());
         navigate(`/students/${id}`)
     }
@@ -163,7 +180,7 @@ const CreateSubscription = () => {
                     )}
                 </Form.Group>
 
-                <Button variant="primary" type="submit">
+                <Button variant="primary" type="submit" disabled={disabled()}>
                     Create Subscription
                 </Button>
                 <Button variant="secondary" onClick={() => dispatch(resetSubscriptionFormState())}>

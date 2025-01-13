@@ -19,11 +19,8 @@ import {
   editPaymentIntent,
   capturePaymentIntent,
   cancelPaymentIntent,
-  listAllPaymentMethods,
   getPaymentMethod,
   searchPaymentMethodByCustomer,
-  createPaymentMethod,
-  editPaymentMethod,
   cancelPaymentMethod,
   attachPaymentMethod,
   detachPaymentMethod,
@@ -96,11 +93,8 @@ const paymentIntentThunks = buildThunks("PaymentIntent", {
 // TODO: remove create & update
 // PaymentMethod
 const paymentMethodThunks = buildThunks("PaymentMethod", {
-  listAll: listAllPaymentMethods,
   get: getPaymentMethod,
   searchByCustomer: searchPaymentMethodByCustomer,
-  create: createPaymentMethod,
-  update: editPaymentMethod,
   delete: cancelPaymentMethod,
   attach: attachPaymentMethod,
   detach: detachPaymentMethod,
@@ -158,7 +152,6 @@ const billingSlice = createSlice({
     successMessage: "",
     error: null,
     enrollmentFlag: false,
-    show: false,
     showPaymentMethodModal: false,
     showSuccessModal: false,
     customerFormState: {
@@ -229,9 +222,6 @@ const billingSlice = createSlice({
     },
     setLoading(state, action) {
       state.loading = action.payload;
-    },
-    setShow(state, action) {
-      state.show = action.payload;
     },
     setShowPaymentMethodModal(state, action) {
       state.showPaymentMethodModal = action.payload;
@@ -353,7 +343,6 @@ export const {
   updateItem: updateSubscriptionThunk,
   deleteItem: deleteSubscriptionThunk,
 } = subscriptionThunks;
-
 
 export const selectProducts = createSelector(
   (state) => state.billing.entities["products"].entities,

@@ -75,11 +75,13 @@ export default function CreatePaymentMethod({ sysId }) {
       <Card.Header>
         <Card.Title>Add New Payment Method</Card.Title>
       </Card.Header>
-      <Card.Body>
-        {successMessage ? (
+      {successMessage ? (
+        <Card.Body>
           <Alert variant="success">{successMessage}</Alert>
-        ) : (
-          <>
+        </Card.Body>
+      ) : (
+        <>
+          <Card.Body>
             <Alert variant="info">
               Enter your payment details below to save them for future billing.
             </Alert>
@@ -102,18 +104,18 @@ export default function CreatePaymentMethod({ sysId }) {
               />
             </div>
             {error && <Alert variant="danger">{error}</Alert>}
-          </>
-        )}
-      </Card.Body>
-      <Card.Footer>
-        <Button
-          variant="info"
-          onClick={handleSubmit}
-          disabled={loading || successMessage}
-        >
-          {loading ? <Spinner animation="border" size="sm" /> : "Submit"}
-        </Button>
-      </Card.Footer>
+          </Card.Body>
+          <Card.Footer>
+            <Button
+              variant="info"
+              onClick={handleSubmit}
+              disabled={loading || successMessage}
+            >
+              {loading ? <Spinner animation="border" size="sm" /> : "Submit"}
+            </Button>
+          </Card.Footer>
+        </>
+      )}
     </Card>
   );
 }

@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import { Card, Form, Row, Col, Button, Alert, Spinner } from "react-bootstrap";
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams, useNavigate } from 'react-router-dom';
-import { createCustomerThunk, updateCustomerFormState, resetCustomerFormState, setShowSuccessModal } from "./BillingSlice";
+import { createCustomerThunk, updateCustomerFormState, resetCustomerFormState, setShowSuccessModal, setSuccessMessage } from "./BillingSlice";
 import { fetchStudentProfile } from "../Students/StudentSlice";
 import SuccessModal from "../../../helpers/SuccessModal";
 import Loading from "../../../helpers/Loading";
@@ -31,14 +31,14 @@ const CreateStripeCustomer = () => {
     const show = useSelector((state) => state.billing.showSuccessModal);
     const loading = useSelector((state) => state.students.loading);
     const studentProfile = useSelector((state) => state.students.studentProfile);
-    const id = useParams().id;
+    const paramsId = useParams().id;
 
     useEffect(() => {
         const fetchProfile = async () => {
             try {
                 const accessToken = oktaAuth.getAccessToken();
                 setAccessToken(accessToken);
-                await dispatch(fetchStudentProfile({ id })).unwrap();
+                await dispatch(fetchStudentProfile({ id: paramsId })).unwrap();
             } catch (error) {
                 console.error('Error fetching student profile:', error);
             }
@@ -47,7 +47,7 @@ const CreateStripeCustomer = () => {
         if (authState.isAuthenticated) {
             fetchProfile();
         }
-    }, [authState, oktaAuth, dispatch, id]);
+    }, [authState, oktaAuth, dispatch, paramsId]);
 
     useEffect(() => {
         if (studentProfile) {
@@ -65,7 +65,7 @@ const CreateStripeCustomer = () => {
                 },
                 defaultPaymentMethod: "",
                 description: "",
-                metadata: { 'okta_id': id },
+                metadata: { 'okta_id': paramsId },
                 subscriptions: [],
             };
 
@@ -81,7 +81,7 @@ const CreateStripeCustomer = () => {
                 }
             });
         }
-    }, [studentProfile, dispatch, id]);
+    }, [studentProfile, dispatch, paramsId]);
 
 
     const handleChange = (e) => {
@@ -108,8 +108,10 @@ const CreateStripeCustomer = () => {
     };
 
     const handleClose = () => {
+        dispatch(setSuccessMessage(""));
+        dispatch(setShowSuccessModal(false));
         dispatch(resetCustomerFormState());
-        navigate(`/students/${id}`)
+        navigate(`/students/${paramsId}`)
     }
 
     if (loading) {

@@ -1,27 +1,27 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 
 export const buildThunks = (entityName, service) => {
-  const thunks = {
-    fetchAll: createAsyncThunk(
-      `billing/fetchAll${entityName}sThunk`,
-      async () => {
-        const response = await service.listAll();
-        const transformedData = response.data.map((item) => ({
-          id: item.id,
-          ...item,
-        }));
+  const thunks = {};
 
-        return transformedData;
-      }
-    ),
-    fetchOne: createAsyncThunk(
+  if (service.get) {
+    thunks.fetchOne = createAsyncThunk(
       `billing/fetchOne${entityName}Thunk`,
       async (id) => {
         const response = await service.get(id);
         return response;
       }
-    ),
-  };
+    );
+  }
+
+  if (service.listAll) {
+    thunks.fetchAll = createAsyncThunk(
+      `billing/fetchAll${entityName}sThunk`,
+      async () => {
+        const response = await service.listAll();
+        return response.data;
+      }
+    );
+  }
 
   if (service.create) {
     thunks.createItem = createAsyncThunk(
@@ -107,41 +107,51 @@ export const buildThunks = (entityName, service) => {
 };
 
 export const buildReducers = (builder, entityThunks, adapter, namespace) => {
-  builder
-    .addCase(entityThunks.fetchAll.pending, (state) => {
-      state.loading = true;
-    })
-    .addCase(entityThunks.fetchAll.fulfilled, (state, action) => {
-      if (!state.entities[namespace]) {
-        state.entities[namespace] = adapter.getInitialState();
-      }
-      adapter.setAll(state.entities[namespace], action.payload);
-      state.loading = false;
-    })
-    .addCase(entityThunks.fetchAll.rejected, (state) => {
-      state.loading = false;
-    })
+  if (entityThunks.fetchAll) {
+    builder
+      .addCase(entityThunks.fetchAll.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(entityThunks.fetchAll.fulfilled, (state, action) => {
+        if (!state.entities[namespace]) {
+          state.entities[namespace] = adapter.getInitialState();
+        }
+        adapter.setAll(state.entities[namespace], action.payload);
+        state.loading = false;
+      })
+      .addCase(entityThunks.fetchAll.rejected, (state) => {
+        state.loading = false;
+      });
+  }
 
-    .addCase(entityThunks.fetchOne.pending, (state) => {
-      state.loading = true;
-    })
-    .addCase(entityThunks.fetchOne.fulfilled, (state, action) => {
-      state.loading = false;
-      adapter.upsertOne(state, action.payload);
-    })
-    .addCase(entityThunks.fetchOne.rejected, (state) => {
-      state.loading = false;
-    })
+  if (entityThunks.fetchOne) {
+    builder
+      .addCase(entityThunks.fetchOne.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(entityThunks.fetchOne.fulfilled, (state, action) => {
+        state.loading = false;
+        adapter.upsertOne(state, action.payload);
+      })
+      .addCase(entityThunks.fetchOne.rejected, (state) => {
+        state.loading = false;
+      });
+  }
 
-    .addCase(entityThunks.createItem.fulfilled, (state, action) => {
+  if (entityThunks.createItem) {
+    builder.addCase(entityThunks.createItem.fulfilled, (state, action) => {
       adapter.addOne(state.entities[namespace], action.payload);
       if (namespace !== "setupIntents") {
         state.successMessage = `${namespace} created successfully.`;
       }
-    })
-    .addCase(entityThunks.updateItem.fulfilled, (state, action) => {
+    });
+  }
+
+  if (entityThunks.updateItem) {
+    builder.addCase(entityThunks.updateItem.fulfilled, (state, action) => {
       adapter.upsertOne(state, action.payload);
     });
+  }
 
   if (entityThunks.deleteItem) {
     builder.addCase(entityThunks.deleteItem.fulfilled, (state, action) => {
