@@ -25,6 +25,7 @@ import './App.css';
 import ManageSubscription from './components/TeacherComponents/Billing/ManageSubscription.jsx';
 import CreateStripeCustomer from './components/TeacherComponents/Billing/CreateStripeCustomer.jsx';
 import NewSubscriptionForm from './components/TeacherComponents/Billing/CreateSubscription.jsx';
+import CreatePaymentMethod from './components/TeacherComponents/Billing/CreatePaymentMethod.jsx';
 
 const oktaAuth = new OktaAuth(config.oidc);
 const stripePromise = loadStripe(config.oidc.stripeApiKey);
@@ -50,7 +51,7 @@ const App = () => {
             <Route path="/students/:id" element={<RequiredAuth />}>
               <Route path="" element={<TeacherLayoutWrapper component={SingleStudent} />} />
             </Route>
-            <Route path="/students/:id/billing" element={<RequiredAuth />}>
+            <Route path="/students/:id/subscription" element={<RequiredAuth />}>
               <Route path="" element={<TeacherLayoutWrapper component={ManageSubscription} />} />
             </Route>
             <Route path="/students/:id/create_stripe_account" element={<RequiredAuth />}>

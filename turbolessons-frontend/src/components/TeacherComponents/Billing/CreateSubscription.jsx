@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import { useParams, useNavigate } from 'react-router-dom';
 import { useOktaAuth } from "@okta/okta-react";
 import { setAccessToken } from "../../../service/axiosConfig";
-import { Form, Button, Modal, Row, Col } from "react-bootstrap";
+import { Form, Button, Modal, Row, Col, Spinner } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import {
     updateSubscriptionFormState,
@@ -27,9 +27,9 @@ const CreateSubscription = () => {
     const navigate = useNavigate();
     const subscriptionFormState = useSelector((state) => state.billing.subscriptionFormState);
     const customerAdapter = useSelector((state) => state.billing.entities["customers"]);
-    const id = useParams().id;
+    const paramsId = useParams().id;
     const customer = Object.values(customerAdapter.entities).find(
-        (c) => c.metadata?.okta_id === id
+        (c) => c.metadata?.okta_id === paramsId
     );
     const stripeCustomerId = customer?.id;
     const products = useSelector(selectProducts);
@@ -38,11 +38,12 @@ const CreateSubscription = () => {
     const showSuccessModal = useSelector((state) => state.billing.showSuccessModal);
     const accessToken = oktaAuth.getAccessToken();
     const successMessage = useSelector((state) => state.billing.successMessage);
+    const loading = useSelector((state) => state.billing.loading);
 
     useEffect(() => {
         if (!customerAdapter.entities[stripeCustomerId]) {
             setAccessToken(accessToken);
-            dispatch(searchCustomersBySysIdThunk({ customerId: id }));
+            dispatch(searchCustomersBySysIdThunk({ customerId: paramsId }));
         }
     }, []);
 
@@ -65,16 +66,12 @@ const CreateSubscription = () => {
         const { name, value } = e.target;
         setAccessToken(accessToken);
         dispatch(updateSubscriptionFormState({ field: name, value }));
-        console.log(subscriptionFormState);
-
     };
 
     const handleItemsChange = (e, index) => {
         const updatedItems = [...subscriptionFormState.items];
         updatedItems[index] = e.target.value;
         dispatch(updateSubscriptionFormState({ field: "items", value: updatedItems }));
-        console.log(subscriptionFormState);
-
     };
 
     const addNewItem = () => {
@@ -95,19 +92,17 @@ const CreateSubscription = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-
         if (authState && authState.isAuthenticated) {
             const accessToken = oktaAuth.getAccessToken();
             setAccessToken(accessToken);
             try {
                 const result = await dispatch(createSubscriptionThunk(subscriptionFormState)).unwrap();
+                console.log("Subscription created:", result);
                 dispatch(setShowSuccessModal(true));
             } catch (error) {
-
                 console.error("Subscription creation failed:", error);
             }
         }
-
     };
 
     const handlePaymentMethodModalClose = () => {
@@ -120,7 +115,7 @@ const CreateSubscription = () => {
         dispatch(setShowSuccessModal(false));
         dispatch(setSuccessMessage(""));
         dispatch(resetSubscriptionFormState());
-        navigate(`/students/${id}`)
+        navigate(`/students/${paramsId}`)
     }
 
     return (
@@ -180,8 +175,8 @@ const CreateSubscription = () => {
                     )}
                 </Form.Group>
 
-                <Button variant="primary" type="submit" disabled={disabled()}>
-                    Create Subscription
+                <Button variant="primary" type="submit" disabled={disabled() || loading}>
+                    {loading ? <Spinner animation="border" size="sm" /> : "Create Subscription"}
                 </Button>
                 <Button variant="secondary" onClick={() => dispatch(resetSubscriptionFormState())}>
                     Reset Form
@@ -196,7 +191,7 @@ const CreateSubscription = () => {
                     </Modal.Header>
                     <Modal.Body>
                         <CreatePaymentMethod
-                            sysId={id}
+                            sysId={paramsId}
                         />
                     </Modal.Body>
                 </Modal>
@@ -206,7 +201,6 @@ const CreateSubscription = () => {
                     onClose={handleSuccessModalClose}
                 />
             </Form>
-            {/* )} */}
         </>
     );
 };

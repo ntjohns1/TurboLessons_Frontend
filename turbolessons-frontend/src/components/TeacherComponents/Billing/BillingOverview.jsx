@@ -1,7 +1,7 @@
 
 
 import React, { useEffect } from 'react';
-import { Button, Card } from 'react-bootstrap';
+import { Button, Card, Spinner } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link, useParams } from 'react-router-dom';
 import '../../../App'
@@ -14,24 +14,41 @@ export default function BillingOverview() {
     const dispatch = useDispatch();
     const paramsId = useParams().id;
     const { authState, oktaAuth } = useOktaAuth();
-
     const customerAdapter = useSelector((state) => state.billing.entities["customers"]);
     const customer = Object.values(customerAdapter.entities).find(
         (c) => c.metadata?.okta_id === paramsId
     );
-
     const stripeCustomerId = customer ? customer.id : "";
-
     // Todo: This should handle multiple subscriptions
     const stripeSubscriptionId = customer ? customer.subscriptions[0] : "";
-
     const accessToken = oktaAuth.getAccessToken();
+    const loading = useSelector((state) => state.billing.loading);
+
+
     useEffect(() => {
         if (authState && authState.isAuthenticated) {
             setAccessToken(accessToken)
             dispatch(searchCustomersBySysIdThunk({ customerId: paramsId }));
         }
     }, []);
+
+
+    if (loading) {  // Loading 
+        return (
+            <Card className="text-center">
+                <Card.Body>
+                    <Card.Title>
+                        Loading...
+                    </Card.Title>
+                    <Button disabled variant="secondary">
+                        <Spinner animation="grow" size="sm" />
+                        <Spinner animation="grow" size="sm" />
+                        <Spinner animation="grow" size="sm" />
+                    </Button>
+                </Card.Body>
+            </Card>
+        )
+    }
 
     // No resolved Stripe customer ID
     if (!stripeCustomerId) {
@@ -81,8 +98,8 @@ export default function BillingOverview() {
                         Plan: {subscription.planName} <br />
                         Status: {subscription.status} */}
                     </Card.Text>
-                    <Button variant="secondary" onClick={() => console.log(dispatch(fetchPaymentMethodsByCustomerThunk({ customerId: stripeCustomerId })))}>
-                        Update Payment Method
+                    <Button as={Link} to={`/students/${paramsId}/subscription`} variant="primary">
+                        Manage Subscription
                     </Button>
                 </Card.Body>
             </Card>

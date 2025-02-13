@@ -89,6 +89,11 @@ const CreateStripeCustomer = () => {
         dispatch(updateCustomerFormState({ field: name, value }));
     };
 
+    const disabled = () => {
+        const { name, email } = customerFormState;
+        return !name || !email;
+    };
+
     const handleSubmit = async (e) => {
         e.preventDefault();
         if (authState && authState.isAuthenticated) {
@@ -250,7 +255,7 @@ const CreateStripeCustomer = () => {
                         />
                     </Form.Group>
 
-                    <Button variant="primary" type="submit">
+                    <Button variant="primary" type="submit" disabled={disabled()}>
                         Create Customer
                     </Button>
                 </Form>

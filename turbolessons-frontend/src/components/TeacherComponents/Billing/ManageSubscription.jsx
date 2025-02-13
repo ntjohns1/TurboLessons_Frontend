@@ -4,28 +4,27 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import PaymentMethodModal from "./CreatePaymentMethod";
 import SubscriptionDetails from "./SubscriptionDetails";
-import { createCustomerThunk, searchCustomersBySysIdThunk } from "./BillingSlice";
+import { createCustomerThunk, searchCustomersBySysIdThunk, fetchOneSubscriptionThunk } from "./BillingSlice";
 import { setAccessToken } from "../../../service/axiosConfig";
 import { useOktaAuth } from '@okta/okta-react';
+import { use } from "react";
 
 
 const ManageSubscription = () => {
   /*
+      High Level Process:
+      
+
+
       - Requirements:
           - Viewing current subscription status and details.
           - Updating subscription plans.
           - Viewing billing history.
           - Adding or updating payment methods.
           - Handling payment processing and errors.
-  
-  
-  */
-  // pseudocode:
 
-  // fetch stripe customer using Student ID TODO
-  // if no stripe customer account attached to student data, render component to create Stripe account
-  // if customer account exists but no subscription, render form to create subscription
-  // if subscription exists, render data in UI Layout below:
+      
+  */
 
   const [show, setShow] = useState(false);
 
@@ -36,20 +35,35 @@ const ManageSubscription = () => {
   const accessToken = oktaAuth.getAccessToken();
   const dispatch = useDispatch();
   const paramsId = useParams().id;
-  const billingState = useSelector((state) => state.billing);
+  const customerAdapter = useSelector((state) => state.billing.entities["customers"]);
+  const customer = Object.values(customerAdapter.entities).find(
+    (c) => c.metadata?.okta_id === paramsId
+  );
+  const stripeCustomerId = customer ? customer.id : "";
+  // Todo: This should handle multiple subscriptions
+  const stripeSubscriptionId = customer ? customer.subscriptions[0] : "";
 
   useEffect(() => {
+
+  }, [customerAdapter]);
+
+  useEffect(() => {
+    const customer = Object.values(customerAdapter.entities).find(
+      (c) => c.metadata?.okta_id === paramsId
+    );
+    console.log("customer", customer);
+
+    console.log("subscriptions", customer?.subscriptions);
+
     setAccessToken(accessToken);
-    dispatch(searchCustomersBySysIdThunk({ customerId: paramsId })).then((response) => {
-      console.log("Thunk Response:", response.payload); // Log the response from the thunk
-    });
+    if (stripeSubscriptionId) {
 
-  }, []);
+      dispatch(fetchOneSubscriptionThunk(stripeSubscriptionId)).then((response) => {
+        console.log("Thunk Response:", response.payload); // Log the response from the thunk
+      });
+    }
 
-  useEffect(() => {
-
-    console.log("Billing State Entities After Thunk Dispatch:", billingState.entities);
-  }, [billingState.entities]);
+  }, [customerAdapter]);
 
   return (
     <Container >
@@ -76,7 +90,6 @@ const ManageSubscription = () => {
                       <div className="mt-3 text-center">
                         <Button variant="primary" type="submit">Update Plan</Button>
                       </div>
-                      <PaymentMethodModal show={show} handleClose={handleClose} />
                     </Form>
                   </Card.Body>
                 </Card>

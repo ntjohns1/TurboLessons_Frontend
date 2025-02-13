@@ -131,7 +131,9 @@ export const buildReducers = (builder, entityThunks, adapter, namespace) => {
       })
       .addCase(entityThunks.fetchOne.fulfilled, (state, action) => {
         state.loading = false;
-        adapter.upsertOne(state, action.payload);
+        console.log(action.payload);
+        
+        adapter.upsertOne(state.entities[namespace], action.payload);
       })
       .addCase(entityThunks.fetchOne.rejected, (state) => {
         state.loading = false;
@@ -149,13 +151,13 @@ export const buildReducers = (builder, entityThunks, adapter, namespace) => {
 
   if (entityThunks.updateItem) {
     builder.addCase(entityThunks.updateItem.fulfilled, (state, action) => {
-      adapter.upsertOne(state, action.payload);
+      adapter.upsertOne(state.entities[namespace], action.payload);
     });
   }
 
   if (entityThunks.deleteItem) {
     builder.addCase(entityThunks.deleteItem.fulfilled, (state, action) => {
-      adapter.removeOne(state, action.payload.id);
+      adapter.removeOne(state.entities[namespace], action.payload.id);
     });
   }
   if (entityThunks.fetchItemsByCustomer) {
