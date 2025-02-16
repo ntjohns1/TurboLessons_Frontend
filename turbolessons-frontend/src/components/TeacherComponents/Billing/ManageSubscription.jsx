@@ -36,16 +36,19 @@ const ManageSubscription = () => {
   const dispatch = useDispatch();
   const paramsId = useParams().id;
   const customerAdapter = useSelector((state) => state.billing.entities["customers"]);
+  const subscriptionAdapter = useSelector((state) => state.billing.entities["subscriptions"]);
   const customer = Object.values(customerAdapter.entities).find(
     (c) => c.metadata?.okta_id === paramsId
   );
   const stripeCustomerId = customer ? customer.id : "";
   // Todo: This should handle multiple subscriptions
   const stripeSubscriptionId = customer ? customer.subscriptions[0] : "";
+  const subscription = Object.values(subscriptionAdapter.entities).find((s) => s.id === stripeSubscriptionId);
 
   useEffect(() => {
-
-  }, [customerAdapter]);
+    console.log(subscription);
+    
+  }, [subscriptionAdapter]);
 
   useEffect(() => {
     const customer = Object.values(customerAdapter.entities).find(
@@ -65,6 +68,88 @@ const ManageSubscription = () => {
 
   }, [customerAdapter]);
 
+  /*
+  application: null
+applicationFeePercent: null
+applicationObject: null
+automaticTax: {enabled: false, liability: null}
+billingCycleAnchor: 1733696798
+billingThresholds: null
+cancelAt: null
+cancelAtPeriodEnd: false
+canceledAt: null
+cancellationDetails: {commen: null, feedback: null, reason: null}
+collectionMethod: "charge_automatically"
+created: 1733696798
+currency: "usd"
+currentPeriodEnd: 1741472798
+currentPeriodStart: 1739053598
+customer: "cus_RHGJfleiSFtUUQ"
+customerObject: null
+daysUntilDue: null
+defaultPaymentMethod: null
+defaultPaymentMethodObject: null
+defaultSource: null
+defaultSourceObject: null
+defaultTaxRates: []
+description: null
+discount: null
+discountObjects: []
+discounts: []
+endedAt: null
+id: "sub_1QTsvyDmZLVpivSLh6YmMXsx"
+items: 
+  data: Array(1)
+    0: 
+      billingThresholds: null
+      created: 1733696798
+      deleted: null
+      discountObjects: []
+      discounts: []
+      id: "si_RMcANq0pJrIPT4"
+      metadata: {}
+      object: "subscription_item"
+      plan: {active: true, aggregateUsage: null, amount: 3000, amountDecimal: 3000, billingScheme: 'per_unit', …}
+      price: {active: true, billingScheme: 'per_unit', created: 1723650923, currency: 'usd', currencyOptions: null, …}
+      quantity: null
+      subscription: "sub_1QTsvyDmZLVpivSLh6YmMXsx"
+      taxRates: []
+      trial: null
+      [[Prototype]]: Object
+    length: 1
+  [[Prototype]]: Array(0)
+  hasMore: false
+  object: "list"
+  requestParams: null
+  url: "/v1/subscription_items?subscription=sub_1QTsvyDmZLVpivSLh6YmMXsx"
+[[Prototype]]: Object
+latestInvoice: "in_1QqMUFDmZLVpivSL2DCfqRtq"
+latestInvoiceObject: null
+livemode: false
+metadata: {}
+nextPendingInvoiceItemInvoice: null
+object: "subscription"
+onBehalfOf: null
+onBehalfOfObject: null
+pauseCollection: null
+paymentSettings: {paymentMethodOptions: null, paymentMethodTypes: null, saveDefaultPaymentMethod: 'off'}
+pendingInvoiceItemInterval: null
+pendingSetupIntent: "seti_1QTsvzDmZLVpivSLHaVMq5Gl"
+pendingSetupIntentObject: null
+pendingUpdate: null
+prebilling: null
+schedule: null
+scheduleObject: null
+startDate: 1733696798
+status: "active"
+testClock: null
+testClockObject: null
+transferData: null
+trialEnd: null
+trialSettings: {endBehavior: {…}}
+trialStart: null
+  */
+
   return (
     <Container >
       <Row >
@@ -72,7 +157,7 @@ const ManageSubscription = () => {
           <Card className="mb-3">
             <Row>
               <Col md={6}>
-                <SubscriptionDetails />
+                <SubscriptionDetails subscription={subscription}/>
               </Col>
               <Col md={6}>
                 <Card className="m-3">
