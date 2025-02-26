@@ -12,6 +12,27 @@ import {
   createCustomer,
   editCustomer,
   deleteCustomer,
+  listAllInvoices,
+  listAllInvoicesByCustomer,
+  listAllInvoicesBySubscription,
+  getInvoice,
+  getUpcomingInvoice,
+  createInvoice,
+  editInvoice,
+  deleteInvoice,
+  finalizeInvoice,
+  payInvoice,
+  voidInvoice,
+  markUncollectibleInvoice,
+  retrieveLineItems,
+  retrieveUpcomingLineItems,
+  listAllMeters,
+  getMeter,
+  createMeter,
+  editMeter,
+  deactivateMeter,
+  reactivateMeter,
+  createMeterEvent,
   listAllPaymentIntents,
   getPaymentIntent,
   searchPaymentIntentByCustomer,
@@ -48,6 +69,10 @@ import {
 
 // Entity Adapters
 const customerAdapter = createEntityAdapter();
+const invoiceAdapter = createEntityAdapter();
+const invoiceLineItemAdapter = createEntityAdapter();
+const meterAdapter = createEntityAdapter();
+const meterEventAdapter = createEntityAdapter();
 const paymentIntentAdapter = createEntityAdapter();
 const paymentMethodAdapter = createEntityAdapter({
   selectId: (paymentMethod) => {
@@ -77,6 +102,41 @@ const customerThunks = buildThunks("Customer", {
   create: createCustomer,
   update: editCustomer,
   delete: deleteCustomer,
+});
+
+// Invoice
+const invoiceThunks = buildThunks("Invoice", {
+  listAll: listAllInvoices,
+  get: getInvoice,
+  getUpcoming: getUpcomingInvoice,
+  create: createInvoice,
+  update: editInvoice,
+  delete: deleteInvoice,
+  finalize: finalizeInvoice,
+  pay: payInvoice,
+  void: voidInvoice,
+  markUncollectible: markUncollectibleInvoice,
+  searchByCustomer: listAllInvoicesByCustomer,
+  searchBySubscription: listAllInvoicesBySubscription,
+});
+
+const invoiceLineItemThunks = buildThunks("InvoiceLineItem", {
+  retrieveLineItems: retrieveLineItems,
+  retrieveUpcomingLineItems: retrieveUpcomingLineItems,
+});
+
+// Meter
+const meterThunks = buildThunks("Meter", {
+  listAll: listAllMeters,
+  get: getMeter,
+  create: createMeter,
+  update: editMeter,
+  deactivate: deactivateMeter,
+  reactivate: reactivateMeter,
+});
+
+const meterEventThunks = buildThunks("MeterEvent", {
+  create: createMeterEvent,
 });
 
 // PaymentIntent
@@ -141,6 +201,10 @@ const billingSlice = createSlice({
   initialState: {
     entities: {
       customers: customerAdapter.getInitialState({}),
+      invoices: invoiceAdapter.getInitialState({}),
+      invoiceLineItems: invoiceLineItemAdapter.getInitialState({}),
+      meters: meterAdapter.getInitialState({}),
+      meterEvents: meterEventAdapter.getInitialState({}),
       paymentIntents: paymentIntentAdapter.getInitialState({}),
       paymentMethods: paymentMethodAdapter.getInitialState({}),
       prices: priceAdapter.getInitialState({}),
@@ -249,6 +313,15 @@ const billingSlice = createSlice({
   },
   extraReducers: (builder) => {
     buildReducers(builder, customerThunks, customerAdapter, "customers");
+    buildReducers(builder, invoiceThunks, invoiceAdapter, "invoices");
+    buildReducers(
+      builder,
+      invoiceLineItemThunks,
+      invoiceLineItemAdapter,
+      "invoiceLineItems"
+    );
+    buildReducers(builder, meterThunks, meterAdapter, "meters");
+    buildReducers(builder, meterEventThunks, meterEventAdapter, "meterEvents");
     buildReducers(
       builder,
       paymentIntentThunks,
@@ -303,6 +376,36 @@ export const {
   deleteItem: deleteCustomerThunk,
   fetchItemsByCustomer: searchCustomersBySysIdThunk,
 } = customerThunks;
+
+export const {
+  fetchAll: fetchAllInvoicesThunk,
+  fetchOne: fetchOneInvoiceThunk,
+  createItem: createInvoiceThunk,
+  updateItem: updateInvoiceThunk,
+  deleteItem: deleteInvoiceThunk,
+  fetchItemsByCustomer: fetchInvoicesByCustomerThunk,
+  fetchItemsBySubscription: fetchInvoicesBySubscriptionThunk,
+  finalizeItem: finalizeInvoiceThunk,
+  payItem: payInvoiceThunk,
+  voidItem: voidInvoiceThunk,
+  markUncollectibleItem: markUncollectibleInvoiceThunk,
+} = invoiceThunks;
+
+export const {
+  retrieveLineItems: retrieveInvoiceLineItemsThunk,
+  retrieveUpcomingLineItems: retrieveUpcomingInvoiceLineItemsThunk,
+} = invoiceLineItemThunks;
+
+export const {
+  fetchAll: fetchAllMetersThunk,
+  fetchOne: fetchOneMeterThunk,
+  createItem: createMeterThunk,
+  updateItem: updateMeterThunk,
+  deactivateItem: deactivateMeterThunk,
+  reactivateItem: reactivateMeterThunk,
+} = meterThunks;
+
+export const { createItem: createMeterEventThunk } = meterEventThunks;
 
 export const {
   fetchAll: fetchAllPaymentIntentsThunk,

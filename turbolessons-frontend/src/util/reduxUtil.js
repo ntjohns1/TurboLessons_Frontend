@@ -63,6 +63,86 @@ export const buildThunks = (entityName, service) => {
     );
   }
 
+  if (service.searchBySubscription) {
+    thunks.fetchItemsBySubscription = createAsyncThunk(
+      `billing/search${entityName}sBySubscriptionThunk`,
+      async ({ subscriptionId }) => {
+        const response = await service.searchBySubscription(subscriptionId);
+        return response;
+      }
+    );
+  }
+
+  if (service.finalize) {
+    thunks.finalizeItem = createAsyncThunk(
+      `billing/finalize${entityName}Thunk`,
+      async ({ id }) => {
+        const response = service.finalize(id);
+        return response;
+      }
+    );
+  }
+
+  if (service.pay) {
+    thunks.payItem = createAsyncThunk(
+      `billing/pay${entityName}Thunk`,
+      async ({ id }) => {
+        const response = service.pay(id);
+        return response;
+      }
+    );
+  }
+
+  if (service.void) {
+    thunks.voidItem = createAsyncThunk(
+      `billing/void${entityName}Thunk`,
+      async ({ id }) => {
+        const response = service.void(id);
+        return response;
+      }
+    );
+  }
+
+  if (service.markUncollectible) {
+    thunks.markUncollectibleItem = createAsyncThunk(
+      `billing/markUncollectible${entityName}Thunk`,
+      async ({ id }) => {
+        const response = service.markUncollectible(id);
+        return response;
+      }
+    );
+  }
+
+  if (service.deactivate) {
+    thunks.deactivateItem = createAsyncThunk(
+      `billing/deactivate${entityName}Thunk`,
+      async ({ id }) => {
+        const response = service.deactivate(id);
+        return response;
+      }
+    );
+  }
+
+  if (service.reactivate) {
+    thunks.reactivateItem = createAsyncThunk(
+      `billing/reactivate${entityName}Thunk`,
+      async ({ id }) => {
+        const response = service.reactivate(id);
+        return response;
+      }
+    );
+  }
+
+  if (service.retrieveUpcoming) {
+    thunks.retrieveUpcomingItem = createAsyncThunk(
+      `billing/retrieveUpcoming${entityName}Thunk`,
+      async ({ id }) => {
+        const response = service.retrieveUpcoming(id);
+        return response;
+      }
+    );
+  }
+
   if (service.capture) {
     thunks.captureItem = createAsyncThunk(
       `billing/capture${entityName}Thunk`,
@@ -132,7 +212,7 @@ export const buildReducers = (builder, entityThunks, adapter, namespace) => {
       .addCase(entityThunks.fetchOne.fulfilled, (state, action) => {
         state.loading = false;
         console.log(action.payload);
-        
+
         adapter.upsertOne(state.entities[namespace], action.payload);
       })
       .addCase(entityThunks.fetchOne.rejected, (state) => {
