@@ -91,6 +91,204 @@ export const deleteCustomer = async (id) => {
   );
 };
 
+// Invoice
+
+// (GET("/api/payments/invoice")), handler::listAll)
+export const listAllInvoices = async () => {
+  return apiCall("GET", "/payments/invoice", {}, "Error fetching invoices:");
+};
+
+// (GET("/api/payments/invoice/{id}/customer"), handler::listAllByCustomer)
+export const listAllInvoicesByCustomer = async (customerId) => {
+  return apiCall(
+    "GET",
+    `/payments/invoice/${customerId}/customer`,
+    {},
+    "Error fetching invoices by customer"
+  );
+};
+
+// (GET("/api/payments/invoice/{id}/subscription"), handler::listAllBySubscription)
+export const listAllInvoicesBySubscription = async (subscriptionId) => {
+  return apiCall(
+    "GET",
+    `/payments/invoice/${subscriptionId}/subscription`,
+    {},
+    "Error fetching invoices by subscription"
+  );
+};
+
+// (GET("/api/payments/invoice/{id}"), handler::retrieve)
+export const getInvoice = async (id) => {
+  return apiCall(
+    "GET",
+    `/payments/invoice/${id}`,
+    {},
+    "Error fetching invoice:"
+  );
+};
+
+// (GET("/api/payments/invoice/{id}/upcoming"), handler::retrieveUpcoming)
+export const getUpcomingInvoice = async (id) => {
+  return apiCall(
+    "GET",
+    `/payments/invoice/${id}/upcoming`,
+    {},
+    "Error fetching upcoming invoice:"
+  );
+};
+
+// (POST("/api/payments/invoice"), handler::create)
+export const createInvoice = async (formState) => {
+  return apiCall(
+    "POST",
+    "/payments/invoice",
+    { formState },
+    "Error creating invoice:"
+  );
+};
+
+// (PUT("/api/payments/invoice/{id}"), handler::update)
+export const editInvoice = async (id, formState) => {
+  return apiCall(
+    "PUT",
+    `/payments/invoice/${id}`,
+    { formState },
+    "Error editing invoice:"
+  );
+};
+
+// (DELETE("/api/payments/invoice/{id}"), handler::deleteDraft)
+export const deleteInvoice = async (id) => {
+  return apiCall(
+    "DELETE",
+    `/payments/invoice/${id}`,
+    {},
+    "Error deleting invoice:"
+  );
+};
+// (POST("/api/payments/invoice/{id}/finalize"), handler::finalize)
+export const finalizeInvoice = async (id) => {
+  return apiCall(
+    "POST",
+    `/payments/invoice/${id}/finalize`,
+    {},
+    "Error finalizing invoice:"
+  );
+};
+
+// (POST("/api/payments/invoice/{id}/pay"), handler::payInvoice)
+export const payInvoice = async (id) => {
+  return apiCall(
+    "POST",
+    `/payments/invoice/${id}/pay`,
+    {},
+    "Error paying invoice:"
+  );
+};
+
+// (POST("/api/payments/invoice/{id}/void"), handler::voidInvoice)
+export const voidInvoice = async (id) => {
+  return apiCall(
+    "POST",
+    `/payments/invoice/${id}/void`,
+    {},
+    "Error voiding invoice:"
+  );
+};
+
+// (POST("/api/payments/invoice/{id}/mark_uncollectible"), handler::markUncollectible)
+export const markUncollectibleInvoice = async (id) => {
+  return apiCall(
+    "POST",
+    `/payments/invoice/${id}/mark_uncollectible`,
+    {},
+    "Error marking invoice uncollectible:"
+  );
+};
+
+// (POST("/api/payments/invoice/{id}/line_items"), handler::retrieveLineItems)
+export const retrieveLineItems = async (id) => {
+  return apiCall(
+    "POST",
+    `/payments/invoice/${id}/line_items`,
+    {},
+    "Error retrieving line items:"
+  );
+};
+
+// (POST("/api/payments/invoice/{id}/upcoming/line_items"), handler::retrieveUpcomingLineItems);
+export const retrieveUpcomingLineItems = async (id) => {
+  return apiCall(
+    "POST",
+    `/payments/invoice/${id}/upcoming/line_items`,
+    {},
+    "Error retrieving upcoming line items:"
+  );
+};
+
+// Meter
+
+// (GET("/api/payments/meter")), handler::listAll)
+export const listAllMeters = async () => {
+  return apiCall("GET", "/payments/meter", {}, "Error fetching meters:");
+};
+
+// (GET("/api/payments/meter/{id}"), handler::retrieve)
+export const getMeter = async (id) => {
+  return apiCall("GET", `/payments/meter/${id}`, {}, "Error fetching meter:");
+};
+
+// (POST("/api/payments/meter"), handler::create)
+export const createMeter = async (formState) => {
+  return apiCall(
+    "POST",
+    "/payments/meter",
+    { formState },
+    "Error creating meter:"
+  );
+};
+
+// (POST("/api/payments/meter/{id}"), handler::update)
+export const editMeter = async (id, formState) => {
+  return apiCall(
+    "POST",
+    `/payments/meter/${id}`,
+    { formState },
+    "Error editing meter:"
+  );
+};
+
+// (POST("/api/payments/meter/{id}/deactivate"), handler::deactivate)
+export const deactivateMeter = async (id) => {
+  return apiCall(
+    "POST",
+    `/payments/meter/${id}/deactivate`,
+    {},
+    "Error deactivating meter:"
+  );
+};
+
+// (POST("/api/payments/meter/{id}/reactivate"), handler::reactivate)
+export const reactivateMeter = async (id) => {
+  return apiCall(
+    "POST",
+    `/payments/meter/${id}/reactivate`,
+    {},
+    "Error reactivating meter:"
+  );
+};
+
+// (POST("/api/payments/meter_event"), handler::createEvent);
+export const createMeterEvent = async (formState) => {
+  return apiCall(
+    "POST",
+    "/payments/meter_event",
+    { formState },
+    "Error creating meter event:"
+  );
+};
+
 // PaymentIntent
 
 // route((GET("/payments/api/paymentintent")), handler::listAll)
@@ -372,10 +570,9 @@ export const getSubscription = async (id) => {
 
 // route(POST("/payments/api/subscription/{priceId}"), handler::create)
 export const createSubscription = async (formState) => {
-
   const subscriptionDto = {
     customer: formState.customerId,
-    items: formState.items, 
+    items: formState.items,
     defaultPaymentMethod: formState.defaultPaymentMethod,
     cancelAtPeriodEnd: false,
     cancelAt: null,
@@ -408,3 +605,26 @@ export const cancelSubscription = async (id) => {
     "Error canceling subscription:"
   );
 };
+
+// (GET("/api/payments/invoice")), handler::listAll)
+// (GET("/api/payments/invoice/{id}/customer"), handler::listAllByCustomer)
+// (GET("/api/payments/invoice/{id}/subscription"), handler::listAllBySubscription)
+// (GET("/api/payments/invoice/{id}"), handler::retrieve)
+// (GET("/api/payments/invoice/{id}/upcoming"), handler::retrieveUpcoming)
+// (POST("/api/payments/invoice"), handler::create)
+// (PUT("/api/payments/invoice/{id}"), handler::update)
+// (DELETE("/api/payments/invoice/{id}"), handler::deleteDraft)
+// (POST("/api/payments/invoice/{id}/finalize"), handler::finalize)
+// (POST("/api/payments/invoice/{id}/pay"), handler::payInvoice)
+// (POST("/api/payments/invoice/{id}/void"), handler::voidInvoice)
+// (POST("/api/payments/invoice/{id}/mark_uncollectible"), handler::markUncollectible)
+// (POST("/api/payments/invoice/{id}/line_items"), handler::retrieveLineItems)
+// (POST("/api/payments/invoice/{id}/upcoming/line_items"), handler::retrieveUpcomingLineItems);
+
+// (GET("/api/payments/meter")), handler::listAll)
+// (GET("/api/payments/meter/{id}"), handler::retrieve)
+// (POST("/api/payments/meter"), handler::create)
+// (POST("/api/payments/meter/{id}"), handler::update)
+// (POST("/api/payments/meter/{id}/deactivate"), handler::deactivate)
+// (POST("/api/payments/meter/{id}/reactivate"), handler::reactivate)
+// (POST("/api/payments/meter_event"), handler::createEvent);

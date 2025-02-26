@@ -2,12 +2,12 @@ import React, { useState, useEffect } from "react";
 import { Container, Row, Col, Table, Form, Button, Card } from "react-bootstrap";
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
-import PaymentMethodModal from "./CreatePaymentMethod";
 import SubscriptionDetails from "./SubscriptionDetails";
 import { createCustomerThunk, searchCustomersBySysIdThunk, fetchOneSubscriptionThunk } from "./BillingSlice";
 import { setAccessToken } from "../../../service/axiosConfig";
 import { useOktaAuth } from '@okta/okta-react';
-import { use } from "react";
+import ManagePaymentMethod from "./ManagePaymentMethod";
+
 
 
 const ManageSubscription = () => {
@@ -47,7 +47,7 @@ const ManageSubscription = () => {
 
   useEffect(() => {
     console.log(subscription);
-    
+
   }, [subscriptionAdapter]);
 
   useEffect(() => {
@@ -157,7 +157,7 @@ trialStart: null
           <Card className="mb-3">
             <Row>
               <Col md={6}>
-                <SubscriptionDetails subscription={subscription}/>
+                <SubscriptionDetails subscription={subscription} />
               </Col>
               <Col md={6}>
                 <Card className="m-3">
@@ -207,13 +207,7 @@ trialStart: null
               </Table>
             </Card.Body>
           </Card>
-          <Card>
-            <Card.Body>
-              <h3>Payment Methods</h3>
-              <p>Current Method: **** **** **** 1234</p>
-              <Button variant="primary" onClick={handleShow}>Manage Payment Methods</Button>
-            </Card.Body>
-          </Card>
+          <ManagePaymentMethod paramsId={paramsId} />
         </Col>
       </Row>
     </Container>

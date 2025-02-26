@@ -8,10 +8,10 @@ const SubscriptionDetails = ({subscription}) => {
     const productAdapter = useSelector((state) => state.billing.entities["products"]);
     const priceAdapter = useSelector((state) => state.billing.entities["prices"]);
     const product = Object.values(productAdapter.entities).find(p => p.id === subscription?.items?.data[0].price.product);
-    const price = Object.values(priceAdapter.entities).find(p => p.id === subscription.items?.data[0].price.id);
-    const periodStart  = subscription.currentPeriodStart;
+    const price = Object.values(priceAdapter.entities).find(p => p.id === subscription?.items?.data[0].price.id);
+    const periodStart  = subscription?.currentPeriodStart;
     const startDate = periodStart ? new Date(periodStart * 1000).toLocaleDateString() : 'N/A';
-    const periodEnd  = subscription.currentPeriodEnd;
+    const periodEnd  = subscription?.currentPeriodEnd;
     const endDate = periodEnd ? new Date(periodEnd * 1000).toLocaleDateString() : 'N/A';
     useEffect(() => {
     if (!productAdapter.ids.length || !priceAdapter.ids.length) {   

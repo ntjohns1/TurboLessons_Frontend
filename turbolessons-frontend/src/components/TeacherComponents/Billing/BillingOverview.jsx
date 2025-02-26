@@ -7,7 +7,7 @@ import { Link, useParams } from 'react-router-dom';
 import '../../../App'
 import { setAccessToken } from "../../../service/axiosConfig";
 import { useOktaAuth } from '@okta/okta-react';
-import { searchCustomersBySysIdThunk, fetchPaymentMethodsByCustomerThunk } from "./BillingSlice";
+import { searchCustomersBySysIdThunk, fetchPaymentMethodsByCustomerThunk, selectCustomerBySysId } from "./BillingSlice";
 
 export default function BillingOverview() {
 
@@ -15,9 +15,7 @@ export default function BillingOverview() {
     const paramsId = useParams().id;
     const { authState, oktaAuth } = useOktaAuth();
     const customerAdapter = useSelector((state) => state.billing.entities["customers"]);
-    const customer = Object.values(customerAdapter.entities).find(
-        (c) => c.metadata?.okta_id === paramsId
-    );
+    const customer = useSelector((state) => selectCustomerBySysId(state, paramsId));
     const stripeCustomerId = customer ? customer.id : "";
     // Todo: This should handle multiple subscriptions
     const stripeSubscriptionId = customer ? customer.subscriptions[0] : "";

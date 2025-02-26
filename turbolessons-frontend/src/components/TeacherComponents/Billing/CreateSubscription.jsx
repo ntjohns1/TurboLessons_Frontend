@@ -5,6 +5,7 @@ import { setAccessToken } from "../../../service/axiosConfig";
 import { Form, Button, Modal, Row, Col, Spinner } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import {
+    selectCustomerBySysId,
     updateSubscriptionFormState,
     resetSubscriptionFormState,
     fetchPaymentMethodsByCustomerThunk,
@@ -28,9 +29,7 @@ const CreateSubscription = () => {
     const subscriptionFormState = useSelector((state) => state.billing.subscriptionFormState);
     const customerAdapter = useSelector((state) => state.billing.entities["customers"]);
     const paramsId = useParams().id;
-    const customer = Object.values(customerAdapter.entities).find(
-        (c) => c.metadata?.okta_id === paramsId
-    );
+    const customer = useSelector((state) => selectCustomerBySysId(state, paramsId));
     const stripeCustomerId = customer?.id;
     const products = useSelector(selectProducts);
     const customerPaymentMethods = useSelector(selectPaymentMethods);
@@ -64,7 +63,6 @@ const CreateSubscription = () => {
 
     const handleChange = (e) => {
         const { name, value } = e.target;
-        setAccessToken(accessToken);
         dispatch(updateSubscriptionFormState({ field: name, value }));
     };
 

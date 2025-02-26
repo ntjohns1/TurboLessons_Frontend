@@ -154,6 +154,7 @@ const billingSlice = createSlice({
     enrollmentFlag: false,
     showPaymentMethodModal: false,
     showSuccessModal: false,
+    showPaymentMethodDetails: false,
     customerFormState: {
       name: "",
       email: "",
@@ -173,6 +174,9 @@ const billingSlice = createSlice({
       customerId: "",
       items: [],
       defaultPaymentMethod: "",
+    },
+    paymentMethodFormState: {
+      paymentMethodId: "",
     },
   },
   reducers: {
@@ -220,11 +224,18 @@ const billingSlice = createSlice({
         defaultPaymentMethod: "",
       };
     },
+    updatePaymentMethodFormState(state, action) {
+      const { field, value } = action.payload;
+      state.paymentMethodFormState[field] = value;
+    },
     setLoading(state, action) {
       state.loading = action.payload;
     },
     setShowPaymentMethodModal(state, action) {
       state.showPaymentMethodModal = action.payload;
+    },
+    setShowPaymentMethodDetails(state, action) {
+      state.showPaymentMethodDetails = action.payload;
     },
     setShowSuccessModal(state, action) {
       state.showSuccessModal = action.payload;
@@ -273,12 +284,14 @@ export const {
   resetCustomerFormState,
   updateSubscriptionFormState,
   resetSubscriptionFormState,
+  updatePaymentMethodFormState,
   setLoading,
   setShow,
   resetSuccessModal,
   setSuccessMessage,
   setError,
   setShowPaymentMethodModal,
+  setShowPaymentMethodDetails,
   setShowSuccessModal,
 } = billingSlice.actions;
 
@@ -354,20 +367,19 @@ export const selectPaymentMethods = createSelector(
   (entities) => Object.values(entities || {})
 );
 
-export default billingSlice.reducer;
-
 // Selector to fetch a customer by metadata.okta_id
-// export const selectCustomerBySysId = createSelector(
-//   [
-//     (state) => state.billing.entities["customers"].entities, // Access the customers' entities
-//     (_, oktaId) => oktaId, // Get the oktaId passed as an argument
-//   ],
-//   (customers, oktaId) => {
-//     if (!customers) return null;
-//     return (
-//       Object.values(customers).find(
-//         (customer) => customer.metadata?.okta_id === oktaId
-//       ) || null
-//     );
-//   }
-// );
+export const selectCustomerBySysId = createSelector(
+  [
+    (state) => state.billing?.entities["customers"]?.entities || {}, // Ensure a fallback object
+    (_, oktaId) => oktaId,
+  ],
+  (customers, oktaId) => {
+    return (
+      Object.values(customers).find(
+        (customer) => customer.metadata?.okta_id === oktaId
+      ) || null
+    );
+  }
+);
+
+export default billingSlice.reducer;
