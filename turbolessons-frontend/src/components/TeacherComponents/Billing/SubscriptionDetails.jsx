@@ -21,8 +21,8 @@ const SubscriptionDetails = ({subscription}) => {
     }
     // console.log("Product:" + JSON.stringify(product));  
     // console.log(JSON.stringify(price));
-    console.log(subscription);
-    console.log(startDate);
+    // console.log(subscription);
+    // console.log(startDate);
     
     
   }, [productAdapter, priceAdapter]);

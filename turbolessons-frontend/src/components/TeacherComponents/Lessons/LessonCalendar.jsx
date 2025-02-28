@@ -95,7 +95,7 @@ export default function LessonCalendar() {
     };
 
     const handleEventChange = (id, changeInfo) => {
-        console.log(changeInfo);
+        // console.log(changeInfo);
         dispatch(updateEvent({
             id,
             formState: {
