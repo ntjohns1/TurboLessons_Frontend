@@ -241,12 +241,14 @@ export const getMeter = async (id) => {
 
 // (POST("/api/payments/meter"), handler::create)
 export const createMeter = async (formState) => {
-  return apiCall(
-    "POST",
-    "/payments/meter",
-    { formState },
-    "Error creating meter:"
-  );
+  const meterDto = {
+    id: "",
+    display_name: formState.display_name,
+    event_name: formState.event_name,
+  };
+  console.log("formState in createMeterEvent: ", meterDto);
+
+  return apiCall("POST", "/payments/meter", meterDto, "Error creating meter:");
 };
 
 // (POST("/api/payments/meter/{id}"), handler::update)
@@ -281,6 +283,7 @@ export const reactivateMeter = async (id) => {
 
 // (POST("/api/payments/meter_event"), handler::createEvent);
 export const createMeterEvent = async (formState) => {
+  console.log("formState in createMeterEvent: ", formState);
   return apiCall(
     "POST",
     "/payments/meter_event",

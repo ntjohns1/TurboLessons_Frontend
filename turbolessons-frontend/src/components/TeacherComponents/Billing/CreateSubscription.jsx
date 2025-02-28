@@ -17,7 +17,9 @@ import {
     setSuccessMessage,
     selectPaymentMethods,
     selectProducts,
+    createMeterThunk
 } from "./BillingSlice";
+import { selectStudentById } from "../Students/StudentSlice";
 import CreatePaymentMethod from "./CreatePaymentMethod";
 import SuccessModal from "../../../helpers/SuccessModal";
 
@@ -95,6 +97,11 @@ const CreateSubscription = () => {
             setAccessToken(accessToken);
             try {
                 const result = await dispatch(createSubscriptionThunk(subscriptionFormState)).unwrap();
+                const meter = {
+                    display_name: `${customer.name} - Subscription`,
+                    event_name: `${paramsId}_lesson`,
+                };
+                dispatch(createMeterThunk(meter));
                 console.log("Subscription created:", result);
                 dispatch(setShowSuccessModal(true));
             } catch (error) {

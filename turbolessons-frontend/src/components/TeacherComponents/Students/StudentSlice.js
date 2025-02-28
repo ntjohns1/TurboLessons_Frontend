@@ -126,7 +126,7 @@ const studentSlice = createSlice({
       })
       .addCase(fetchStudentProfile.fulfilled, (state, action) => {
         state.loading = false;
-        state.studentProfile = action.payload; // Store the resolved data
+        state.studentProfile = action.payload;
       })
       .addCase(fetchStudentProfile.rejected, (state, action) => {
         state.loading = false;
