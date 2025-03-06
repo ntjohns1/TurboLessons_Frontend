@@ -80,6 +80,7 @@ const initialState = {
     teacherEmail: "",
     comments: "",
     durationOption: "30m",
+    billingStatus: "UNLOGGED",
   },
 };
 
@@ -176,6 +177,7 @@ const lessonSlice = createSlice({
           teacherEmail: teacherEmail || "",
           comments: event.comments || "",
           durationOption: event.durationOption || "30m",
+          billingStatus: "UNLOGGED",
         };
       } else {
         state.formState = {
