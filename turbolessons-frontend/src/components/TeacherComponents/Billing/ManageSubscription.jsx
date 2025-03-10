@@ -1,13 +1,99 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Container, Row, Col, Table, Form, Button, Card } from "react-bootstrap";
-import PaymentMethodModal from "./PaymentMethodModal";
+import { useDispatch, useSelector } from 'react-redux';
+import { useParams } from 'react-router-dom';
+import SubscriptionDetails from "./SubscriptionDetails";
+import { createCustomerThunk, searchCustomersBySysIdThunk, fetchOneSubscriptionThunk, fetchAllSetupIntentsThunk, fetchAllMetersThunk } from "./BillingSlice";
+import { setAccessToken } from "../../../service/axiosConfig";
+import { useOktaAuth } from '@okta/okta-react';
+import ManagePaymentMethod from "./ManagePaymentMethod";
+import InvoiceHistory from "./InvoiceHistory";
+
+
 
 const ManageSubscription = () => {
+  /*
+      High Level Process:
+      
+
+
+      - Requirements:
+          - Viewing current subscription status and details.
+          - Updating subscription plans.
+          - Viewing billing history.
+          - Adding or updating payment methods.
+          - Handling payment processing and errors.
+
+      
+  */
 
   const [show, setShow] = useState(false);
 
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
+
+  const { authState, oktaAuth } = useOktaAuth();
+  const accessToken = oktaAuth.getAccessToken();
+  const dispatch = useDispatch();
+  const paramsId = useParams().id;
+  const customerAdapter = useSelector((state) => state.billing.entities["customers"]);
+  const subscriptionAdapter = useSelector((state) => state.billing.entities["subscriptions"]);
+  const customer = Object.values(customerAdapter.entities).find(
+    (c) => c.metadata?.okta_id === paramsId
+  );
+  const stripeCustomerId = customer ? customer.id : "";
+  // Todo: This should handle multiple subscriptions
+  const stripeSubscriptionId = customer ? customer.subscriptions[0] : "";
+  const subscription = Object.values(subscriptionAdapter.entities).find((s) => s.id === stripeSubscriptionId);
+  const setupIntents = useSelector((state) => state.billing.entities["setupIntents"]);
+  const meters = useSelector((state) => state.billing.entities["meters"]);
+
+
+  // useEffect(() => {
+  //   dispatch(fetchAllSetupIntentsThunk());
+  // }, []);
+
+  //   useEffect(() => {
+  // // console.log("setupIntents: ", setupIntents);
+  //     for (const setupIntent of Object.values(setupIntents.entities)) {
+  //       console.log("--------------- id: " + setupIntent.id + " ---------------");
+  //       console.log("client_secret:", setupIntent.clientSecret); 
+  //       console.log("customer:", setupIntent.customer); 
+  //       console.log("created:", setupIntent.created);
+  //       console.log("status:", setupIntent.status);
+  //       console.log("payment_method:", setupIntent.paymentMethod);
+  //       console.log("---------------------------------");
+
+  //     }
+
+  //   }, [setupIntents]);
+
+
+  useEffect(() => {
+    dispatch(fetchAllMetersThunk());
+  }, []);
+
+  useEffect(() => {
+    console.log("meters:" + JSON.stringify(meters));
+  }, [meters]);
+
+  useEffect(() => {
+    const customer = Object.values(customerAdapter.entities).find(
+      (c) => c.metadata?.okta_id === paramsId
+    );
+    console.log("customer", customer);
+
+    // console.log("subscriptions", customer?.subscriptions);
+
+    setAccessToken(accessToken);
+    if (stripeSubscriptionId) {
+      dispatch(fetchOneSubscriptionThunk(stripeSubscriptionId))
+      .then((response) => {
+        console.log("Thunk Response:", response.payload);
+      });
+    }
+
+  }, [customerAdapter]);
 
   return (
     <Container >
@@ -16,14 +102,7 @@ const ManageSubscription = () => {
           <Card className="mb-3">
             <Row>
               <Col md={6}>
-                <Card className="m-3">
-                  <Card.Body>
-                    <Card.Title>Subscription Details</Card.Title>
-                    <Card.Text>Status: Active</Card.Text>
-                    <Card.Text>Plan: Monthly - $60</Card.Text>
-                    <Card.Text>Renewal Date: 01/07/2024</Card.Text>
-                  </Card.Body>
-                </Card>
+                <SubscriptionDetails subscription={subscription} />
               </Col>
               <Col md={6}>
                 <Card className="m-3">
@@ -41,46 +120,14 @@ const ManageSubscription = () => {
                       <div className="mt-3 text-center">
                         <Button variant="primary" type="submit">Update Plan</Button>
                       </div>
-                      <PaymentMethodModal show={show} handleClose={handleClose}/>
                     </Form>
                   </Card.Body>
                 </Card>
               </Col>
             </Row>
           </Card>
-          <Card className="mb-3">
-            <Card.Body>
-              <h3>Billing History</h3>
-              <Table striped bordered hover>
-                <thead>
-                  <tr>
-                    <th>Date</th>
-                    <th>Amount</th>
-                    <th>Status</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <td>01/06/2024</td>
-                    <td>$60</td>
-                    <td>Paid</td>
-                  </tr>
-                  <tr>
-                    <td>01/05/2024</td>
-                    <td>$60</td>
-                    <td>Paid</td>
-                  </tr>
-                </tbody>
-              </Table>
-            </Card.Body>
-          </Card>
-          <Card>
-            <Card.Body>
-              <h3>Payment Methods</h3>
-              <p>Current Method: **** **** **** 1234</p>
-              <Button Button variant="primary" onClick={handleShow}>Manage Payment Methods</Button>
-            </Card.Body>
-          </Card>
+          <InvoiceHistory />
+          <ManagePaymentMethod paramsId={paramsId} />
         </Col>
       </Row>
     </Container>

@@ -17,11 +17,11 @@ process.env.CLIENT_ID = process.env.SPA_CLIENT_ID || process.env.CLIENT_ID;
 const env = {};
 
 // List of environment variables made available to the app
-["ISSUER", "CLIENT_ID"].forEach((key) => {
+["ISSUER", "CLIENT_ID","VITE_STRIPE_PUBLISHABLE_KEY"].forEach((key) => {
   if (!process.env[key]) {
     throw new Error(`Environment variable ${key} must be set. See README.md`);
   }
-  console.log(`Environment Variable Loaded: ${key} = ${process.env[key]}`);
+  // console.log(`Environment Variable Loaded: ${key} = ${process.env[key]}`);
   env[key] = process.env[key];
 });
 

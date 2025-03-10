@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useEffect, useRef } from 'react'
+import React, { useCallback, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
 import { Container } from 'react-bootstrap'
 import FullCalendar from '@fullcalendar/react'
@@ -15,7 +15,7 @@ import {
     setSelectedEvent,
     setDateClick,
     setShowModal,
-    setLoading
+
 } from './LessonSlice';
 import { setAccessToken } from "../../../service/axiosConfig";
 
@@ -27,7 +27,9 @@ export default function LessonCalendar() {
     const dispatch = useDispatch();
     const eventsByTeacher = useSelector((state) => state.lessons.eventsByTeacher);
     // const loading = useSelector((state) => state.lessons.loading);
+    const eventsLoaded = useSelector((state) => state.lessons.eventsLoaded)
     const showModal = useSelector((state) => state.lessons.showModal);
+    const teacher = authState.idToken.claims.name;
     const handleCloseModal = () => {
         dispatch(setShowModal(false));
     };
@@ -38,11 +40,10 @@ export default function LessonCalendar() {
 
     useEffect(() => {
         if (authState.isAuthenticated) {
-            const teacher = authState.idToken.claims.name;
             setAccessToken(accessToken);
             dispatch(fetchTeacherEvents({ teacher }));
         }
-    }, [authState, dispatch, handleCloseModal]);
+    }, [authState, accessToken, teacher, dispatch, eventsLoaded]);
 
 
     const events = useCallback(() => {
@@ -94,7 +95,7 @@ export default function LessonCalendar() {
     };
 
     const handleEventChange = (id, changeInfo) => {
-        console.log(changeInfo);
+        // console.log(changeInfo);
         dispatch(updateEvent({
             id,
             formState: {

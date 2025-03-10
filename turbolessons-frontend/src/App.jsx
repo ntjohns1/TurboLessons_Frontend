@@ -6,8 +6,9 @@ import { Security } from '@okta/okta-react';
 import { LoginCallback } from '@okta/okta-react';
 import Loading from './helpers/Loading';
 import config from './config';
-import { StudentProvider } from './util/context/StudentContext';
 import { WebSocketProvider } from "./util/context/WebSocketContext.jsx";
+import { Elements } from "@stripe/react-stripe-js";
+import { loadStripe } from "@stripe/stripe-js";
 import { Route, Routes } from "react-router-dom";
 import TeacherDashboard from './pages/Teachers/TeacherDashboard';
 import Students from "./pages/Teachers/Students"
@@ -22,9 +23,12 @@ import LessonCalendar from './components/TeacherComponents/Lessons/LessonCalenda
 import TeacherLayoutWrapper from './layouts/TeacherLayoutWrapper'
 import './App.css';
 import ManageSubscription from './components/TeacherComponents/Billing/ManageSubscription.jsx';
-
+import CreateStripeCustomer from './components/TeacherComponents/Billing/CreateStripeCustomer.jsx';
+import NewSubscriptionForm from './components/TeacherComponents/Billing/CreateSubscription.jsx';
+import CreatePaymentMethod from './components/TeacherComponents/Billing/CreatePaymentMethod.jsx';
 
 const oktaAuth = new OktaAuth(config.oidc);
+const stripePromise = loadStripe(config.oidc.stripeApiKey);
 
 const App = () => {
   const navigate = useNavigate();
@@ -34,21 +38,27 @@ const App = () => {
 
   return (
     <Security oktaAuth={oktaAuth} restoreOriginalUri={restoreOriginalUri}>
-      <StudentProvider>
-        <WebSocketProvider>
+      <WebSocketProvider>
+        <Elements stripe={stripePromise}>
           <Routes>
             <Route path="login/callback" element={<LoginCallback loadingElement={<Loading />} />} />
             <Route path="/" element={<RequiredAuth />}>
               <Route path="" element={<TeacherLayoutWrapper component={TeacherDashboard} />} />
             </Route>
             <Route path="/students" element={<RequiredAuth />}>
-              <Route path="" element={<TeacherLayoutWrapper component={Students} /> } />
+              <Route path="" element={<TeacherLayoutWrapper component={Students} />} />
             </Route>
             <Route path="/students/:id" element={<RequiredAuth />}>
               <Route path="" element={<TeacherLayoutWrapper component={SingleStudent} />} />
             </Route>
-            <Route path="/students/:id/billing" element={<RequiredAuth />}>
+            <Route path="/students/:id/subscription" element={<RequiredAuth />}>
               <Route path="" element={<TeacherLayoutWrapper component={ManageSubscription} />} />
+            </Route>
+            <Route path="/students/:id/create_stripe_account" element={<RequiredAuth />}>
+              <Route path="" element={<TeacherLayoutWrapper component={CreateStripeCustomer} />} />
+            </Route>
+            <Route path="/students/:id/create_subscription" element={<RequiredAuth />}>
+              <Route path="" element={<TeacherLayoutWrapper component={NewSubscriptionForm} />} />
             </Route>
             <Route path="/addStudent" element={<RequiredAuth />}>
               <Route path="" element={<TeacherLayoutWrapper component={AddStudent} />} />
@@ -57,7 +67,7 @@ const App = () => {
               <Route path="" element={<TeacherLayoutWrapper component={LessonCalendar} />} />
             </Route>
             <Route path="/messages" element={<RequiredAuth />}>
-            <Route path="" element={<TeacherLayoutWrapper component={Messenger} /> } />
+              <Route path="" element={<TeacherLayoutWrapper component={Messenger} />} />
             </Route>
             <Route path="/lessons" element={<RequiredAuth />}>
               <Route path="" element={<TeacherLayoutWrapper component={Lessons} />} />
@@ -72,8 +82,8 @@ const App = () => {
               <Route path="" element={<Unauthorized />} />
             </Route>
           </Routes>
-        </WebSocketProvider>
-      </StudentProvider>
+        </Elements>
+      </WebSocketProvider>
     </Security>
   );
 };

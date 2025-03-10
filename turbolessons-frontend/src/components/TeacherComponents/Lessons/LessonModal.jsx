@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { Modal } from "react-bootstrap";
 import LessonForm from './LessonForm';
 import LessonView from './LessonView';
@@ -6,7 +6,8 @@ import { useSelector } from 'react-redux';
 
 
 const LessonModal = ({ show, onHide, onCreate, onUpdate, onDelete }) => {
-    const [isUpdate, setUpdate] = useState(false);
+    // const [isUpdate, setUpdate] = useState(false);
+    const isUpdate = useSelector((state) => state.lessons.isUpdate);
     const isDateClick = useSelector((state) => state.lessons.dateClick);
 
     return (
@@ -17,7 +18,6 @@ const LessonModal = ({ show, onHide, onCreate, onUpdate, onDelete }) => {
             <Modal.Body>
                 {isUpdate || isDateClick ? (
                     <LessonForm
-                        setUpdate={setUpdate}
                         onHide={onHide}
                         onCreate={onCreate}
                         onUpdate={onUpdate}
@@ -25,7 +25,6 @@ const LessonModal = ({ show, onHide, onCreate, onUpdate, onDelete }) => {
                     />
                 ) : (
                     <LessonView
-                        setUpdate={setUpdate}
                         onHide={onHide}
                     />
                 )}
