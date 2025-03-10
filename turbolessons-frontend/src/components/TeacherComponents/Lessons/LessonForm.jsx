@@ -56,6 +56,8 @@ const LessonForm = ({ onHide, onCreate, onUpdate }) => {
   }, [setUpdate]);
 
   const handleDateChange = (date) => {
+    console.log(date);
+    
     dispatch(setFormField({ field: 'date', value: date.toISOString() }));
   };
 

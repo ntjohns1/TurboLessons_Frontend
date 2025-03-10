@@ -135,7 +135,7 @@ const lessonSlice = createSlice({
         ).toISOString();
 
         // Update the formState date
-        state.formState.date = value.toISOString();
+        state.formState.date = value;
       } else if (field === "startTime") {
         const newStartTime = new Date(value);
         const durationMinutes =

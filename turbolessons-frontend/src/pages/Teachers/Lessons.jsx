@@ -6,8 +6,8 @@ import LessonList from '../../components/TeacherComponents/Lessons/LessonList.js
 export default function Lessons() {
     return (
         <Container>
-            {/* <LessonForm/> */}
-            <LessonList/>
+            <LessonForm/>
+            {/* <LessonList/> */}
         </Container>
     )
 };
