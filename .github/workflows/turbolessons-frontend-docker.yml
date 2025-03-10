@@ -31,7 +31,8 @@ jobs:
           tags: noslenj/turbolessons-frontend:latest
           build-args: |
             ISSUER=${{ secrets.ISSUER }}
-            CLIENT_ID=${{ secrets.CLIENT_ID }}    
+            CLIENT_ID=${{ secrets.CLIENT_ID }}
+            VITE_STRIPE_PUBLISHABLE_KEY=${{ secrets.VITE_STRIPE_PUBLISHABLE_KEY }}
             
       - name: Trigger Jenkins Multiple Jobs
         uses: appleboy/jenkins-action@v0.0.2
