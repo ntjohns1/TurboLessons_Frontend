@@ -14,6 +14,7 @@ const destructureAndMap = (data) => {
       teacherEmail,
       date,
       comments,
+      billingStatus
     }) => ({
       id,
       start: startTime,
@@ -25,6 +26,7 @@ const destructureAndMap = (data) => {
       teacherEmail,
       date,
       comments,
+      billingStatus
     })
   );
 };
@@ -52,6 +54,8 @@ export const fetchAllEvents = async () => {
 export const fetchEventsByTeacher = async (teacher) => {
   try {
     const { data } = await api.get(`/lessons/teacher/${teacher}`);
+    console.log('data: ', data);
+    
     return destructureAndMap(data);
   } catch (error) {
     console.error("Error fetching events by teacher:", error);

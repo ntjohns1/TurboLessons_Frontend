@@ -1,15 +1,13 @@
 import React, { useState } from 'react';
 import { Form } from "react-bootstrap";
+import { useDispatch, useSelector } from 'react-redux';
 import SendMessage from './SendMessage';
 import DisplayMessages from './DisplayMessages';
-import { useStudentContext } from '../../../util/context/StudentContext';
 
 export default function SelectStudent() {
-  const { students } = useStudentContext();
+  const students = useSelector((state) => state.students.studentsByTeacher);
   const [sendTo, setSendTo] = useState('');
-  // const [updateOutMessages, setUpdateOutMessages] = useState(false);
   const [updateOutMessages, setUpdateOutMessages] = useState({});
-
 
   const handleChange = async (e) => {
     const selectedUser = e.target.value;

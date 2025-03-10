@@ -1,97 +1,123 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { Button, Card, Container, Form } from "react-bootstrap";
 import { useOktaAuth } from '@okta/okta-react';
-import { useStudentContext } from '../../../util/context/StudentContext';
 import { setAccessToken } from '../../../service/axiosConfig';
 import DatePicker from "react-datepicker";
 import { useSelector, useDispatch } from 'react-redux';
-import { setValidated } from './LessonSlice';
+import { setValidated, setFormField, setInitialFormState, setUpdate } from './LessonSlice';
+import { parseISO, format } from "date-fns";
 import "react-datepicker/dist/react-datepicker.css";
 
-const LessonForm = ({ setUpdate, onHide, onCreate, onUpdate }) => {
+const LessonForm = ({ onHide, onCreate, onUpdate }) => {
 
   const dispatch = useDispatch();
   const { authState, oktaAuth } = useOktaAuth();
-  const event = useSelector((state) => state.lessons.selectedEvent);
+
+  const rawFormState = useSelector((state) => state.lessons.formState);
+
+  const formState = useMemo(() => ({
+    ...rawFormState,
+    date: parseISO(rawFormState.date),
+    startTime: parseISO(rawFormState.startTime),
+    endTime: parseISO(rawFormState.endTime),
+  }), [rawFormState]);
+  const selectedEvent = useSelector((state) => state.lessons.selectedEvent);
   const dateClick = useSelector((state) => state.lessons.dateClick);
-  const isValidated = useSelector((state) => state.lessons.validated)
-  const principleName = authState && authState.idToken && authState.idToken.claims.name;
-  const principleEmail = authState && authState.idToken.claims.email;
-  const { students } = useStudentContext();
-  const initialDate = event && event.start ? new Date(event.start) : new Date();
-  const initialTime = initialDate;
-  const [formState, setFormState] = useState({
-    date: initialDate,
-    startTime: initialTime,
-    endTime: new Date(initialTime.getTime() + 30 * 60000),
-    title: event && event.student ? event.student : '',
-    student: event && event.student ? event.student : '',
-    studentEmail: event && event.studentEmail ? event.studentEmail : '',
-    teacher: principleName,
-    teacherEmail: principleEmail,
-    comments: event && event.comments ? event.comments : '',
-    durationOption: event && event.durationOption ? event.durationOption : '30m',
-  });
+  const isValidated = useSelector((state) => state.lessons.validated);
+  const students = useSelector((state) => state.students.studentsByTeacher);
+
+
+  // useEffect(() => {
+  //   if (event && event.startTime) {
+  //     const parsedDate = new Date(event.startTime);
+  //     if (!isNaN(parsedDate)) {
+  //       setFormState((prevState) => ({
+  //         ...prevState,
+  //         date: parsedDate,
+  //         startTime: parsedDate,
+  //         endTime: new Date(parsedDate.getTime() + (prevState.durationOption === '30m' ? 30 : 60) * 60000),
+  //       }));
+  //     } else {
+  //       console.error('Invalid date from event:', event.startTime);
+  //     }
+  //   }
+  // }, [event]);
 
   useEffect(() => {
-    if (event && event.startTime) {
-      const parsedDate = new Date(event.startTime);
-      if (!isNaN(parsedDate)) {
-        setFormState((prevState) => ({
-          ...prevState,
-          date: parsedDate,
-          startTime: parsedDate,
-          endTime: new Date(parsedDate.getTime() + (prevState.durationOption === '30m' ? 30 : 60) * 60000),
-        }));
-      } else {
-        console.error('Invalid date from event:', event.startTime);
-      }
-    }
-  }, [event]);
+    const teacherName = authState && authState.idToken && authState.idToken.claims.name;
+    const teacherEmail = authState && authState.idToken.claims.email;
+    dispatch(setInitialFormState({ event: selectedEvent, teacherName, teacherEmail }));
+  }, [selectedEvent, authState, dispatch]);
 
   useEffect(() => {
     return () => {
-      setUpdate(false);
+      dispatch(setUpdate(false));
     };
   }, [setUpdate]);
 
   const handleDateChange = (date) => {
-    setFormState((prevState) => {
-      const startTime = new Date(date);
-      startTime.setHours(prevState.startTime.getHours(), prevState.startTime.getMinutes());
-
-      const endTime = new Date(date);
-      endTime.setHours(prevState.endTime.getHours(), prevState.endTime.getMinutes());
-
-      return { ...prevState, date, startTime, endTime };
-    });
+    console.log(date);
+    
+    dispatch(setFormField({ field: 'date', value: date.toISOString() }));
   };
+
+  // const handleDateChange = (date) => {
+  //   setFormState((prevState) => {
+  //     const startTime = new Date(date);
+  //     startTime.setHours(prevState.startTime.getHours(), prevState.startTime.getMinutes());
+
+  //     const endTime = new Date(date);
+  //     endTime.setHours(prevState.endTime.getHours(), prevState.endTime.getMinutes());
+
+  //     return { ...prevState, date, startTime, endTime };
+  //   });
+  // };
+
 
   const handleStartTimeChange = (time) => {
-    setFormState((prevState) => {
-      const endTime = new Date(time.getTime() + (prevState.durationOption === '30m' ? 30 : 60) * 60000);
-      return { ...prevState, startTime: time, endTime };
-    });
+    dispatch(setFormField({ field: 'startTime', value: time.toISOString() }));
+    const endTime = new Date(time.getTime() + (formState.durationOption === '30m' ? 30 : 60) * 60000);
+    dispatch(setFormField({ field: 'endTime', value: endTime.toISOString() }));
   };
 
+  // const handleStartTimeChange = (time) => {
+  //   setFormState((prevState) => {
+  //     const endTime = new Date(time.getTime() + (prevState.durationOption === '30m' ? 30 : 60) * 60000);
+  //     return { ...prevState, startTime: time, endTime };
+  //   });
+  // };
 
   const handleDurationOptionChange = (e) => {
-    const newDuration = e.target.value;
-    setFormState((prevState) => {
-      const endTime = new Date(prevState.startTime.getTime() + (newDuration === '30m' ? 30 : 60) * 60000);
-      return { ...prevState, durationOption: newDuration, endTime };
-    });
+    const durationOption = e.target.value;
+    dispatch(setFormField({ field: 'durationOption', value: durationOption }));
+    const endTime = new Date(formState.startTime.getTime() + (durationOption === '30m' ? 30 : 60) * 60000);
+    dispatch(setFormField({ field: 'endTime', value: endTime.toISOString() }));
   };
+
+  // const handleDurationOptionChange = (e) => {
+  //   const newDuration = e.target.value;
+  //   setFormState((prevState) => {
+  //     const endTime = new Date(prevState.startTime.getTime() + (newDuration === '30m' ? 30 : 60) * 60000);
+  //     return { ...prevState, durationOption: newDuration, endTime };
+  //   });
+  // };
 
   const handleStudentChange = (e) => {
     const selectedStudent = students.find((student) => student.displayName === e.target.value);
-    setFormState({
-      ...formState,
-      student: e.target.value,
-      studentEmail: selectedStudent ? selectedStudent.email : '',
-      title: e.target.value,
-    });
+    dispatch(setFormField({ field: 'student', value: e.target.value }));
+    dispatch(setFormField({ field: 'studentEmail', value: selectedStudent?.email || '' }));
+    dispatch(setFormField({ field: 'title', value: e.target.value }));
   };
+
+  // const handleStudentChange = (e) => {
+  //   const selectedStudent = students.find((student) => student.displayName === e.target.value);
+  //   setFormState({
+  //     ...formState,
+  //     student: e.target.value,
+  //     studentEmail: selectedStudent ? selectedStudent.email : '',
+  //     title: e.target.value,
+  //   });
+  // };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -106,7 +132,7 @@ const LessonForm = ({ setUpdate, onHide, onCreate, onUpdate }) => {
         const accessToken = await oktaAuth.getAccessToken();
         setAccessToken(accessToken);
         if (!dateClick) {
-          onUpdate(event.id, formState);
+          onUpdate(selectedEvent.id, formState);
           onHide();
           alert('Successfully Edited Lesson Event');
         } else {
@@ -195,7 +221,7 @@ const LessonForm = ({ setUpdate, onHide, onCreate, onUpdate }) => {
               type="text"
               name="comments"
               value={formState.comments}
-              onChange={(e) => setFormState({ ...formState, comments: e.target.value })}
+              onChange={(e) => dispatch(setFormField({ field: 'comments', value: e.target.value }))}
             />
           </Form.Group>
           <Button

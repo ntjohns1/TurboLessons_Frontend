@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import { useOktaAuth } from '@okta/okta-react';
 import { Card, Container, Row, Col, CardImg } from 'react-bootstrap';
@@ -7,8 +8,10 @@ import { setAccessToken } from '../../../service/axiosConfig';
 import EditStudent from './EditStudent';
 import StudentInfo from './StudentInfo';
 import BillingOverview from '../Billing/BillingOverview';
+import { fetchStudentProfile, setStudentProfile } from './StudentSlice';
 
 export default function SingleStudent() {
+  const dispatch = useDispatch();
   const { authState, oktaAuth } = useOktaAuth();
   const [isUpdate, setIsUpdate] = useState(false);
   const [student, setStudent] = useState({});
@@ -18,9 +21,13 @@ export default function SingleStudent() {
   useEffect(() => {
     const fetchProfile = async () => {
       try {
-        const accessToken = await oktaAuth.getAccessToken();
+        const accessToken = oktaAuth.getAccessToken();
         setAccessToken(accessToken);
-        const data = await getStudentProfile(id, accessToken);
+        // const data = await getStudentProfile(id, accessToken);
+        const data = await dispatch(fetchStudentProfile({ id })).unwrap();
+
+        // Log and set the student data
+        console.log('Fetched student profile:', data);
         setStudent(data);
       } catch (error) {
         console.error('Error fetching student profile:', error);
