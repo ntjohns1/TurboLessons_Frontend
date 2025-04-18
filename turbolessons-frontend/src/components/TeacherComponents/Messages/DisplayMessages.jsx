@@ -1,54 +1,56 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { useOktaAuth } from '@okta/okta-react';
-import { Card, Container, Toast, Row, Col } from "react-bootstrap";
+import { Card, Container, Toast } from "react-bootstrap";
 import { useSocket } from '../../../util/context/WebSocketContext';
-import { fetchMessagesBySenderAndReceiver } from "../../../service/messageService.js"
+import { useDispatch, useSelector } from 'react-redux';
+import { 
+  selectMessages, 
+  fetchConversationThunk,
+  selectLoading,
+  selectError 
+} from './MessageSlice';
 import './DisplayMessages.css';
 
-export default function DisplayMessages({ sendTo, updateOutMessages }) {
-  const { authState, oktaAuth } = useOktaAuth();
+export default function DisplayMessages({ sendTo }) {
+  const { authState } = useOktaAuth();
   const displayName = authState && authState.idToken && authState.idToken.claims.name;
-  const accessToken = oktaAuth.getAccessToken();
   const { inMessage, principle } = useSocket();
-  const [allMessages, setAllMessages] = useState([]);
+  const messages = useSelector(selectMessages);
+  const loading = useSelector(selectLoading);
+  const error = useSelector(selectError);
+  const dispatch = useDispatch();
   const messagesEndRef = useRef(null);
+
   const scrollToBottom = () => {
-    messagesEndRef.current.scrollIntoView({ behavior: "smooth" });
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   };
 
   useEffect(() => {
-    const fetchData = async () => {
-      if (!sendTo) {
-        console.log('No user selected');
-        return;
-      }
-      try {
-        const resOutMsg = await fetchMessagesBySenderAndReceiver(principle, sendTo, accessToken);
-        const resInMsg = await fetchMessagesBySenderAndReceiver(sendTo, principle, accessToken);
-        const sortedMessages = [...resOutMsg, ...resInMsg].sort(
-          (a, b) => new Date(a.timestamp) - new Date(b.timestamp)
-        );
-        setAllMessages(sortedMessages);
-      } catch (error) {
-        console.log(error);
-      }
-    };
-    fetchData();
-  }, [sendTo]);
+    if (sendTo && principle) {
+      dispatch(fetchConversationThunk({ sender: principle, receiver: sendTo }));
+    }
+  }, [sendTo, principle, dispatch]);
 
   useEffect(() => {
     if (inMessage && inMessage.sender && inMessage.sender === sendTo) {
-      setAllMessages(prevMessages => [...prevMessages, inMessage]);
+      dispatch(fetchConversationThunk({ sender: principle, receiver: sendTo }));
     }
-  }, [inMessage]);
+  }, [inMessage, sendTo, principle, dispatch]);
 
-  useEffect(() => {
-    if (updateOutMessages && updateOutMessages.receiver === sendTo) {
-      setAllMessages(prevMessages => [...prevMessages, updateOutMessages]);
-    }
-  }, [updateOutMessages, sendTo]);
+  useEffect(scrollToBottom, [messages.length]);
 
-  useEffect(scrollToBottom, [allMessages.length]);
+  if (loading) {
+    return <div>Loading messages...</div>;
+  }
+
+  if (error) {
+    return <div>Error loading messages: {error}</div>;
+  }
+
+  const filteredMessages = messages.filter(msg => 
+    (msg.sender === principle && msg.recipient === sendTo) || 
+    (msg.sender === sendTo && msg.recipient === principle)
+  ).sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp));
 
   return (
     <Container className="my-3">
@@ -59,7 +61,7 @@ export default function DisplayMessages({ sendTo, updateOutMessages }) {
             overflowY: "auto",
           }}
         >
-          {allMessages.map((msg, index) => (
+          {filteredMessages.map((msg, index) => (
             <Toast
               key={index}
               className={`my-3 ${msg.sender === sendTo ? "toast-right" : ""}`}
