@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { useOktaAuth } from '@okta/okta-react';
 import { deleteLessonEvent } from '../../../service/eventService';
 import { setAccessToken } from '../../../service/axiosConfig';

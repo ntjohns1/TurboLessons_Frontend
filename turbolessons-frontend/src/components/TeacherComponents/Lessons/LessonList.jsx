@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Card, Table, Toast, Button } from 'react-bootstrap';
+import { Card, Table } from 'react-bootstrap';
 import { fetchEventsByTeacher } from '../../../service/eventService';
 import LessonForm from './LessonForm';
 import LogLesson from '../Billing/LogLesson';
@@ -8,8 +8,6 @@ import { useOktaAuth } from '@okta/okta-react';
 
 
 const LessonList = () => {
-    // const [lessons, setLessons] = useState([]);
-    // const [editLesson, setEditLesson] = useState(null);
     const { authState, oktaAuth } = useOktaAuth();
     const principle = authState && authState.idToken && authState.idToken.claims.name;
     const dispatch = useDispatch();
