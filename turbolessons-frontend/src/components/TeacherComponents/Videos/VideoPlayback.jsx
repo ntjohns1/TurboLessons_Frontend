@@ -1,27 +1,30 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import { Col, Container, Row } from "react-bootstrap";
+import { useSelector } from 'react-redux';
+import { selectCurrentVideo } from './VideoSlice';
 import PlayVideo from "./PlayVideo";
-import SelectVideo from "./SelectVideo"
+import SelectVideo from "./SelectVideo";
 
 export default function VideoPlayback() {
-
-    const [selected, setSelected] = useState({
-        name: '',
-        id: ''
-    })
-
-    useEffect(() => {console.log(selected);}, [selected])
+    const selected = useSelector(selectCurrentVideo) || { name: '', id: '' };
 
     return (
-        <Container>
+        <Container fluid>
             <Row>
-                <Col xs={9}>
-                    <PlayVideo selected={selected}/>
+                <Col md={9} className="mb-3">
+                    {selected.name ? (
+                        <PlayVideo selected={selected} />
+                    ) : (
+                        <div className="text-center p-5 bg-light rounded">
+                            <h4>No Video Selected</h4>
+                            <p>Please select a video from the list to play</p>
+                        </div>
+                    )}
                 </Col>
-                <Col xs={3}>
-                    <SelectVideo setSelected={setSelected}/>
+                <Col md={3}>
+                    <SelectVideo setSelected={() => {}} /> {/* setSelected prop will be removed in future */}
                 </Col>
             </Row>
         </Container>
-    )
+    );
 }

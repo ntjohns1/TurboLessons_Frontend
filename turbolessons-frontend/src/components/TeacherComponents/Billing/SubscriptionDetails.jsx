@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect } from "react";
 import { useDispatch, useSelector } from 'react-redux';
-import { Container, Row, Col, Table, Form, Button, Card } from "react-bootstrap";
+import { Card } from "react-bootstrap";
 import { fetchAllPricesThunk, fetchAllProductsThunk } from "./BillingSlice";
 
 const SubscriptionDetails = ({subscription}) => {
@@ -19,13 +19,7 @@ const SubscriptionDetails = ({subscription}) => {
         dispatch(fetchAllProductsThunk());
 
     }
-    // console.log("Product:" + JSON.stringify(product));  
-    // console.log(JSON.stringify(price));
-    // console.log(subscription);
-    // console.log(startDate);
-    
-    
-  }, [productAdapter, priceAdapter]);
+    }, [productAdapter, priceAdapter]);
     return (
         <Card className="m-3">
             <Card.Body>

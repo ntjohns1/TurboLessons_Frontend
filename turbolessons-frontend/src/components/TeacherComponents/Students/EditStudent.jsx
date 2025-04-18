@@ -1,37 +1,37 @@
 import React, { useEffect } from 'react';
 import { Card, Form, Button, Row, Col } from 'react-bootstrap';
 import { FaRegWindowClose } from "react-icons/fa";
-import DeletUserBtn from './DeleteUserBtn';
+import DeleteUserBtn from './DeleteUserBtn';
+import { useDispatch, useSelector } from 'react-redux';
+import { updateStudent, setFormField, setIsUpdate } from './StudentSlice';
+import { useOktaAuth } from '@okta/okta-react';
 import { setAccessToken } from '../../../service/axiosConfig';
-import { editStudent } from '../../../service/adminService';
 
-export default function EditStudent({ student, formState, setStudent, setIsUpdate, setFormState, oktaAuth, id }) {
+export default function EditStudent({ student, id }) {
+    const dispatch = useDispatch();
+    const { oktaAuth } = useOktaAuth();
+    const formState = useSelector(state => state.students.formState);
 
     useEffect(() => {
-        setFormState({
-            ...student,
+        // Initialize form with student data
+        Object.entries(student).forEach(([field, value]) => {
+            dispatch(setFormField({ field, value: value || "" }));
         });
-    }, [student, setFormState]);
+    }, [student, dispatch]);
 
     const handleChange = (event) => {
         const { name, value } = event.target;
-        setFormState({
-            ...formState,
-            [name]: value,
-        });
+        dispatch(setFormField({ field: name, value }));
     };
 
     const handleSubmit = async (evt) => {
         evt.preventDefault();
         try {
-            if (oktaAuth && oktaAuth.isAuthenticated) {
-                const accessToken = await oktaAuth.getAccessToken();
-                setAccessToken(accessToken);
-                await editStudent(id, formState);
-                setStudent({ ...formState });
-                alert(`${formState.displayName} successfully updated`);
-                setIsUpdate(false);
-            }
+            const accessToken = oktaAuth.getAccessToken();
+            setAccessToken(accessToken);
+            await dispatch(updateStudent({ id, formState })).unwrap();
+            alert(`${formState.displayName} successfully updated`);
+            dispatch(setIsUpdate(false));
         } catch (error) {
             console.error('Error updating student:', error);
         }
@@ -48,7 +48,7 @@ export default function EditStudent({ student, formState, setStudent, setIsUpdat
                         <Button
                             className="btn-round ml-3"
                             variant="secondary"
-                            onClick={() => setIsUpdate(false)}
+                            onClick={() => dispatch(setIsUpdate(false))}
                         >
                             <FaRegWindowClose />
                         </Button>
@@ -57,36 +57,32 @@ export default function EditStudent({ student, formState, setStudent, setIsUpdat
             </Card.Header>
             <Card.Body>
                 <Form onSubmit={handleSubmit}>
-
-                    <Form.Group as={Row} className="mb-3" controlId="formPlaintextEmail">
-                        <Form.Label column sm="4">
-                            Email
-                        </Form.Label>
+                    <Form.Group as={Row} className="mb-3">
+                        <Form.Label column sm="4">Email</Form.Label>
                         <Col sm="8">
                             <Form.Control
                                 name="email"
                                 value={formState.email ?? ""}
                                 onChange={handleChange}
-                                type="email" />
+                                type="email"
+                                required
+                            />
                         </Col>
                     </Form.Group>
-                    <Form.Group as={Row} className="mb-3" controlId="formPlaintextEmail">
-                        <Form.Label column sm="4">
-                            First Name
-                        </Form.Label>
+                    <Form.Group as={Row} className="mb-3">
+                        <Form.Label column sm="4">First Name</Form.Label>
                         <Col sm="8">
                             <Form.Control
                                 name="firstName"
                                 value={formState.firstName ?? ""}
                                 onChange={handleChange}
                                 type="text"
+                                required
                             />
                         </Col>
                     </Form.Group>
-                    <Form.Group as={Row} className="mb-3" controlId="formPlaintextEmail">
-                        <Form.Label column sm="4">
-                            Middle Name
-                        </Form.Label>
+                    <Form.Group as={Row} className="mb-3">
+                        <Form.Label column sm="4">Middle Name</Form.Label>
                         <Col sm="8">
                             <Form.Control
                                 name="middleName"
@@ -96,49 +92,42 @@ export default function EditStudent({ student, formState, setStudent, setIsUpdat
                             />
                         </Col>
                     </Form.Group>
-                    <Form.Group as={Row} className="mb-3" controlId="formPlaintextEmail">
-                        <Form.Label column sm="4">
-                            Last Name
-                        </Form.Label>
+                    <Form.Group as={Row} className="mb-3">
+                        <Form.Label column sm="4">Last Name</Form.Label>
                         <Col sm="8">
                             <Form.Control
                                 name="lastName"
                                 value={formState.lastName ?? ""}
                                 onChange={handleChange}
                                 type="text"
+                                required
                             />
                         </Col>
                     </Form.Group>
-                    <Form.Group as={Row} className="mb-3" controlId="formPlaintextEmail">
-                        <Form.Label column sm="4">
-                            Mobile Phone
-                        </Form.Label>
+                    <Form.Group as={Row} className="mb-3">
+                        <Form.Label column sm="4">Mobile Phone</Form.Label>
                         <Col sm="8">
                             <Form.Control
                                 name="mobilePhone"
                                 value={formState.mobilePhone ?? ""}
                                 onChange={handleChange}
-                                type="text"
+                                type="tel"
                             />
                         </Col>
                     </Form.Group>
-                    <Form.Group as={Row} className="mb-3" controlId="formPlaintextPhone">
-                        <Form.Label column sm="4">
-                            Home Phone
-                        </Form.Label>
+                    <Form.Group as={Row} className="mb-3">
+                        <Form.Label column sm="4">Home Phone</Form.Label>
                         <Col sm="8">
                             <Form.Control
                                 name="primaryPhone"
                                 value={formState.primaryPhone ?? ""}
                                 onChange={handleChange}
-                                type="text"
+                                type="tel"
                             />
                         </Col>
                     </Form.Group>
-                    <Form.Group as={Row} className="mb-3" controlId="formPlaintextEmail">
-                        <Form.Label column sm="4">
-                            Address
-                        </Form.Label>
+                    <Form.Group as={Row} className="mb-3">
+                        <Form.Label column sm="4">Address</Form.Label>
                         <Col sm="8">
                             <Form.Control
                                 name="streetAddress"
@@ -148,10 +137,8 @@ export default function EditStudent({ student, formState, setStudent, setIsUpdat
                             />
                         </Col>
                     </Form.Group>
-                    <Form.Group as={Row} className="mb-3" controlId="formPlaintextEmail">
-                        <Form.Label column sm="4">
-                            City
-                        </Form.Label>
+                    <Form.Group as={Row} className="mb-3">
+                        <Form.Label column sm="4">City</Form.Label>
                         <Col sm="8">
                             <Form.Control
                                 name="city"
@@ -161,10 +148,8 @@ export default function EditStudent({ student, formState, setStudent, setIsUpdat
                             />
                         </Col>
                     </Form.Group>
-                    <Form.Group as={Row} className="mb-3" controlId="formPlaintextEmail">
-                        <Form.Label column sm="4">
-                            State
-                        </Form.Label>
+                    <Form.Group as={Row} className="mb-3">
+                        <Form.Label column sm="4">State</Form.Label>
                         <Col sm="8">
                             <Form.Control
                                 name="state"
@@ -174,10 +159,8 @@ export default function EditStudent({ student, formState, setStudent, setIsUpdat
                             />
                         </Col>
                     </Form.Group>
-                    <Form.Group as={Row} className="mb-3" controlId="formPlaintextEmail">
-                        <Form.Label column sm="4">
-                            Zip Code
-                        </Form.Label>
+                    <Form.Group as={Row} className="mb-3">
+                        <Form.Label column sm="4">Zip Code</Form.Label>
                         <Col sm="8">
                             <Form.Control
                                 name="zipCode"
@@ -188,15 +171,17 @@ export default function EditStudent({ student, formState, setStudent, setIsUpdat
                         </Col>
                     </Form.Group>
                     <Button
-                        as='input'
-                        className='my-2'
                         type='submit'
-                    />
+                        variant='primary'
+                        className='my-2'
+                    >
+                        Update Student
+                    </Button>
                 </Form>
             </Card.Body>
             <Card.Footer className='p-2 d-flex justify-content-center'>
-                <DeletUserBtn oktaAuth={oktaAuth} id={id} setIsUpdate={setIsUpdate} student={student} />
+                <DeleteUserBtn id={id} student={student} />
             </Card.Footer>
         </Card>
-    )
-};
+    );
+}

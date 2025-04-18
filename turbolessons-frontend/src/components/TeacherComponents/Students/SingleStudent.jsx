@@ -1,49 +1,50 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import { useOktaAuth } from '@okta/okta-react';
 import { Card, Container, Row, Col, CardImg } from 'react-bootstrap';
-import { getStudentProfile } from '../../../service/adminService';
-import { setAccessToken } from '../../../service/axiosConfig';
 import EditStudent from './EditStudent';
 import StudentInfo from './StudentInfo';
 import BillingOverview from '../Billing/BillingOverview';
-import { fetchStudentProfile, setStudentProfile } from './StudentSlice';
+import { 
+  fetchStudentProfile, 
+  selectStudentProfile,
+  selectIsUpdate,
+  setIsUpdate,
+  selectLoading,
+  selectError 
+} from './StudentSlice';
+import { setAccessToken } from '../../../service/axiosConfig';
 
 export default function SingleStudent() {
   const dispatch = useDispatch();
   const { authState, oktaAuth } = useOktaAuth();
-  const [isUpdate, setIsUpdate] = useState(false);
-  const [student, setStudent] = useState({});
-  const [formState, setFormState] = useState({ ...student, });
-  const id = useParams().id;
+  const { id } = useParams();
+  
+  const student = useSelector(selectStudentProfile);
+  const isUpdate = useSelector(selectIsUpdate);
+  const loading = useSelector(selectLoading);
+  const error = useSelector(selectError);
 
   useEffect(() => {
-    const fetchProfile = async () => {
-      try {
-        const accessToken = oktaAuth.getAccessToken();
-        setAccessToken(accessToken);
-        // const data = await getStudentProfile(id, accessToken);
-        const data = await dispatch(fetchStudentProfile({ id })).unwrap();
-
-        // Log and set the student data
-        console.log('Fetched student profile:', data);
-        setStudent(data);
-      } catch (error) {
-        console.error('Error fetching student profile:', error);
-      }
-    };
-
-    if (authState.isAuthenticated) {
-      fetchProfile();
+    if (authState.isAuthenticated && id) {
+      const accessToken = oktaAuth.getAccessToken();
+      setAccessToken(accessToken);
+      dispatch(fetchStudentProfile({ id }));
     }
-  }, [authState, oktaAuth, id]);
+  }, [authState, id, dispatch]);
 
-  useEffect(() => {
-    setFormState({
-      ...student,
-    });
-  }, [student]);
+  if (loading) {
+    return <div>Loading student profile...</div>;
+  }
+
+  if (error) {
+    return <div>Error loading student profile: {error.message}</div>;
+  }
+
+  if (!student || Object.keys(student).length === 0) {
+    return <div>No student found</div>;
+  }
 
   return (
     <Container>
@@ -55,7 +56,7 @@ export default function SingleStudent() {
                 <Card className='mb-3'>
                   <Card.Body className="d-flex justify-content-center align-items-center">
                     <CardImg
-                      alt="..."
+                      alt={student.displayName}
                       className="avatar border-gray"
                       src={"https://loremflickr.com/195/135"}
                     />
@@ -71,18 +72,10 @@ export default function SingleStudent() {
                   <EditStudent
                     id={id}
                     student={student}
-                    setStudent={setStudent}
-                    formState={formState}
-                    setFormState={setFormState}
-                    setIsUpdate={setIsUpdate}
-                    oktaAuth={oktaAuth}
                   />
                 ) : (
                   <StudentInfo
                     student={student}
-                    formState={setFormState}
-                    setFormState={setFormState}
-                    setIsUpdate={setIsUpdate}
                   />
                 )}
               </Col>

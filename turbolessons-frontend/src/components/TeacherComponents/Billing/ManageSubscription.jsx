@@ -1,9 +1,9 @@
-import React, { useState, useEffect } from "react";
-import { Container, Row, Col, Table, Form, Button, Card } from "react-bootstrap";
+import React, { useEffect } from "react";
+import { Container, Row, Col, Form, Button, Card } from "react-bootstrap";
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import SubscriptionDetails from "./SubscriptionDetails";
-import { createCustomerThunk, searchCustomersBySysIdThunk, fetchOneSubscriptionThunk, fetchAllSetupIntentsThunk, fetchAllMetersThunk } from "./BillingSlice";
+import { fetchOneSubscriptionThunk, fetchAllMetersThunk } from "./BillingSlice";
 import { setAccessToken } from "../../../service/axiosConfig";
 import { useOktaAuth } from '@okta/okta-react';
 import ManagePaymentMethod from "./ManagePaymentMethod";
@@ -27,11 +27,6 @@ const ManageSubscription = () => {
       
   */
 
-  const [show, setShow] = useState(false);
-
-  const handleClose = () => setShow(false);
-  const handleShow = () => setShow(true);
-
   const { authState, oktaAuth } = useOktaAuth();
   const accessToken = oktaAuth.getAccessToken();
   const dispatch = useDispatch();
@@ -45,28 +40,7 @@ const ManageSubscription = () => {
   // Todo: This should handle multiple subscriptions
   const stripeSubscriptionId = customer ? customer.subscriptions[0] : "";
   const subscription = Object.values(subscriptionAdapter.entities).find((s) => s.id === stripeSubscriptionId);
-  const setupIntents = useSelector((state) => state.billing.entities["setupIntents"]);
   const meters = useSelector((state) => state.billing.entities["meters"]);
-
-
-  // useEffect(() => {
-  //   dispatch(fetchAllSetupIntentsThunk());
-  // }, []);
-
-  //   useEffect(() => {
-  // // console.log("setupIntents: ", setupIntents);
-  //     for (const setupIntent of Object.values(setupIntents.entities)) {
-  //       console.log("--------------- id: " + setupIntent.id + " ---------------");
-  //       console.log("client_secret:", setupIntent.clientSecret); 
-  //       console.log("customer:", setupIntent.customer); 
-  //       console.log("created:", setupIntent.created);
-  //       console.log("status:", setupIntent.status);
-  //       console.log("payment_method:", setupIntent.paymentMethod);
-  //       console.log("---------------------------------");
-
-  //     }
-
-  //   }, [setupIntents]);
 
 
   useEffect(() => {
