@@ -6,8 +6,8 @@ import {
   getStudentProfile,
   getStudentsByTeacher,
 } from "../../../service/adminService";
-// Thunks
 
+// Thunks
 export const fetchTeacherStudents = createAsyncThunk(
   "students/fetchTeacherStudents",
   async ({ teacher }) => {
@@ -54,7 +54,6 @@ const studentSlice = createSlice({
   initialState: {
     studentsByTeacher: [],
     studentsLoaded: false,
-    // selectedStudent: null,
     formState: {
       city: "",
       displayName: "",
@@ -111,6 +110,7 @@ const studentSlice = createSlice({
     builder
       .addCase(fetchTeacherStudents.pending, (state) => {
         state.loading = true;
+        state.error = null;
       })
       .addCase(fetchTeacherStudents.fulfilled, (state, action) => {
         state.loading = false;
@@ -123,6 +123,7 @@ const studentSlice = createSlice({
       })
       .addCase(fetchStudentProfile.pending, (state) => {
         state.loading = true;
+        state.error = null;
       })
       .addCase(fetchStudentProfile.fulfilled, (state, action) => {
         state.loading = false;
@@ -132,28 +133,68 @@ const studentSlice = createSlice({
         state.loading = false;
         state.error = action.error;
       })
+      .addCase(createNewStudent.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
       .addCase(createNewStudent.fulfilled, (state, action) => {
+        state.loading = false;
         state.studentsByTeacher.push(action.payload);
       })
+      .addCase(createNewStudent.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.error;
+      })
+      .addCase(updateStudent.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
       .addCase(updateStudent.fulfilled, (state, action) => {
+        state.loading = false;
         const index = state.studentsByTeacher.findIndex(
-          (student = student.id === action.payload.id)
+          (student) => student.id === action.payload.id
         );
         if (index !== -1) {
           state.studentsByTeacher[index] = action.payload;
         }
       })
+      .addCase(updateStudent.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.error;
+      })
+      .addCase(removeStudent.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
       .addCase(removeStudent.fulfilled, (state, action) => {
+        state.loading = false;
         state.studentsByTeacher = state.studentsByTeacher.filter(
           (student) => student.id !== action.payload
         );
+      })
+      .addCase(removeStudent.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.error;
       });
   },
 });
 
-export const { setStudentProfile, setIsUpdate, setLoading, resetFormState } =
-  studentSlice.actions;
+export const {
+  setStudentProfile,
+  setFormField,
+  setIsUpdate,
+  setLoading,
+  resetFormState,
+} = studentSlice.actions;
 
+// Selectors
+export const selectStudentsByTeacher = (state) => state.students.studentsByTeacher;
+export const selectStudentProfile = (state) => state.students.studentProfile;
+export const selectIsUpdate = (state) => state.students.isUpdate;
+export const selectLoading = (state) => state.students.loading;
+export const selectError = (state) => state.students.error;
+export const selectFormState = (state) => state.students.formState;
+export const selectStudentsLoaded = (state) => state.students.studentsLoaded;
 export const selectStudentById = (state, studentId) =>
   state.students.studentsByTeacher.find((student) => student.id === studentId);
 

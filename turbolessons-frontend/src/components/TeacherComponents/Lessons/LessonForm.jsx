@@ -1,11 +1,11 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useEffect, useMemo } from 'react';
 import { Button, Card, Container, Form } from "react-bootstrap";
 import { useOktaAuth } from '@okta/okta-react';
 import { setAccessToken } from '../../../service/axiosConfig';
 import DatePicker from "react-datepicker";
 import { useSelector, useDispatch } from 'react-redux';
 import { setValidated, setFormField, setInitialFormState, setUpdate } from './LessonSlice';
-import { parseISO, format } from "date-fns";
+import { parseISO } from "date-fns";
 import "react-datepicker/dist/react-datepicker.css";
 
 const LessonForm = ({ onHide, onCreate, onUpdate }) => {
@@ -26,23 +26,6 @@ const LessonForm = ({ onHide, onCreate, onUpdate }) => {
   const isValidated = useSelector((state) => state.lessons.validated);
   const students = useSelector((state) => state.students.studentsByTeacher);
 
-
-  // useEffect(() => {
-  //   if (event && event.startTime) {
-  //     const parsedDate = new Date(event.startTime);
-  //     if (!isNaN(parsedDate)) {
-  //       setFormState((prevState) => ({
-  //         ...prevState,
-  //         date: parsedDate,
-  //         startTime: parsedDate,
-  //         endTime: new Date(parsedDate.getTime() + (prevState.durationOption === '30m' ? 30 : 60) * 60000),
-  //       }));
-  //     } else {
-  //       console.error('Invalid date from event:', event.startTime);
-  //     }
-  //   }
-  // }, [event]);
-
   useEffect(() => {
     const teacherName = authState && authState.idToken && authState.idToken.claims.name;
     const teacherEmail = authState && authState.idToken.claims.email;
@@ -61,31 +44,11 @@ const LessonForm = ({ onHide, onCreate, onUpdate }) => {
     dispatch(setFormField({ field: 'date', value: date.toISOString() }));
   };
 
-  // const handleDateChange = (date) => {
-  //   setFormState((prevState) => {
-  //     const startTime = new Date(date);
-  //     startTime.setHours(prevState.startTime.getHours(), prevState.startTime.getMinutes());
-
-  //     const endTime = new Date(date);
-  //     endTime.setHours(prevState.endTime.getHours(), prevState.endTime.getMinutes());
-
-  //     return { ...prevState, date, startTime, endTime };
-  //   });
-  // };
-
-
   const handleStartTimeChange = (time) => {
     dispatch(setFormField({ field: 'startTime', value: time.toISOString() }));
     const endTime = new Date(time.getTime() + (formState.durationOption === '30m' ? 30 : 60) * 60000);
     dispatch(setFormField({ field: 'endTime', value: endTime.toISOString() }));
   };
-
-  // const handleStartTimeChange = (time) => {
-  //   setFormState((prevState) => {
-  //     const endTime = new Date(time.getTime() + (prevState.durationOption === '30m' ? 30 : 60) * 60000);
-  //     return { ...prevState, startTime: time, endTime };
-  //   });
-  // };
 
   const handleDurationOptionChange = (e) => {
     const durationOption = e.target.value;
@@ -94,30 +57,12 @@ const LessonForm = ({ onHide, onCreate, onUpdate }) => {
     dispatch(setFormField({ field: 'endTime', value: endTime.toISOString() }));
   };
 
-  // const handleDurationOptionChange = (e) => {
-  //   const newDuration = e.target.value;
-  //   setFormState((prevState) => {
-  //     const endTime = new Date(prevState.startTime.getTime() + (newDuration === '30m' ? 30 : 60) * 60000);
-  //     return { ...prevState, durationOption: newDuration, endTime };
-  //   });
-  // };
-
   const handleStudentChange = (e) => {
     const selectedStudent = students.find((student) => student.displayName === e.target.value);
     dispatch(setFormField({ field: 'student', value: e.target.value }));
     dispatch(setFormField({ field: 'studentEmail', value: selectedStudent?.email || '' }));
     dispatch(setFormField({ field: 'title', value: e.target.value }));
   };
-
-  // const handleStudentChange = (e) => {
-  //   const selectedStudent = students.find((student) => student.displayName === e.target.value);
-  //   setFormState({
-  //     ...formState,
-  //     student: e.target.value,
-  //     studentEmail: selectedStudent ? selectedStudent.email : '',
-  //     title: e.target.value,
-  //   });
-  // };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -145,7 +90,6 @@ const LessonForm = ({ onHide, onCreate, onUpdate }) => {
       }
     }
   };
-
 
   return (
     <Container>

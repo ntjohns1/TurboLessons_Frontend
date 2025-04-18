@@ -1,5 +1,4 @@
 import api from './axiosConfig';
-import config from '../config';
 
 export async function fetchAllMessages() {
   try {

@@ -1,18 +1,24 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { FaEdit } from "react-icons/fa";
 import { Button, Card, Col, Form, Row } from 'react-bootstrap';
+import { useDispatch } from 'react-redux';
+import { setIsUpdate, setFormField } from './StudentSlice';
+import { setAccessToken } from '../../../service/axiosConfig';
+import { useOktaAuth } from '@okta/okta-react';
 
+export default function StudentInfo({ student }) {
+    const dispatch = useDispatch();
+    const { oktaAuth } = useOktaAuth();
 
-export default function StudentInfo({ student, setFormState, setIsUpdate }) {
+    const handleEdit = () => {
+        // Initialize form state with current student data
+        Object.entries(student).forEach(([field, value]) => {
+            dispatch(setFormField({ field, value: value || "" }));
+        });
+        dispatch(setIsUpdate(true));
+    };
 
-    useEffect(() => {
-        setFormState({
-            ...student,
-        })
-    }, []);
-    
     return (
-
         <Card className="card-user">
             <Card.Header>
                 <Row>
@@ -23,7 +29,7 @@ export default function StudentInfo({ student, setFormState, setIsUpdate }) {
                         <Button
                             className="btn-round ml-3"
                             variant="secondary"
-                            onClick={() => setIsUpdate(true)}
+                            onClick={handleEdit}
                         >
                             <FaEdit />
                         </Button>
@@ -32,88 +38,68 @@ export default function StudentInfo({ student, setFormState, setIsUpdate }) {
             </Card.Header>
             <Card.Body>
                 <Form>
-                    <Form.Group as={Row} className="mb-1" controlId="formPlaintextEmail">
-                        <Form.Label column sm="4">
-                            Email
-                        </Form.Label>
+                    <Form.Group as={Row} className="mb-1">
+                        <Form.Label column sm="4">Email</Form.Label>
                         <Col sm="8">
-                            <Form.Control plaintext readOnly defaultValue={student.email} />
+                            <Form.Control plaintext readOnly value={student.email || ''} />
                         </Col>
                     </Form.Group>
-                    <Form.Group as={Row} className="mb-1" controlId="formPlaintextEmail">
-                        <Form.Label column sm="4">
-                            First Name
-                        </Form.Label>
+                    <Form.Group as={Row} className="mb-1">
+                        <Form.Label column sm="4">First Name</Form.Label>
                         <Col sm="8">
-                            <Form.Control plaintext readOnly defaultValue={student.firstName} />
+                            <Form.Control plaintext readOnly value={student.firstName || ''} />
                         </Col>
                     </Form.Group>
-                    <Form.Group as={Row} className="mb-1" controlId="formPlaintextFName">
-                        <Form.Label column sm="4">
-                            Middle Name
-                        </Form.Label>
+                    <Form.Group as={Row} className="mb-1">
+                        <Form.Label column sm="4">Middle Name</Form.Label>
                         <Col sm="8">
-                            <Form.Control plaintext readOnly defaultValue={student.middleName} />
+                            <Form.Control plaintext readOnly value={student.middleName || ''} />
                         </Col>
                     </Form.Group>
-                    <Form.Group as={Row} className="mb-1" controlId="formPlaintextLastName">
-                        <Form.Label column sm="4">
-                            Last Name
-                        </Form.Label>
+                    <Form.Group as={Row} className="mb-1">
+                        <Form.Label column sm="4">Last Name</Form.Label>
                         <Col sm="8">
-                            <Form.Control plaintext readOnly defaultValue={student.lastName} />
+                            <Form.Control plaintext readOnly value={student.lastName || ''} />
                         </Col>
                     </Form.Group>
-                    <Form.Group as={Row} className="mb-1" controlId="formPlaintextMName">
-                        <Form.Label column sm="4">
-                            Mobile Phone
-                        </Form.Label>
+                    <Form.Group as={Row} className="mb-1">
+                        <Form.Label column sm="4">Mobile Phone</Form.Label>
                         <Col sm="8">
-                            <Form.Control plaintext readOnly defaultValue={student.mobilePhone} />
+                            <Form.Control plaintext readOnly value={student.mobilePhone || ''} />
                         </Col>
                     </Form.Group>
-                    <Form.Group as={Row} className="mb-1" controlId="formPlaintextEmail">
-                        <Form.Label column sm="4">
-                            Home Phone
-                        </Form.Label>
+                    <Form.Group as={Row} className="mb-1">
+                        <Form.Label column sm="4">Home Phone</Form.Label>
                         <Col sm="8">
-                            <Form.Control plaintext readOnly defaultValue={student.primaryPhone} />
+                            <Form.Control plaintext readOnly value={student.primaryPhone || ''} />
                         </Col>
                     </Form.Group>
-                    <Form.Group as={Row} className="mb-1" controlId="formPlaintextEmail">
-                        <Form.Label column sm="4">
-                            Address
-                        </Form.Label>
+                    <Form.Group as={Row} className="mb-1">
+                        <Form.Label column sm="4">Address</Form.Label>
                         <Col sm="8">
-                            <Form.Control plaintext readOnly defaultValue={student.streetAddress} />
+                            <Form.Control plaintext readOnly value={student.streetAddress || ''} />
                         </Col>
                     </Form.Group>
-                    <Form.Group as={Row} className="mb-1" controlId="formPlaintextEmail">
-                        <Form.Label column sm="4">
-                            City
-                        </Form.Label>
+                    <Form.Group as={Row} className="mb-1">
+                        <Form.Label column sm="4">City</Form.Label>
                         <Col sm="8">
-                            <Form.Control plaintext readOnly defaultValue={student.city} />
+                            <Form.Control plaintext readOnly value={student.city || ''} />
                         </Col>
                     </Form.Group>
-                    <Form.Group as={Row} className="mb-1" controlId="formPlaintextEmail">
-                        <Form.Label column sm="4">
-                            State
-                        </Form.Label>
+                    <Form.Group as={Row} className="mb-1">
+                        <Form.Label column sm="4">State</Form.Label>
                         <Col sm="8">
-                            <Form.Control plaintext readOnly defaultValue={student.state} />
+                            <Form.Control plaintext readOnly value={student.state || ''} />
                         </Col>
                     </Form.Group>
-                    <Form.Group as={Row} className="mb-1" controlId="formPlaintextEmail">
-                        <Form.Label column sm="4">
-                            Zip Code
-                        </Form.Label>
+                    <Form.Group as={Row} className="mb-1">
+                        <Form.Label column sm="4">Zip Code</Form.Label>
                         <Col sm="8">
-                            <Form.Control plaintext readOnly defaultValue={student.zipCode} />
+                            <Form.Control plaintext readOnly value={student.zipCode || ''} />
                         </Col>
                     </Form.Group>
                 </Form>
             </Card.Body>
         </Card>
-    )
-};
+    );
+}

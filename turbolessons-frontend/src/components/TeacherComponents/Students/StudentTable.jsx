@@ -4,55 +4,95 @@ import { Card, Toast, Button } from 'react-bootstrap';
 import { useOktaAuth } from '@okta/okta-react';
 import { Link, useNavigate } from 'react-router-dom';
 import Loading from '../../../helpers/Loading';
-import '../../../App'
-import { fetchTeacherStudents } from './StudentSlice';
+import '../../../App';
+import { 
+    fetchTeacherStudents, 
+    selectStudentsByTeacher,
+    selectStudentsLoaded,
+    selectLoading,
+    selectError 
+} from './StudentSlice';
 import { setAccessToken } from '../../../service/axiosConfig';
-
 
 export default function StudentTable() {
     const dispatch = useDispatch();
     const navigate = useNavigate();
-    const students = useSelector((state) => state.students.studentsByTeacher);
-    const studentsLoaded = useSelector((state) => state.students.studentsLoaded);
     const { authState, oktaAuth } = useOktaAuth();
-    const accessToken = oktaAuth.getAccessToken();
-    const principle = authState && authState.idToken && authState.idToken.claims.name;
-
+    
+    // Redux selectors
+    const students = useSelector(selectStudentsByTeacher);
+    const studentsLoaded = useSelector(selectStudentsLoaded);
+    const loading = useSelector(selectLoading);
+    const error = useSelector(selectError);
+    
+    const principle = authState?.idToken?.claims?.name;
 
     useEffect(() => {
-        if (authState && authState.isAuthenticated) {
+        if (authState?.isAuthenticated && principle && !studentsLoaded) {
+            const accessToken = oktaAuth.getAccessToken();
             setAccessToken(accessToken);
             dispatch(fetchTeacherStudents({ teacher: principle }));
         }
-    }, [authState, accessToken, principle, studentsLoaded, dispatch])
+    }, [authState, principle, studentsLoaded, dispatch]);
 
-    function goToStudent(studentId) {
+    const goToStudent = (studentId) => {
         navigate(`/students/${studentId}`);
+    };
+
+    if (loading) {
+        return <Loading />;
     }
 
-    return (
-        <div className='d-flex justify-content-center' style={{ height: '90vh' }}>
-            {students.length != 0 ? (
+    if (error) {
+        return (
+            <div className="alert alert-danger" role="alert">
+                Error loading students: {error.message}
+            </div>
+        );
+    }
+
+    if (!students || students.length === 0) {
+        return (
+            <div className='d-flex justify-content-center' style={{ height: '90vh' }}>
                 <Card>
                     <Card.Header>
                         <h4>Students</h4>
                     </Card.Header>
-                    <Card.Body style={{ overflowY: 'auto' }}>
-                        {students && students.map((student) => (
-                            <Toast onClick={() => goToStudent(student.id)} key={student.id}>
-                                <Toast.Header closeButton={false}>
-                                    <strong className="me-auto">{student.displayName}</strong>
-                                </Toast.Header>
-                            </Toast>
-                        ))}
+                    <Card.Body className="text-center">
+                        <p>No students found.</p>
                     </Card.Body>
                     <Card.Footer>
                         <Button as={Link} to='/addStudent' variant='darkblue'>New Student</Button>
                     </Card.Footer>
                 </Card>
-            ) : (
-                <Loading />
-            )}
-        </ div>
-    )
+            </div>
+        );
+    }
+
+    return (
+        <div className='d-flex justify-content-center' style={{ height: '90vh' }}>
+            <Card>
+                <Card.Header>
+                    <h4>Students</h4>
+                </Card.Header>
+                <Card.Body style={{ overflowY: 'auto' }}>
+                    {students.map((student) => (
+                        <Toast 
+                            onClick={() => goToStudent(student.id)} 
+                            key={student.id}
+                            role="button"
+                            className="student-toast"
+                        >
+                            <Toast.Header closeButton={false}>
+                                <strong className="me-auto">{student.displayName}</strong>
+                            </Toast.Header>
+                        </Toast>
+                    ))}
+                </Card.Body>
+                <Card.Footer>
+                    <Button as={Link} to='/addStudent' variant='darkblue'>New Student</Button>
+                </Card.Footer>
+            </Card>
+        </div>
+    );
 }
