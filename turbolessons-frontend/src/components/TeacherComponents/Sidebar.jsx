@@ -22,6 +22,8 @@ export default function Sidebar() {
     oktaAuth.signOut();
   };
 
+  console.log(oktaAuth.getAccessToken());
+  
   return (
     <Nav
       className="flex-column py-4 d-flex"
