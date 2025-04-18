@@ -3,11 +3,12 @@ import { useOktaAuth } from '@okta/okta-react';
 import { Card, Container, Toast } from "react-bootstrap";
 import { useSocket } from '../../../util/context/WebSocketContext';
 import { useDispatch, useSelector } from 'react-redux';
-import { 
-  selectMessages, 
+import { setAccessToken } from '../../../service/axiosConfig';
+import {
+  selectMessages,
   fetchConversationThunk,
   selectLoading,
-  selectError 
+  selectError
 } from './MessageSlice';
 import './DisplayMessages.css';
 
@@ -27,12 +28,16 @@ export default function DisplayMessages({ sendTo }) {
 
   useEffect(() => {
     if (sendTo && principle) {
+      const accessToken = oktaAuth.getAccessToken();
+      setAccessToken(accessToken);
       dispatch(fetchConversationThunk({ sender: principle, receiver: sendTo }));
     }
   }, [sendTo, principle, dispatch]);
 
   useEffect(() => {
     if (inMessage && inMessage.sender && inMessage.sender === sendTo) {
+      const accessToken = oktaAuth.getAccessToken();
+      setAccessToken(accessToken);
       dispatch(fetchConversationThunk({ sender: principle, receiver: sendTo }));
     }
   }, [inMessage, sendTo, principle, dispatch]);
@@ -47,8 +52,8 @@ export default function DisplayMessages({ sendTo }) {
     return <div>Error loading messages: {error}</div>;
   }
 
-  const filteredMessages = messages.filter(msg => 
-    (msg.sender === principle && msg.recipient === sendTo) || 
+  const filteredMessages = messages.filter(msg =>
+    (msg.sender === principle && msg.recipient === sendTo) ||
     (msg.sender === sendTo && msg.recipient === principle)
   ).sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp));
 

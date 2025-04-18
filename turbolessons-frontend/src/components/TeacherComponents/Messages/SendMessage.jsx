@@ -1,5 +1,6 @@
 import React from 'react';
 import { useOktaAuth } from '@okta/okta-react';
+import { setAccessToken } from '../../../service/axiosConfig';
 import { Button, Form, Container } from "react-bootstrap";
 import { useSocket } from '../../../util/context/WebSocketContext';
 import { useDispatch, useSelector } from 'react-redux';
@@ -31,6 +32,8 @@ export default function SendMessage() {
       timestamp: new Date().toISOString()
     };
 
+    const accessToken = oktaAuth.getAccessToken();
+    setAccessToken(accessToken);
     dispatch(sendMessageThunk(newMessage));
   };
 
