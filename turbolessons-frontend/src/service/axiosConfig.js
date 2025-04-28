@@ -1,9 +1,13 @@
 import axios from 'axios';
 
-// Base configuration
+// Determine base URL based on environment
+const BASE_URL = process.env.NODE_ENV === 'development' 
+  ? 'http://localhost:8080/api'
+  : 'https://www.turbolessons.com/api';
+
 // Base configuration
 const api = axios.create({
-  baseURL: 'https://www.turbolessons.com/api',
+  baseURL: BASE_URL,
   headers: {
     'Content-Type': 'application/json',
     'Accept': 'application/json',
