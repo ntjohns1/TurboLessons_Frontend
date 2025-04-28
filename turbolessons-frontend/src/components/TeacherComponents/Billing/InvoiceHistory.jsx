@@ -7,10 +7,6 @@ import { fetchInvoicesBySubscriptionThunk } from './BillingSlice';
 import { formatCurrency, formatTimestamp, capitalize } from '../../../util/formatters';
 
 const InvoiceHistory = ({ subscriptionId }) => {
-    // fetch invoices by customer id
-    // if invoices exist, display them in a table
-    // if no invoices exist, display a message saying no invoices exist
-    // if error fetching invoices, display an error message
     const { authState, oktaAuth } = useOktaAuth();
     const dispatch = useDispatch();
     const invoicesAdapter = useSelector((state) => state.billing.entities["invoices"]);
@@ -19,8 +15,7 @@ const InvoiceHistory = ({ subscriptionId }) => {
     const error = useSelector((state) => state.billing.error);
 
     useEffect(() => {
-        if (subscriptionId) {
-            console.log('subscriptionId:', subscriptionId);
+        if (subscriptionId && authState?.isAuthenticated) {
             const fetchCustomerData = async () => {
                 const accessToken = oktaAuth.getAccessToken();
                 setAccessToken(accessToken);
@@ -30,13 +25,6 @@ const InvoiceHistory = ({ subscriptionId }) => {
         }
     }, [subscriptionId, dispatch]);
 
-    // Log invoices when they change
-    useEffect(() => {
-        console.log('Invoices adapter:', invoicesAdapter);
-        console.log('Invoices array:', invoices);
-    }, [invoicesAdapter, invoices]);
-
-    // Helper function to safely format dates
     const safeFormatDate = (timestamp) => {
         if (!timestamp) return 'N/A';
         try {

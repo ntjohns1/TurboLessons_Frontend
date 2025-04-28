@@ -22,23 +22,16 @@ const UpdateSubscription = ({ subscription }) => {
         if (!products.length || !prices.length) {
             setAccessToken(accessToken);
             dispatch(fetchAllProductsThunk());
-            // .then((res) => {
-            //     console.log("Products response:", res);
-            // });
-            
             dispatch(fetchAllPricesThunk());
-
         }
     }, [dispatch, products.length, prices.length, accessToken]);
 
 
     useEffect(() => {
         if (stripeSubscriptionId) {
-            console.log("Fetching subscription items for ID:", stripeSubscriptionId);
             dispatch(fetchItemsBySubscriptionThunk({ subscriptionId: stripeSubscriptionId }))
                 .then(response => {
                     console.log("Subscription items response:", response);
-                    console.log("Response payload:", response.payload);
                 })
                 .catch(error => {
                     console.error("Error fetching subscription items:", error);
@@ -64,8 +57,8 @@ const UpdateSubscription = ({ subscription }) => {
                                 return (
                                     <li key={itemId} className="list-group-item">
                                         <p>Item ID: {item.id}</p>
-                                        <p>Price: {item.price}</p>
-                                        <p>Quantity: {item.quantity}</p>
+                                        <p>Price ID: {item.price?.id || (typeof item.price === 'string' ? item.price : 'N/A')}</p>
+                                        <p>Quantity: {item.quantity || 'N/A'}</p>
                                     </li>
                                 );
                             })}
