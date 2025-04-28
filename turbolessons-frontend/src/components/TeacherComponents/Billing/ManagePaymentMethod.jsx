@@ -30,11 +30,11 @@ const ManagePaymentMethod = ({ paramsId }) => {
         }
     }, [dispatch, stripeCustomerId]);
 
-    useEffect(() => {
-        if (customerPaymentMethods.length) {
-            console.log("Payment Methods: " + JSON.stringify(customerPaymentMethods));
-        }
-    }, [customerPaymentMethods]);
+    // useEffect(() => {
+    //     if (customerPaymentMethods.length) {
+    //         console.log("Payment Methods: " + JSON.stringify(customerPaymentMethods, null, 2));
+    //     }
+    // }, [customerPaymentMethods]);
 
     const handleChange = (e) => {
         const { name, value } = e.target;
