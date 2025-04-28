@@ -4,6 +4,7 @@ import { fetchAllProductsThunk, fetchAllPricesThunk, fetchItemsBySubscriptionThu
 import { selectProducts } from './BillingSlice';
 import { setAccessToken } from "../../../service/axiosConfig";
 import { useOktaAuth } from '@okta/okta-react';
+import { formatCurrency } from '../../../util/formatters';
 
 const UpdateSubscription = ({ subscription }) => {
     // service layer: subscription item routes
@@ -17,7 +18,7 @@ const UpdateSubscription = ({ subscription }) => {
     const prices = useSelector((state) => state.billing.entities["prices"]);
     const stripeSubscriptionId = subscription?.id;
     const subscriptionItems = useSelector((state) => state.billing.entities["subscriptionItems"]);
-
+    const amount = 
     useEffect(() => {
         if (!products.length || !prices.length) {
             setAccessToken(accessToken);
@@ -31,7 +32,11 @@ const UpdateSubscription = ({ subscription }) => {
         if (stripeSubscriptionId) {
             dispatch(fetchItemsBySubscriptionThunk({ subscriptionId: stripeSubscriptionId }))
                 .then(response => {
-                    console.log("Subscription items response:", response);
+                    console.log("Subscription items response:", JSON.stringify(response, null, 2));
+                    const firstItem = response.payload.data?.[0];
+                    const productObject = firstItem?.price?.productObject;
+                    console.log("Product Object description:", productObject.description);
+                    console.log("Product Object price:", typeof firstItem.plan.amount);
                 })
                 .catch(error => {
                     console.error("Error fetching subscription items:", error);
@@ -56,9 +61,8 @@ const UpdateSubscription = ({ subscription }) => {
                                 const item = subscriptionItems.entities[itemId];
                                 return (
                                     <li key={itemId} className="list-group-item">
-                                        <p>Item ID: {item.id}</p>
-                                        <p>Price ID: {item.price?.id || (typeof item.price === 'string' ? item.price : 'N/A')}</p>
-                                        <p>Quantity: {item.quantity || 'N/A'}</p>
+                                        <p>Lesson Type: {item.price?.productObject?.description || 'N/A'}</p>
+                                        <p>Price Per Lesson:   $ {item.price ? (parseInt(item.price.unitAmountDecimal, 10) / 100).toFixed(2) : 'N/A'}</p>
                                     </li>
                                 );
                             })}
