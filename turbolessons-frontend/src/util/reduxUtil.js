@@ -196,7 +196,7 @@ export const buildReducers = (builder, entityThunks, adapter, namespace) => {
         if (!state.entities[namespace]) {
           state.entities[namespace] = adapter.getInitialState();
         }
-        console.log(namespace, action.payload);
+        // console.log(namespace, action.payload);
         adapter.setAll(state.entities[namespace], action.payload);
         state.loading = false;
       })
@@ -212,7 +212,7 @@ export const buildReducers = (builder, entityThunks, adapter, namespace) => {
       })
       .addCase(entityThunks.fetchOne.fulfilled, (state, action) => {
         state.loading = false;
-        console.log(action.payload);
+        // console.log(action.payload);
 
         adapter.upsertOne(state.entities[namespace], action.payload);
       })
@@ -283,7 +283,7 @@ export const buildReducers = (builder, entityThunks, adapter, namespace) => {
           state.loading = false;
           console.log(
             "Subscription items response in reducer:",
-            action.payload
+            JSON.stringify(action.payload, null, 2)
           );
 
           if (!state.entities[namespace]) {

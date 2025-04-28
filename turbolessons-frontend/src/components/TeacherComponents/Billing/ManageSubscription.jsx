@@ -55,16 +55,16 @@ const ManageSubscription = () => {
     const customer = Object.values(customerAdapter.entities).find(
       (c) => c.metadata?.okta_id === paramsId
     );
-    console.log("customer", customer);
+    // console.log("customer", customer);
 
     // console.log("subscriptions", customer?.subscriptions);
 
     setAccessToken(accessToken);
     if (stripeSubscriptionId) {
-      dispatch(fetchOneSubscriptionThunk(stripeSubscriptionId))
-      .then((response) => {
-        console.log("Thunk Response:", response.payload);
-      });
+      dispatch(fetchOneSubscriptionThunk(stripeSubscriptionId));
+      // .then((response) => {
+      //   console.log("Thunk Response:", response.payload);
+      // });
     }
 
   }, [customerAdapter]);

@@ -13,7 +13,8 @@ const InvoiceHistory = ({ subscriptionId }) => {
     // if error fetching invoices, display an error message
     const { authState, oktaAuth } = useOktaAuth();
     const dispatch = useDispatch();
-    const invoices = useSelector((state) => state.billing.entities["invoices"]);
+    const invoicesAdapter = useSelector((state) => state.billing.entities["invoices"]);
+    const invoices = Object.values(invoicesAdapter?.entities || {});
     const loading = useSelector((state) => state.billing.loading);
     const error = useSelector((state) => state.billing.error);
 
@@ -23,13 +24,17 @@ const InvoiceHistory = ({ subscriptionId }) => {
             const fetchCustomerData = async () => {
                 const accessToken = oktaAuth.getAccessToken();
                 setAccessToken(accessToken);
-                dispatch(fetchInvoicesBySubscriptionThunk({ subscriptionId })).then(() => {
-                    console.log('Invoices:', invoices);
-                });
+                dispatch(fetchInvoicesBySubscriptionThunk({ subscriptionId }));
             };
             fetchCustomerData();
         }
     }, [subscriptionId, dispatch]);
+
+    // Log invoices when they change
+    useEffect(() => {
+        console.log('Invoices adapter:', invoicesAdapter);
+        console.log('Invoices array:', invoices);
+    }, [invoicesAdapter, invoices]);
 
     // Helper function to safely format dates
     const safeFormatDate = (timestamp) => {
@@ -82,12 +87,12 @@ const InvoiceHistory = ({ subscriptionId }) => {
                             </tr>
                         </thead>
                         <tbody>
-                            {Object.values(invoices)?.map((invoice, index) => (
+                            {invoices?.map((invoice, index) => (
                                 <tr key={`invoice-${invoice.id || index}`}>
-                                    <td>{invoice.number || 'N/A'}</td>
+                                    <td>{invoice.id || 'N/A'}</td>
                                     <td>{formatCurrency((invoice.amount_due || 0) / 100)}</td>
                                     <td>{safeFormatDate(invoice.created)}</td>
-                                    <td>{capitalize(invoice.status || '')}</td>
+                                    <td>{capitalize(invoice.paid ? 'Paid' : 'Unpaid')}</td>
                                     <td>
                                         <Button
                                             variant="outline-primary"
