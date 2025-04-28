@@ -609,6 +609,56 @@ export const cancelSubscription = async (id) => {
   );
 };
 
+// List subscription items for a specific subscription
+export const listSubscriptionItems = async (subscriptionId) => {
+  return apiCall(
+    "GET",
+    `/payments/subscription_item/subscription/${subscriptionId}`,
+    {},
+    "Error listing subscription items:"
+  );
+};
+
+// Get a specific subscription item
+export const getSubscriptionItem = async (id) => {
+  return apiCall(
+    "GET",
+    `/payments/subscription_item/${id}`,
+    {},
+    "Error retrieving subscription item:"
+  );
+};
+
+// Create a new subscription item
+export const createSubscriptionItem = async (itemData) => {
+  return apiCall(
+    "POST",
+    `/payments/subscription_item`,
+    itemData,
+    "Error creating subscription item:"
+  );
+};
+
+// Update a subscription item
+export const updateSubscriptionItem = async (id, itemData) => {
+  return apiCall(
+    "PUT",
+    `/payments/subscription_item/${id}`,
+    itemData,
+    "Error updating subscription item:"
+  );
+};
+
+// Delete a subscription item
+export const deleteSubscriptionItem = async (id) => {
+  return apiCall(
+    "DELETE",
+    `/payments/subscription_item/${id}`,
+    {},
+    "Error deleting subscription item:"
+  );
+};
+
 // (GET("/api/payments/invoice")), handler::listAll)
 // (GET("/api/payments/invoice/{id}/customer"), handler::listAllByCustomer)
 // (GET("/api/payments/invoice/{id}/subscription"), handler::listAllBySubscription)

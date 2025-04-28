@@ -40,6 +40,11 @@ import {
   editPaymentIntent,
   capturePaymentIntent,
   cancelPaymentIntent,
+  listSubscriptionItems,
+  getSubscriptionItem,
+  createSubscriptionItem,
+  updateSubscriptionItem,
+  deleteSubscriptionItem,
   getPaymentMethod,
   searchPaymentMethodByCustomer,
   cancelPaymentMethod,
@@ -91,6 +96,7 @@ const setupIntentAdapter = createEntityAdapter({
   },
 });
 const subscriptionAdapter = createEntityAdapter();
+const subscriptionItemAdapter = createEntityAdapter();
 
 // Thunks
 
@@ -195,6 +201,15 @@ const subscriptionThunks = buildThunks("Subscription", {
   delete: cancelSubscription,
 });
 
+// SubscriptionItem
+const subscriptionItemThunks = buildThunks("SubscriptionItem", {
+  searchBySubscription: listSubscriptionItems,
+  get: getSubscriptionItem,
+  create: createSubscriptionItem,
+  update: updateSubscriptionItem,
+  delete: deleteSubscriptionItem,
+});
+
 // Slice
 const billingSlice = createSlice({
   name: "billing",
@@ -211,6 +226,7 @@ const billingSlice = createSlice({
       products: productAdapter.getInitialState({}),
       setupIntents: setupIntentAdapter.getInitialState({}),
       subscriptions: subscriptionAdapter.getInitialState({}),
+      subscriptionItems: subscriptionItemAdapter.getInitialState({}),
     },
     loading: false,
     successMessage: "",
@@ -348,6 +364,12 @@ const billingSlice = createSlice({
       subscriptionAdapter,
       "subscriptions"
     );
+    buildReducers(
+      builder,
+      subscriptionItemThunks,
+      subscriptionItemAdapter,
+      "subscriptionItems"
+    );
   },
 });
 
@@ -459,6 +481,15 @@ export const {
   updateItem: updateSubscriptionThunk,
   deleteItem: deleteSubscriptionThunk,
 } = subscriptionThunks;
+
+export const {
+  fetchAll: fetchAllSubscriptionItemsThunk,
+  fetchOne: fetchOneSubscriptionItemThunk,
+  createItem: createSubscriptionItemThunk,
+  updateItem: updateSubscriptionItemThunk,
+  deleteItem: deleteSubscriptionItemThunk,
+  fetchItemsBySubscription: fetchItemsBySubscriptionThunk,
+} = subscriptionItemThunks;
 
 export const selectProducts = createSelector(
   (state) => state.billing.entities["products"].entities,
