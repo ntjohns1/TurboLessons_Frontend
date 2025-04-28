@@ -3,7 +3,7 @@ import { Container, Row, Col, Form, Button, Card } from "react-bootstrap";
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import SubscriptionDetails from "./SubscriptionDetails";
-import { fetchOneSubscriptionThunk, fetchAllMetersThunk } from "./BillingSlice";
+import { fetchOneSubscriptionThunk, fetchItemsBySubscriptionThunk } from "./BillingSlice";
 import { setAccessToken } from "../../../service/axiosConfig";
 import { useOktaAuth } from '@okta/okta-react';
 import ManagePaymentMethod from "./ManagePaymentMethod";
@@ -50,6 +50,20 @@ const ManageSubscription = () => {
   // useEffect(() => {
   //   console.log("meters:" + JSON.stringify(meters));
   // }, [meters]);
+
+  useEffect(() => {
+    if (stripeSubscriptionId) {
+        console.log("Fetching subscription items for ID:", stripeSubscriptionId);
+        dispatch(fetchItemsBySubscriptionThunk({ subscriptionId: stripeSubscriptionId }))
+            .then(response => {
+                console.log("Subscription items response:", JSON.stringify(response, null, 2));
+                console.log("Response payload:", JSON.stringify(response.payload, null, 2));
+            })
+            .catch(error => {
+                console.error("Error fetching subscription items:", error);
+            });
+    }
+}, [dispatch, stripeSubscriptionId]);
 
   useEffect(() => {
     const customer = Object.values(customerAdapter.entities).find(

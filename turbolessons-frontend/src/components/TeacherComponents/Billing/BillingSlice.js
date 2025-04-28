@@ -203,7 +203,7 @@ const subscriptionThunks = buildThunks("Subscription", {
 
 // SubscriptionItem
 const subscriptionItemThunks = buildThunks("SubscriptionItem", {
-  listBySubscription: listSubscriptionItems,
+  searchBySubscription: listSubscriptionItems,
   get: getSubscriptionItem,
   create: createSubscriptionItem,
   update: updateSubscriptionItem,
