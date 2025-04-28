@@ -36,20 +36,20 @@ const ManageSubscription = () => {
   const customer = Object.values(customerAdapter.entities).find(
     (c) => c.metadata?.okta_id === paramsId
   );
-  const stripeCustomerId = customer ? customer.id : "";
+  // const stripeCustomerId = customer ? customer.id : "";
   // Todo: This should handle multiple subscriptions
   const stripeSubscriptionId = customer ? customer.subscriptions[0] : "";
   const subscription = Object.values(subscriptionAdapter.entities).find((s) => s.id === stripeSubscriptionId);
-  const meters = useSelector((state) => state.billing.entities["meters"]);
+  // const meters = useSelector((state) => state.billing.entities["meters"]);
 
 
-  useEffect(() => {
-    dispatch(fetchAllMetersThunk());
-  }, []);
+  // useEffect(() => {
+  //   dispatch(fetchAllMetersThunk());
+  // }, []);
 
-  useEffect(() => {
-    console.log("meters:" + JSON.stringify(meters));
-  }, [meters]);
+  // useEffect(() => {
+  //   console.log("meters:" + JSON.stringify(meters));
+  // }, [meters]);
 
   useEffect(() => {
     const customer = Object.values(customerAdapter.entities).find(
@@ -100,7 +100,7 @@ const ManageSubscription = () => {
               </Col>
             </Row>
           </Card>
-          <InvoiceHistory />
+          <InvoiceHistory subscriptionId={stripeSubscriptionId}/>
           <ManagePaymentMethod paramsId={paramsId} />
         </Col>
       </Row>

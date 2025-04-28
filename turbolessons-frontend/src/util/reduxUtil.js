@@ -196,6 +196,7 @@ export const buildReducers = (builder, entityThunks, adapter, namespace) => {
         if (!state.entities[namespace]) {
           state.entities[namespace] = adapter.getInitialState();
         }
+        console.log(namespace, action.payload);
         adapter.setAll(state.entities[namespace], action.payload);
         state.loading = false;
       })
@@ -270,6 +271,61 @@ export const buildReducers = (builder, entityThunks, adapter, namespace) => {
       .addCase(entityThunks.fetchItemsByCustomer.rejected, (state) => {
         state.loading = false;
       });
+  }
+  if (entityThunks.fetchItemsBySubscription) {
+    builder
+      .addCase(entityThunks.fetchItemsBySubscription.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(
+        entityThunks.fetchItemsBySubscription.fulfilled,
+        (state, action) => {
+          state.loading = false;
+          console.log(
+            "Subscription items response in reducer:",
+            action.payload
+          );
+
+          if (!state.entities[namespace]) {
+            state.entities[namespace] = adapter.getInitialState();
+          }
+
+          // Handle different response formats
+          if (action.payload && action.payload.data) {
+            // Standard Stripe collection format with data array
+            adapter.setAll(state.entities[namespace], action.payload.data);
+            console.log(
+              `Set ${action.payload.data.length} subscription items in store (data array)`
+            );
+          } else if (action.payload && Array.isArray(action.payload)) {
+            // Direct array format
+            adapter.setAll(state.entities[namespace], action.payload);
+            console.log(
+              `Set ${action.payload.length} subscription items in store (direct array)`
+            );
+          } else if (
+            action.payload &&
+            typeof action.payload === "object" &&
+            !Array.isArray(action.payload)
+          ) {
+            // Single object format
+            adapter.setAll(state.entities[namespace], [action.payload]);
+            console.log(`Set 1 subscription item in store (single object)`);
+          } else {
+            console.warn(
+              "Unexpected subscription items response format:",
+              action.payload
+            );
+          }
+        }
+      )
+      .addCase(
+        entityThunks.fetchItemsBySubscription.rejected,
+        (state, action) => {
+          state.loading = false;
+          console.error("Error fetching subscription items:", action.error);
+        }
+      );
   }
   if (entityThunks.attachItem) {
     builder
