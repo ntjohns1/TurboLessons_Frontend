@@ -230,7 +230,14 @@ export const buildReducers = (builder, entityThunks, adapter, namespace) => {
 
   if (entityThunks.updateItem) {
     builder.addCase(entityThunks.updateItem.fulfilled, (state, action) => {
-      adapter.upsertOne(state.entities[namespace], action.payload);
+      // Only try to update the store if we have a valid response with an ID
+      if (action.payload && action.payload.id) {
+        adapter.upsertOne(state.entities[namespace], action.payload);
+      } else if (namespace === "subscriptionItems") {
+        // For subscription items, we don't get a response with data
+        // Just set a success message without trying to update the store
+        state.successMessage = "Subscription updated successfully";
+      }
     });
   }
 

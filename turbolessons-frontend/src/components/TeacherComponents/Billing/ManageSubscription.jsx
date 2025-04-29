@@ -24,17 +24,8 @@ const ManageSubscription = () => {
     (c) => c.metadata?.okta_id === paramsId
   );
   // Todo: This should handle multiple subscriptions
-  const stripeSubscriptionId = customer ? customer.subscriptions[0] : "";
+  const stripeSubscriptionId = customer?.subscriptions?.[0] || "";
   const subscription = Object.values(subscriptionAdapter.entities).find((s) => s.id === stripeSubscriptionId);
-
-  useEffect(() => {
-    if (stripeSubscriptionId && authState?.isAuthenticated) {
-      dispatch(fetchItemsBySubscriptionThunk({ subscriptionId: stripeSubscriptionId }))
-        .catch(error => {
-          console.error("Error fetching subscription items:", error);
-        });
-    }
-  }, [dispatch, stripeSubscriptionId]);
 
   useEffect(() => {
     setAccessToken(accessToken);
@@ -42,7 +33,7 @@ const ManageSubscription = () => {
       dispatch(fetchOneSubscriptionThunk(stripeSubscriptionId));
     }
 
-  }, [dispatch, stripeSubscriptionId]);
+  }, [dispatch, stripeSubscriptionId, accessToken]);
 
   return (
     <Container >
@@ -50,14 +41,14 @@ const ManageSubscription = () => {
         <SubscriptionDetails subscription={subscription} className="m-2"/>
       </Row>
       <Row>
-        <UpdateSubscription paramsId={paramsId} subscription={subscription} className="m-2"/>
-        </Row>
-        <Row>
+        <UpdateSubscription stripeSubscriptionId={stripeSubscriptionId} className="m-2"/>
+      </Row>
+      <Row>
         <InvoiceHistory subscriptionId={stripeSubscriptionId} className="m-2"/>
-        </Row>
-        <Row>
-        <ManagePaymentMethod paramsId={paramsId} className="m-2"/>
-        </Row>
+      </Row>
+      <Row>
+        <ManagePaymentMethod stripeCustomerId={customer?.id} className="m-2"/>
+      </Row>
      
     </Container>
   );
