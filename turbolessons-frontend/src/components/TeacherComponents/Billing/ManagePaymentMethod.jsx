@@ -36,7 +36,7 @@ const ManagePaymentMethod = ({ paramsId }) => {
     };
 
     return (
-        <Card>
+        <Card className="m-2">
             {showDetails ?
                 (<Card.Body>
                     <h3>Payment Methods</h3>

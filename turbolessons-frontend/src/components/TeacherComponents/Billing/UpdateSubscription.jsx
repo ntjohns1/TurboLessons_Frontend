@@ -1,10 +1,16 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { fetchAllProductsThunk, fetchAllPricesThunk, fetchItemsBySubscriptionThunk } from './BillingSlice';
+import {
+    fetchAllProductsThunk,
+    fetchAllPricesThunk,
+    fetchItemsBySubscriptionThunk,
+    createSubscriptionItemThunk
+} from './BillingSlice';
 import { selectProducts } from './BillingSlice';
 import { setAccessToken } from "../../../service/axiosConfig";
 import { useOktaAuth } from '@okta/okta-react';
 import { formatCurrency } from '../../../util/formatters';
+import { Container, Card, Form, Button, Row, Col, Alert } from 'react-bootstrap';
 
 const UpdateSubscription = ({ subscription }) => {
     // service layer: subscription item routes
@@ -18,10 +24,17 @@ const UpdateSubscription = ({ subscription }) => {
     const prices = useSelector((state) => state.billing.entities["prices"]);
     const stripeSubscriptionId = subscription?.id;
     const subscriptionItems = useSelector((state) => state.billing.entities["subscriptionItems"]);
-    const amount = 
+
+    // State for the new subscription item form
+    const [selectedProduct, setSelectedProduct] = useState('');
+    const [loading, setLoading] = useState(false);
+    const [message, setMessage] = useState({ text: '', type: '' });
+
     useEffect(() => {
         if (!products.length || !prices.length) {
             setAccessToken(accessToken);
+            console.log(accessToken);
+
             dispatch(fetchAllProductsThunk());
             dispatch(fetchAllPricesThunk());
         }
@@ -35,8 +48,10 @@ const UpdateSubscription = ({ subscription }) => {
                     console.log("Subscription items response:", JSON.stringify(response, null, 2));
                     const firstItem = response.payload.data?.[0];
                     const productObject = firstItem?.price?.productObject;
-                    console.log("Product Object description:", productObject.description);
-                    console.log("Product Object price:", typeof firstItem.plan.amount);
+                    if (productObject) {
+                        console.log("Product Object description:", productObject.description);
+                        console.log("Product Object price:", typeof firstItem.plan.amount);
+                    }
                 })
                 .catch(error => {
                     console.error("Error fetching subscription items:", error);
@@ -44,37 +59,82 @@ const UpdateSubscription = ({ subscription }) => {
         }
     }, [dispatch, stripeSubscriptionId]);
 
+    const handleProductChange = (e) => {
+        setSelectedProduct(e.target.value);
+    };
+
+    const handleAddItem = () => {
+        if (!selectedProduct) {
+            setMessage({ text: 'Please select a lesson type', type: 'danger' });
+            return;
+        }
+
+        setLoading(true);
+        setMessage({ text: '', type: '' });
+
+        // Create the new subscription item
+        dispatch(createSubscriptionItemThunk({
+            subscriptionId: stripeSubscriptionId,
+            price: selectedProduct,
+            quantity: 1
+        }))
+            .then(response => {
+                console.log('Subscription item created:', response);
+                setMessage({ text: 'Lesson type added successfully!', type: 'success' });
+                setSelectedProduct('');
+
+                // Refresh the subscription items
+                return dispatch(fetchItemsBySubscriptionThunk({ subscriptionId: stripeSubscriptionId }));
+            })
+            .catch(error => {
+                console.error('Error creating subscription item:', error);
+                setMessage({ text: 'Failed to add lesson type. Please try again.', type: 'danger' });
+            })
+            .finally(() => {
+                setLoading(false);
+            });
+    };
 
     return (
-        <div className="container mt-4">
-            <h2>Update Subscription</h2>
-            <div className="card">
-                <div className="card-body">
-                    <h5 className="card-title">Current Subscription</h5>
-                    <p>Subscription ID: {stripeSubscriptionId || 'Not available'}</p>
-                    
-                    {/* Display subscription items */}
-                    <h5 className="mt-4">Subscription Items</h5>
-                    {subscriptionItems && subscriptionItems.ids && subscriptionItems.ids.length > 0 ? (
-                        <ul className="list-group">
-                            {subscriptionItems.ids.map(itemId => {
-                                const item = subscriptionItems.entities[itemId];
-                                return (
-                                    <li key={itemId} className="list-group-item">
-                                        <p>Lesson Type: {item.price?.productObject?.description || 'N/A'}</p>
-                                        <p>Price Per Lesson:   $ {item.price ? (parseInt(item.price.unitAmountDecimal, 10) / 100).toFixed(2) : 'N/A'}</p>
-                                    </li>
-                                );
-                            })}
-                        </ul>
-                    ) : (
-                        <p>No subscription items found</p>
+            <Card className="m-2">
+                <Card.Body>
+                    <h5>Update Lesson Plan</h5>
+                    {message.text && (
+                        <Alert variant={message.type} onClose={() => setMessage({ text: '', type: '' })} dismissible>
+                            {message.text}
+                        </Alert>
                     )}
-
-                    {/* Add form for managing subscription items here */}
-                </div>
-            </div>
-        </div>
+                    <Form>
+                        <Row>
+                            <Col md={8}>
+                                <Form.Group>
+                                    <Form.Select
+                                        value={selectedProduct}
+                                        onChange={handleProductChange}
+                                        disabled={loading}
+                                    >
+                                        <option value="">Select Lesson Type</option>
+                                        {products.map((product) => (
+                                            <option key={product.id} value={product.defaultPrice}>
+                                                {product.description}
+                                            </option>
+                                        ))}
+                                    </Form.Select>
+                                </Form.Group>
+                            </Col>
+                            <Col md={4}>
+                                <Button
+                                    variant="primary"
+                                    onClick={handleAddItem}
+                                    disabled={!selectedProduct || loading}
+                                >
+                                    {loading ? 'Updating...' : 'Submit'}
+                                </Button>
+                            </Col>
+                        </Row>
+                    </Form>
+                </Card.Body>
+            </Card>
     );
 };
 

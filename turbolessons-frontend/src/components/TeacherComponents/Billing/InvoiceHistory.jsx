@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { Table, Button, Card, Spinner, Alert } from "react-bootstrap";
+import { Table, Button, Card, Container, Spinner, Alert } from "react-bootstrap";
 import { useDispatch, useSelector } from 'react-redux';
 import { setAccessToken } from "../../../service/axiosConfig";
 import { useOktaAuth } from '@okta/okta-react';
@@ -37,19 +37,19 @@ const InvoiceHistory = ({ subscriptionId }) => {
 
     if (loading) {
         return (
-            <Card className="mb-3">
-                <Card.Body className="text-center">
-                    <Spinner animation="border" role="status">
-                        <span className="visually-hidden">Loading...</span>
-                    </Spinner>
-                </Card.Body>
-            </Card>
+            <Card className="m-2">
+                    <Card.Body className="text-center">
+                        <Spinner animation="border" role="status">
+                            <span className="visually-hidden">Loading...</span>
+                        </Spinner>
+                    </Card.Body>
+                </Card>  
         );
     }
 
     if (error) {
         return (
-            <Card className="mb-3">
+            <Card className="m-2">
                 <Card.Body>
                     <Alert variant="danger">{error}</Alert>
                 </Card.Body>
@@ -58,7 +58,7 @@ const InvoiceHistory = ({ subscriptionId }) => {
     }
 
     return (
-        <Card className="mb-3">
+        <Card className="m-2">
             <Card.Body>
                 <h3>Invoice History</h3>
                 {invoices.length === 0 ? (

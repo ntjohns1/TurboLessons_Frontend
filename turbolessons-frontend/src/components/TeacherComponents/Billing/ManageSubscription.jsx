@@ -46,22 +46,19 @@ const ManageSubscription = () => {
 
   return (
     <Container >
-      <Row >
-        <Col md={12}>
-          <Card className="mb-3">
-            <Row>
-              <Col md={6}>
-                <SubscriptionDetails subscription={subscription} />
-              </Col>
-              <Col md={6}>
-                <UpdateSubscription paramsId={paramsId} subscription={subscription} />
-              </Col>
-            </Row>
-          </Card>
-          <InvoiceHistory subscriptionId={stripeSubscriptionId} />
-          <ManagePaymentMethod paramsId={paramsId} />
-        </Col>
+      <Row>
+        <SubscriptionDetails subscription={subscription} className="m-2"/>
       </Row>
+      <Row>
+        <UpdateSubscription paramsId={paramsId} subscription={subscription} className="m-2"/>
+        </Row>
+        <Row>
+        <InvoiceHistory subscriptionId={stripeSubscriptionId} className="m-2"/>
+        </Row>
+        <Row>
+        <ManagePaymentMethod paramsId={paramsId} className="m-2"/>
+        </Row>
+     
     </Container>
   );
 };
