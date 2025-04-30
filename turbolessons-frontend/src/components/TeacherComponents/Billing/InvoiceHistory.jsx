@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { Table, Button, Card, Spinner, Alert } from "react-bootstrap";
+import { Table, Button, Card, Container, Spinner, Alert } from "react-bootstrap";
 import { useDispatch, useSelector } from 'react-redux';
 import { setAccessToken } from "../../../service/axiosConfig";
 import { useOktaAuth } from '@okta/okta-react';
@@ -7,10 +7,6 @@ import { fetchInvoicesBySubscriptionThunk } from './BillingSlice';
 import { formatCurrency, formatTimestamp, capitalize } from '../../../util/formatters';
 
 const InvoiceHistory = ({ subscriptionId }) => {
-    // fetch invoices by customer id
-    // if invoices exist, display them in a table
-    // if no invoices exist, display a message saying no invoices exist
-    // if error fetching invoices, display an error message
     const { authState, oktaAuth } = useOktaAuth();
     const dispatch = useDispatch();
     const invoicesAdapter = useSelector((state) => state.billing.entities["invoices"]);
@@ -19,8 +15,7 @@ const InvoiceHistory = ({ subscriptionId }) => {
     const error = useSelector((state) => state.billing.error);
 
     useEffect(() => {
-        if (subscriptionId) {
-            console.log('subscriptionId:', subscriptionId);
+        if (subscriptionId && authState?.isAuthenticated) {
             const fetchCustomerData = async () => {
                 const accessToken = oktaAuth.getAccessToken();
                 setAccessToken(accessToken);
@@ -30,13 +25,6 @@ const InvoiceHistory = ({ subscriptionId }) => {
         }
     }, [subscriptionId, dispatch]);
 
-    // Log invoices when they change
-    useEffect(() => {
-        console.log('Invoices adapter:', invoicesAdapter);
-        console.log('Invoices array:', invoices);
-    }, [invoicesAdapter, invoices]);
-
-    // Helper function to safely format dates
     const safeFormatDate = (timestamp) => {
         if (!timestamp) return 'N/A';
         try {
@@ -49,19 +37,19 @@ const InvoiceHistory = ({ subscriptionId }) => {
 
     if (loading) {
         return (
-            <Card className="mb-3">
-                <Card.Body className="text-center">
-                    <Spinner animation="border" role="status">
-                        <span className="visually-hidden">Loading...</span>
-                    </Spinner>
-                </Card.Body>
-            </Card>
+            <Card className="m-2">
+                    <Card.Body className="text-center">
+                        <Spinner animation="border" role="status">
+                            <span className="visually-hidden">Loading...</span>
+                        </Spinner>
+                    </Card.Body>
+                </Card>  
         );
     }
 
     if (error) {
         return (
-            <Card className="mb-3">
+            <Card className="m-2">
                 <Card.Body>
                     <Alert variant="danger">{error}</Alert>
                 </Card.Body>
@@ -70,7 +58,7 @@ const InvoiceHistory = ({ subscriptionId }) => {
     }
 
     return (
-        <Card className="mb-3">
+        <Card className="m-2">
             <Card.Body>
                 <h3>Invoice History</h3>
                 {invoices.length === 0 ? (

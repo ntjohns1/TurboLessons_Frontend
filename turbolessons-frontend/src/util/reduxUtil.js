@@ -196,7 +196,6 @@ export const buildReducers = (builder, entityThunks, adapter, namespace) => {
         if (!state.entities[namespace]) {
           state.entities[namespace] = adapter.getInitialState();
         }
-        // console.log(namespace, action.payload);
         adapter.setAll(state.entities[namespace], action.payload);
         state.loading = false;
       })
@@ -212,7 +211,6 @@ export const buildReducers = (builder, entityThunks, adapter, namespace) => {
       })
       .addCase(entityThunks.fetchOne.fulfilled, (state, action) => {
         state.loading = false;
-        // console.log(action.payload);
 
         adapter.upsertOne(state.entities[namespace], action.payload);
       })
@@ -232,7 +230,14 @@ export const buildReducers = (builder, entityThunks, adapter, namespace) => {
 
   if (entityThunks.updateItem) {
     builder.addCase(entityThunks.updateItem.fulfilled, (state, action) => {
-      adapter.upsertOne(state.entities[namespace], action.payload);
+      // Only try to update the store if we have a valid response with an ID
+      if (action.payload && action.payload.id) {
+        adapter.upsertOne(state.entities[namespace], action.payload);
+      } else if (namespace === "subscriptionItems") {
+        // For subscription items, we don't get a response with data
+        // Just set a success message without trying to update the store
+        state.successMessage = "Subscription updated successfully";
+      }
     });
   }
 
@@ -281,10 +286,6 @@ export const buildReducers = (builder, entityThunks, adapter, namespace) => {
         entityThunks.fetchItemsBySubscription.fulfilled,
         (state, action) => {
           state.loading = false;
-          console.log(
-            "Subscription items response in reducer:",
-            JSON.stringify(action.payload, null, 2)
-          );
 
           if (!state.entities[namespace]) {
             state.entities[namespace] = adapter.getInitialState();
@@ -294,15 +295,9 @@ export const buildReducers = (builder, entityThunks, adapter, namespace) => {
           if (action.payload && action.payload.data) {
             // Standard Stripe collection format with data array
             adapter.setAll(state.entities[namespace], action.payload.data);
-            console.log(
-              `Set ${action.payload.data.length} subscription items in store (data array)`
-            );
           } else if (action.payload && Array.isArray(action.payload)) {
             // Direct array format
             adapter.setAll(state.entities[namespace], action.payload);
-            console.log(
-              `Set ${action.payload.length} subscription items in store (direct array)`
-            );
           } else if (
             action.payload &&
             typeof action.payload === "object" &&
@@ -310,7 +305,6 @@ export const buildReducers = (builder, entityThunks, adapter, namespace) => {
           ) {
             // Single object format
             adapter.setAll(state.entities[namespace], [action.payload]);
-            console.log(`Set 1 subscription item in store (single object)`);
           } else {
             console.warn(
               "Unexpected subscription items response format:",

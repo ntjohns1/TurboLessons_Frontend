@@ -8,24 +8,11 @@ import { setAccessToken } from "../../../service/axiosConfig";
 import { useOktaAuth } from '@okta/okta-react';
 import ManagePaymentMethod from "./ManagePaymentMethod";
 import InvoiceHistory from "./InvoiceHistory";
+import UpdateSubscription from "./UpdateSubscription";
 
 
 
 const ManageSubscription = () => {
-  /*
-      High Level Process:
-      
-
-
-      - Requirements:
-          - Viewing current subscription status and details.
-          - Updating subscription plans.
-          - Viewing billing history.
-          - Adding or updating payment methods.
-          - Handling payment processing and errors.
-
-      
-  */
 
   const { authState, oktaAuth } = useOktaAuth();
   const accessToken = oktaAuth.getAccessToken();
@@ -36,88 +23,33 @@ const ManageSubscription = () => {
   const customer = Object.values(customerAdapter.entities).find(
     (c) => c.metadata?.okta_id === paramsId
   );
-  // const stripeCustomerId = customer ? customer.id : "";
   // Todo: This should handle multiple subscriptions
-  const stripeSubscriptionId = customer ? customer.subscriptions[0] : "";
+  const stripeSubscriptionId = customer?.subscriptions?.[0] || "";
   const subscription = Object.values(subscriptionAdapter.entities).find((s) => s.id === stripeSubscriptionId);
-  // const meters = useSelector((state) => state.billing.entities["meters"]);
-
-
-  // useEffect(() => {
-  //   dispatch(fetchAllMetersThunk());
-  // }, []);
-
-  // useEffect(() => {
-  //   console.log("meters:" + JSON.stringify(meters));
-  // }, [meters]);
 
   useEffect(() => {
-    if (stripeSubscriptionId) {
-        console.log("Fetching subscription items for ID:", stripeSubscriptionId);
-        dispatch(fetchItemsBySubscriptionThunk({ subscriptionId: stripeSubscriptionId }))
-            .then(response => {
-                console.log("Subscription items response:", JSON.stringify(response, null, 2));
-                console.log("Response payload:", JSON.stringify(response.payload, null, 2));
-            })
-            .catch(error => {
-                console.error("Error fetching subscription items:", error);
-            });
-    }
-}, [dispatch, stripeSubscriptionId]);
-
-  useEffect(() => {
-    const customer = Object.values(customerAdapter.entities).find(
-      (c) => c.metadata?.okta_id === paramsId
-    );
-    // console.log("customer", customer);
-
-    // console.log("subscriptions", customer?.subscriptions);
-
     setAccessToken(accessToken);
     if (stripeSubscriptionId) {
       dispatch(fetchOneSubscriptionThunk(stripeSubscriptionId));
-      // .then((response) => {
-      //   console.log("Thunk Response:", response.payload);
-      // });
     }
 
-  }, [customerAdapter]);
+  }, [dispatch, stripeSubscriptionId, accessToken]);
 
   return (
     <Container >
-      <Row >
-        <Col md={12}>
-          <Card className="mb-3">
-            <Row>
-              <Col md={6}>
-                <SubscriptionDetails subscription={subscription} />
-              </Col>
-              <Col md={6}>
-                <Card className="m-3">
-                  <Card.Body>
-                    <Card.Title className="text-center">Update Subscription Plan</Card.Title>
-                    <Form>
-                      <Form.Group controlId="subscriptionPlan" className="text-center">
-                        <Form.Label>Choose a new plan</Form.Label>
-                        <Form.Control as="select">
-                          <option className="text-center">Monthly - $60</option>
-                          <option className="text-center">Quarterly - $50</option>
-                          <option className="text-center">Yearly - $180</option>
-                        </Form.Control>
-                      </Form.Group>
-                      <div className="mt-3 text-center">
-                        <Button variant="primary" type="submit">Update Plan</Button>
-                      </div>
-                    </Form>
-                  </Card.Body>
-                </Card>
-              </Col>
-            </Row>
-          </Card>
-          <InvoiceHistory subscriptionId={stripeSubscriptionId}/>
-          <ManagePaymentMethod paramsId={paramsId} />
-        </Col>
+      <Row>
+        <SubscriptionDetails subscription={subscription} className="m-2"/>
       </Row>
+      <Row>
+        <UpdateSubscription stripeSubscriptionId={stripeSubscriptionId} className="m-2"/>
+      </Row>
+      <Row>
+        <InvoiceHistory subscriptionId={stripeSubscriptionId} className="m-2"/>
+      </Row>
+      <Row>
+        <ManagePaymentMethod stripeCustomerId={customer?.id} className="m-2"/>
+      </Row>
+     
     </Container>
   );
 };

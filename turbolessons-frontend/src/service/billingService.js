@@ -631,10 +631,11 @@ export const getSubscriptionItem = async (id) => {
 
 // Create a new subscription item
 export const createSubscriptionItem = async (itemData) => {
+  const { subscriptionId, ...rest } = itemData;
   return apiCall(
     "POST",
-    `/payments/subscription_item`,
-    itemData,
+    `/payments/subscription_item/subscription/${subscriptionId}`,
+    rest,
     "Error creating subscription item:"
   );
 };
