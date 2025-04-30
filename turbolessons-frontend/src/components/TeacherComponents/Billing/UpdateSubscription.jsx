@@ -107,55 +107,85 @@ const UpdateSubscription = ({ stripeSubscriptionId }) => {
         .finally(() => {
             // Reset loading state
             dispatch(setLoading(false));
-            dispatch(resetSubscriptionItemFormState());
-            dispatch(setShowSuccessModal(false));
-            dispatch(setError(null));
         });
+
+        // reset form state
+        dispatch(resetSubscriptionItemFormState());
+    };
+
+    const handleResetForm = () => {
+        dispatch(resetSubscriptionItemFormState());
+        dispatch(setShowSuccessModal(false));
+        dispatch(setError(null));
     };
 
     return (
         <Card className="m-2">
             <Card.Body>
                 <h5>Update Lesson Plan</h5>
+                {/* Add initial loading state */}
+                {loading && !subscriptionItemFormState.subscriptionItemId && (
+                    <div className="text-center my-3">
+                        <div className="spinner-border text-primary" role="status">
+                            <span className="visually-hidden">Loading...</span>
+                        </div>
+                        <p className="mt-2">Loading subscription details...</p>
+                    </div>
+                )}
+                
                 {successMessage && (
-                    <Alert variant="success" onClose={() => setSuccessMessage('')} dismissible>
+                    <Alert variant="success" onClose={() => handleResetForm()} dismissible>
                         {successMessage}
                     </Alert>
                 )}
                 {error && (
-                    <Alert variant="danger" onClose={() => setError(null)} dismissible>
+                    <Alert variant="danger" onClose={() => handleResetForm()} dismissible>
                         {error}
                     </Alert>
                 )}
-                <Form>
-                    <Row>
-                        <Col md={8}>
-                            <Form.Group>
-                                <Form.Select
-                                    value={subscriptionItemFormState.productId}
-                                    onChange={handleProductChange}
-                                    disabled={loading}
-                                >
-                                    <option value="">Select Lesson Type</option>
-                                    {products.map((product) => (
-                                        <option key={product.id} value={product.defaultPrice}>
-                                            {product.description}
-                                        </option>
-                                    ))}
-                                </Form.Select>
-                            </Form.Group>
-                        </Col>
-                        <Col md={4}>
-                            <Button
-                                variant="primary"
-                                onClick={handleUpdateSubscriptionItem}
-                                disabled={!subscriptionItemFormState.productId || loading}
-                            >
-                                {loading ? 'Updating...' : 'Submit'}
-                            </Button>
-                        </Col>
-                    </Row>
-                </Form>
+                
+                {/* Only show form if we have subscription data and alternative plans */}
+                {subscriptionItemFormState.subscriptionItemId && (
+                    <>
+                        {products.filter(product => product.defaultPrice !== subscriptionItemFormState.currentPriceId).length > 0 ? (
+                            <Form>
+                                <Row>
+                                    <Col md={8}>
+                                        <Form.Group>
+                                            <Form.Select
+                                                value={subscriptionItemFormState.productId}
+                                                onChange={handleProductChange}
+                                                disabled={loading}
+                                            >
+                                                <option value="">Select Lesson Type</option>
+                                                {products
+                                                    .filter(product => product.defaultPrice !== subscriptionItemFormState.currentPriceId)
+                                                    .map((product) => (
+                                                        <option key={product.id} value={product.defaultPrice}>
+                                                            {product.description}
+                                                        </option>
+                                                    ))}
+                                            </Form.Select>
+                                        </Form.Group>
+                                    </Col>
+                                    <Col md={4}>
+                                        <Button
+                                            variant="primary"
+                                            onClick={handleUpdateSubscriptionItem}
+                                            disabled={!subscriptionItemFormState.productId || loading}
+                                        >
+                                            {loading ? 'Updating...' : 'Submit'}
+                                        </Button>
+                                    </Col>
+                                </Row>
+                            </Form>
+                        ) : (
+                            <Alert variant="info">
+                                No alternative lesson plans are available at this time.
+                            </Alert>
+                        )}
+                    </>
+                )}
             </Card.Body>
         </Card>
     );
