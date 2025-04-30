@@ -25,7 +25,7 @@ import './App.css';
 import ManageSubscription from './components/TeacherComponents/Billing/ManageSubscription.jsx';
 import CreateStripeCustomer from './components/TeacherComponents/Billing/CreateStripeCustomer.jsx';
 import NewSubscriptionForm from './components/TeacherComponents/Billing/CreateSubscription.jsx';
-import CreatePaymentMethod from './components/TeacherComponents/Billing/CreatePaymentMethod.jsx';
+
 
 const oktaAuth = new OktaAuth(config.oidc);
 const stripePromise = loadStripe(config.oidc.stripeApiKey);
@@ -42,42 +42,49 @@ const App = () => {
         <Elements stripe={stripePromise}>
           <Routes>
             <Route path="login/callback" element={<LoginCallback loadingElement={<Loading />} />} />
-            <Route path="/" element={<RequiredAuth />}>
+            
+            {/* Teacher Dashboard - accessible by Teachers and Admins */}
+            <Route path="/" element={<RequiredAuth requiredRoles={['Teacher', 'Admin']} />}>
               <Route path="" element={<TeacherLayoutWrapper component={TeacherDashboard} />} />
             </Route>
-            <Route path="/students" element={<RequiredAuth />}>
+            
+            {/* Student Management Routes - accessible by Teachers and Admins */}
+            <Route path="/students" element={<RequiredAuth requiredRoles={['Teacher', 'Admin']} />}>
               <Route path="" element={<TeacherLayoutWrapper component={Students} />} />
             </Route>
-            <Route path="/students/:id" element={<RequiredAuth />}>
+            <Route path="/students/:id" element={<RequiredAuth requiredRoles={['Teacher', 'Admin']} />}>
               <Route path="" element={<TeacherLayoutWrapper component={SingleStudent} />} />
             </Route>
-            <Route path="/students/:id/subscription" element={<RequiredAuth />}>
+            <Route path="/students/:id/subscription" element={<RequiredAuth requiredRoles={['Teacher', 'Admin']} />}>
               <Route path="" element={<TeacherLayoutWrapper component={ManageSubscription} />} />
             </Route>
-            <Route path="/students/:id/create_stripe_account" element={<RequiredAuth />}>
+            <Route path="/students/:id/create_stripe_account" element={<RequiredAuth requiredRoles={['Teacher', 'Admin']} />}>
               <Route path="" element={<TeacherLayoutWrapper component={CreateStripeCustomer} />} />
             </Route>
-            <Route path="/students/:id/create_subscription" element={<RequiredAuth />}>
+            <Route path="/students/:id/create_subscription" element={<RequiredAuth requiredRoles={['Teacher', 'Admin']} />}>
               <Route path="" element={<TeacherLayoutWrapper component={NewSubscriptionForm} />} />
             </Route>
-            <Route path="/addStudent" element={<RequiredAuth />}>
+            <Route path="/addStudent" element={<RequiredAuth requiredRoles={['Teacher', 'Admin']} />}>
               <Route path="" element={<TeacherLayoutWrapper component={AddStudent} />} />
             </Route>
-            <Route path="/calendar" element={<RequiredAuth />}>
+            <Route path="/calendar" element={<RequiredAuth requiredRoles={['Teacher', 'Admin']} />}>
               <Route path="" element={<TeacherLayoutWrapper component={LessonCalendar} />} />
             </Route>
-            <Route path="/messages" element={<RequiredAuth />}>
+            <Route path="/messages" element={<RequiredAuth requiredRoles={['Teacher', 'Admin', 'Student']} />}>
               <Route path="" element={<TeacherLayoutWrapper component={Messenger} />} />
             </Route>
-            <Route path="/lessons" element={<RequiredAuth />}>
+            <Route path="/lessons" element={<RequiredAuth requiredRoles={['Teacher', 'Admin']} />}>
               <Route path="" element={<TeacherLayoutWrapper component={Lessons} />} />
             </Route>
-            <Route path="/videos" element={<RequiredAuth />}>
+            <Route path="/videos" element={<RequiredAuth requiredRoles={['Teacher', 'Admin']} />}>
               <Route path="" element={<TeacherLayoutWrapper component={Videos} />} />
             </Route>
-            <Route path="/studentHome" element={<RequiredAuth />}>
+            
+            {/* Student Views - accessible by Students, Teachers, and Admins */}
+            <Route path="/studentHome" element={<RequiredAuth requiredRoles={['Student', 'Teacher', 'Admin']} />}>
               <Route path="" element={<Videos />} />
             </Route>
+            
             <Route path="/unauthorized" element={<RequiredAuth />}>
               <Route path="" element={<Unauthorized />} />
             </Route>

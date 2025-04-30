@@ -30,6 +30,7 @@ export default function StudentTable() {
     useEffect(() => {
         if (authState?.isAuthenticated && principle && !studentsLoaded) {
             const accessToken = oktaAuth.getAccessToken();
+            console.log(authState.accessToken.claims.groups);
             setAccessToken(accessToken);
             dispatch(fetchTeacherStudents({ teacher: principle }));
         }
