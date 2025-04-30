@@ -1,5 +1,4 @@
 import React from 'react';
-
 import { useNavigate } from 'react-router-dom';
 import { OktaAuth, toRelativeUrl } from '@okta/okta-auth-js';
 import { Security } from '@okta/okta-react';
@@ -22,10 +21,9 @@ import Unauthorized from './helpers/Unauthorized';
 import LessonCalendar from './components/TeacherComponents/Lessons/LessonCalendar.jsx';
 import TeacherLayoutWrapper from './layouts/TeacherLayoutWrapper'
 import './App.css';
-import ManageSubscription from './components/TeacherComponents/Billing/ManageSubscription.jsx';
-import CreateStripeCustomer from './components/TeacherComponents/Billing/CreateStripeCustomer.jsx';
-import NewSubscriptionForm from './components/TeacherComponents/Billing/CreateSubscription.jsx';
-
+import TeacherRoutes from './routes/TeacherRoutes';
+import StudentRoutes from './routes/StudentRoutes';
+import RoleRouter from './components/RoleRouter';
 
 const oktaAuth = new OktaAuth(config.oidc);
 const stripePromise = loadStripe(config.oidc.stripeApiKey);
@@ -43,52 +41,17 @@ const App = () => {
           <Routes>
             <Route path="login/callback" element={<LoginCallback loadingElement={<Loading />} />} />
             
-            {/* Teacher Dashboard - accessible by Teachers and Admins */}
-            <Route path="/" element={<RequiredAuth requiredRoles={['Teacher', 'Admin']} />}>
-              <Route path="" element={<TeacherLayoutWrapper component={TeacherDashboard} />} />
+            {/* Root path - will redirect based on user role */}
+            <Route path="/" element={<RequiredAuth />}>
+              <Route path="" element={<RoleRouter />} />
             </Route>
-            
-            {/* Student Management Routes - accessible by Teachers and Admins */}
-            <Route path="/students" element={<RequiredAuth requiredRoles={['Teacher', 'Admin']} />}>
-              <Route path="" element={<TeacherLayoutWrapper component={Students} />} />
-            </Route>
-            <Route path="/students/:id" element={<RequiredAuth requiredRoles={['Teacher', 'Admin']} />}>
-              <Route path="" element={<TeacherLayoutWrapper component={SingleStudent} />} />
-            </Route>
-            <Route path="/students/:id/subscription" element={<RequiredAuth requiredRoles={['Teacher', 'Admin']} />}>
-              <Route path="" element={<TeacherLayoutWrapper component={ManageSubscription} />} />
-            </Route>
-            <Route path="/students/:id/create_stripe_account" element={<RequiredAuth requiredRoles={['Teacher', 'Admin']} />}>
-              <Route path="" element={<TeacherLayoutWrapper component={CreateStripeCustomer} />} />
-            </Route>
-            <Route path="/students/:id/create_subscription" element={<RequiredAuth requiredRoles={['Teacher', 'Admin']} />}>
-              <Route path="" element={<TeacherLayoutWrapper component={NewSubscriptionForm} />} />
-            </Route>
-            <Route path="/addStudent" element={<RequiredAuth requiredRoles={['Teacher', 'Admin']} />}>
-              <Route path="" element={<TeacherLayoutWrapper component={AddStudent} />} />
-            </Route>
-            <Route path="/calendar" element={<RequiredAuth requiredRoles={['Teacher', 'Admin']} />}>
-              <Route path="" element={<TeacherLayoutWrapper component={LessonCalendar} />} />
-            </Route>
-            <Route path="/messages" element={<RequiredAuth requiredRoles={['Teacher', 'Admin', 'Student']} />}>
-              <Route path="" element={<TeacherLayoutWrapper component={Messenger} />} />
-            </Route>
-            <Route path="/lessons" element={<RequiredAuth requiredRoles={['Teacher', 'Admin']} />}>
-              <Route path="" element={<TeacherLayoutWrapper component={Lessons} />} />
-            </Route>
-            <Route path="/videos" element={<RequiredAuth requiredRoles={['Teacher', 'Admin']} />}>
-              <Route path="" element={<TeacherLayoutWrapper component={Videos} />} />
-            </Route>
-            
-            {/* Student Views - accessible by Students, Teachers, and Admins */}
-            <Route path="/studentHome" element={<RequiredAuth requiredRoles={['Student', 'Teacher', 'Admin']} />}>
-              <Route path="" element={<Videos />} />
-            </Route>
-            
+
             <Route path="/unauthorized" element={<RequiredAuth />}>
               <Route path="" element={<Unauthorized />} />
             </Route>
           </Routes>
+          <TeacherRoutes />
+          <StudentRoutes />
         </Elements>
       </WebSocketProvider>
     </Security>
