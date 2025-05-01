@@ -50,7 +50,7 @@ const TeacherRoutes = () => {
       <Route path="/teacher_portal/calendar" element={<RequiredAuth requiredRoles={['Teacher', 'Admin']} />}>
         <Route path="" element={<TeacherLayoutWrapper component={LessonCalendar} />} />
       </Route>
-      <Route path="/teacher_portal/messages" element={<RequiredAuth requiredRoles={['Teacher', 'Admin', 'Student']} />}>
+      <Route path="/teacher_portal/messages" element={<RequiredAuth requiredRoles={['Teacher', 'Admin']} />}>
         <Route path="" element={<TeacherLayoutWrapper component={Messenger} />} />
       </Route>
       <Route path="/teacher_portal/lessons" element={<RequiredAuth requiredRoles={['Teacher', 'Admin']} />}>
