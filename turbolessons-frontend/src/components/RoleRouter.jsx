@@ -16,10 +16,10 @@ const RoleRouter = () => {
       // Determine where to redirect based on user role
       if (userGroups.includes('Teacher') || userGroups.includes('Admin')) {
         // Teacher or Admin - go to teacher dashboard
-        navigate('/teacher');
+        navigate('/teacher_portal');
       } else if (userGroups.includes('Student')) {
         // Student - go to student dashboard
-        navigate('/student');
+        navigate('/student_portal');
       } else {
         // No recognized role - go to unauthorized page
         navigate('/unauthorized');

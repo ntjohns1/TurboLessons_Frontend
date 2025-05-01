@@ -63,7 +63,7 @@ export default function StudentTable() {
                         <p>No students found.</p>
                     </Card.Body>
                     <Card.Footer>
-                        <Button as={Link} to='/addStudent' variant='darkblue'>New Student</Button>
+                        <Button as={Link} to='/teacher_portal/addStudent' variant='darkblue'>New Student</Button>
                     </Card.Footer>
                 </Card>
             </div>
@@ -91,7 +91,7 @@ export default function StudentTable() {
                     ))}
                 </Card.Body>
                 <Card.Footer>
-                    <Button as={Link} to='/addStudent' variant='darkblue'>New Student</Button>
+                    <Button as={Link} to='/teacher_portal/addStudent' variant='darkblue'>New Student</Button>
                 </Card.Footer>
             </Card>
         </div>

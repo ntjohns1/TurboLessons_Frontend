@@ -10,18 +10,17 @@ import Messenger from '../pages/Teachers/Messenger';
 const StudentRoutes = () => {
   return (
     <Routes>
-      {/* Student Dashboard */}
-      <Route path="/student" element={<RequiredAuth requiredRoles={['Student', 'Teacher', 'Admin']} />}>
+      <Route path="/student_portal" element={<RequiredAuth requiredRoles={['Student', 'Teacher', 'Admin']} />}>
         <Route path="" element={<Videos />} />
       </Route>
       
-      {/* Student Features */}
-      <Route path="/student/videos" element={<RequiredAuth requiredRoles={['Student', 'Teacher', 'Admin']} />}>
+
+      <Route path="/student_portal/videos" element={<RequiredAuth requiredRoles={['Student', 'Teacher', 'Admin']} />}>
         <Route path="" element={<Videos />} />
       </Route>
       
-      {/* Shared Features */}
-      <Route path="/student/messages" element={<RequiredAuth requiredRoles={['Student', 'Teacher', 'Admin']} />}>
+
+      <Route path="/student_portal/messages" element={<RequiredAuth requiredRoles={['Student', 'Teacher', 'Admin']} />}>
         <Route path="" element={<Messenger />} />
       </Route>
     </Routes>
