@@ -9,17 +9,8 @@ import { WebSocketProvider } from "./util/context/WebSocketContext.jsx";
 import { Elements } from "@stripe/react-stripe-js";
 import { loadStripe } from "@stripe/stripe-js";
 import { Route, Routes } from "react-router-dom";
-import TeacherDashboard from './pages/Teachers/TeacherDashboard';
-import Students from "./pages/Teachers/Students"
-import AddStudent from "./components/TeacherComponents/Students/AddStudent"
 import { RequiredAuth } from "./helpers/SecureRoute";
-import SingleStudent from './components/TeacherComponents/Students/SingleStudent';
-import Messenger from './pages/Teachers/Messenger';
-import Lessons from './pages/Teachers/Lessons'
-import Videos from './pages/Teachers/Videos';
 import Unauthorized from './helpers/Unauthorized';
-import LessonCalendar from './components/TeacherComponents/Lessons/LessonCalendar.jsx';
-import TeacherLayoutWrapper from './layouts/TeacherLayoutWrapper'
 import './App.css';
 import TeacherRoutes from './routes/TeacherRoutes';
 import StudentRoutes from './routes/StudentRoutes';
