@@ -2,16 +2,18 @@ import { configureStore } from "@reduxjs/toolkit";
 import lessonsReducer from "../components/TeacherComponents/Lessons/LessonSlice";
 import studentReducer from "../components/TeacherComponents/Students/StudentSlice";
 import billingReducer from "../components/TeacherComponents/Billing/BillingSlice";
-import messageReducer from "../components/TeacherComponents/Messages/MessageSlice";
+import teacherMessageReducer from "../components/TeacherComponents/Messages/TeacherMessageSlice";
 import videoReducer from "../components/TeacherComponents/Videos/VideoSlice";
+import studentMessageReducer from "../components/StudentComponents/Messages/StudentMessageSlice";
 
 export const store = configureStore({
   reducer: {
     students: studentReducer,
     lessons: lessonsReducer,
     billing: billingReducer,
-    messages: messageReducer,
+    teacherMessages:  teacherMessageReducer,
     videos: videoReducer,
+    studentMessages: studentMessageReducer,
   },
 });
 

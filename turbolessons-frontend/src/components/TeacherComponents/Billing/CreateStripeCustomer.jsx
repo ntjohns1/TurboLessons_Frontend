@@ -116,7 +116,7 @@ const CreateStripeCustomer = () => {
         dispatch(setSuccessMessage(""));
         dispatch(setShowSuccessModal(false));
         dispatch(resetCustomerFormState());
-        navigate(`/students/${paramsId}`)
+        navigate(`/teacher_portal/students/${paramsId}`)
     }
 
     if (loading) {

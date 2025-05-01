@@ -37,7 +37,7 @@ export default function StudentTable() {
     }, [authState, principle, studentsLoaded, dispatch]);
 
     const goToStudent = (studentId) => {
-        navigate(`/students/${studentId}`);
+        navigate(`/teacher_portal/students/${studentId}`);
     };
 
     if (loading) {

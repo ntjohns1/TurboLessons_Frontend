@@ -4,7 +4,7 @@ import { setAccessToken } from '../../../service/axiosConfig';
 import { Button, Form, Container } from "react-bootstrap";
 import { useSocket } from '../../../util/context/WebSocketContext';
 import { useDispatch, useSelector } from 'react-redux';
-import { sendMessageThunk, selectSelectedStudent, selectMessageText, setMessageText } from './MessageSlice';
+import { sendMessageThunk, selectSelectedStudent, selectMessageText, setMessageText } from './TeacherMessageSlice';
 import '../../../App';
 
 export default function SendMessage() {

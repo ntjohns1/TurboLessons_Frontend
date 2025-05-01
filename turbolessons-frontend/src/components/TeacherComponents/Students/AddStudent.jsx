@@ -26,7 +26,7 @@ export default function AddStudent() {
                 await dispatch(createNewStudent(formState)).unwrap();
                 alert(`Successfully Added Account for: ${formState.firstName} ${formState.lastName}`);
                 dispatch(resetFormState());
-                navigate('/students');
+                navigate('/teacher_portal/students');
             }
         } catch (error) {
             console.error('Error creating student:', error);

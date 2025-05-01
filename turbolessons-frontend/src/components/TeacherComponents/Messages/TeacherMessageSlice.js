@@ -49,8 +49,8 @@ export const sendMessageThunk = createAsyncThunk(
 );
 
 // Slice
-const messageSlice = createSlice({
-    name: "messages",
+const teacherMessageSlice = createSlice({
+    name: "teacherMessages",
     initialState: {
         messages: [],
         selectedStudent: null,
@@ -160,14 +160,14 @@ export const {
     setShowToast,
     setToastMessage,
     clearMessageForm
-} = messageSlice.actions;
+} = teacherMessageSlice.actions;
 
-export const selectMessages = (state) => state.messages.messages;
-export const selectSelectedStudent = (state) => state.messages.selectedStudent;
-export const selectMessageText = (state) => state.messages.messageText;
-export const selectShowToast = (state) => state.messages.showToast;
-export const selectToastMessage = (state) => state.messages.toastMessage;
-export const selectLoading = (state) => state.messages.loading;
-export const selectError = (state) => state.messages.error;
+export const selectMessages = (state) => state.teacherMessages.messages;
+export const selectSelectedStudent = (state) => state.teacherMessages.selectedStudent;
+export const selectMessageText = (state) => state.teacherMessages.messageText;
+export const selectShowToast = (state) => state.teacherMessages.showToast;
+export const selectToastMessage = (state) => state.teacherMessages.toastMessage;
+export const selectLoading = (state) => state.teacherMessages.loading;
+export const selectError = (state) => state.teacherMessages.error;
 
-export default messageSlice.reducer;
+export default teacherMessageSlice.reducer;
