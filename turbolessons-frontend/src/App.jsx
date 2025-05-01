@@ -15,6 +15,7 @@ import './App.css';
 import TeacherRoutes from './routes/TeacherRoutes';
 import StudentRoutes from './routes/StudentRoutes';
 import RoleRouter from './components/RoleRouter';
+import RoleBasedStoreSelector from './components/RoleBasedStoreSelector';
 
 const oktaAuth = new OktaAuth(config.oidc);
 const stripePromise = loadStripe(config.oidc.stripeApiKey);
@@ -29,6 +30,8 @@ const App = () => {
     <Security oktaAuth={oktaAuth} restoreOriginalUri={restoreOriginalUri}>
       <WebSocketProvider>
         <Elements stripe={stripePromise}>
+          {/* This component handles store selection based on user role */}
+          <RoleBasedStoreSelector />
           <Routes>
             <Route path="login/callback" element={<LoginCallback loadingElement={<Loading />} />} />
             

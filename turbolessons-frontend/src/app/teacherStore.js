@@ -4,17 +4,15 @@ import studentReducer from "../components/TeacherComponents/Students/StudentSlic
 import billingReducer from "../components/TeacherComponents/Billing/BillingSlice";
 import teacherMessageReducer from "../components/TeacherComponents/Messages/TeacherMessageSlice";
 import videoReducer from "../components/TeacherComponents/Videos/VideoSlice";
-import studentMessageReducer from "../components/StudentComponents/Messages/StudentMessageSlice";
 
-export const store = configureStore({
+export const teacherStore = configureStore({
   reducer: {
     students: studentReducer,
     lessons: lessonsReducer,
     billing: billingReducer,
     teacherMessages:  teacherMessageReducer,
     videos: videoReducer,
-    studentMessages: studentMessageReducer,
   },
 });
 
-export default store;
+export default teacherStore;
