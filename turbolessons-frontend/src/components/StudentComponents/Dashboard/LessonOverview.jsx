@@ -9,14 +9,10 @@ export default function LessonOverview() {
     }
     return (
         <Card>
-            <Card.Header>
-                <h1>Lesson Overview</h1>
-            </Card.Header>
             <Card.Body>
-                <Card.Title>Lesson Details</Card.Title>
-                <Card.Text>Lesson Day: </Card.Text>
-                <Card.Text>Lesson Time: </Card.Text>
-                <Card.Text>Lesson Teacher: </Card.Text>
+                <Card.Text>Lesson Day: {lesson.day}</Card.Text>
+                <Card.Text>Lesson Time: {lesson.time}</Card.Text>
+                <Card.Text>Lesson Teacher: {lesson.teacher}</Card.Text>
             </Card.Body>
         </Card>
     )

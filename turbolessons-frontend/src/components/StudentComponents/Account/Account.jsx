@@ -1,7 +1,7 @@
 import React from 'react';
 import { Card, Container, Row, Col, CardImg } from 'react-bootstrap';
 import EditProfile from './EditProfile';
-import StudentInfo from './ProfileDetail';  
+import ProfileDetail from './ProfileDetail';  
 
 export default function Account() {
   const isUpdate = false;
@@ -46,7 +46,7 @@ export default function Account() {
                     student={student}
                   />
                 ) : (
-                  <StudentInfo
+                  <ProfileDetail
                     student={student}
                   />
                 )}

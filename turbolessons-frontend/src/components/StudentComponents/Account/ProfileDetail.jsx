@@ -6,7 +6,7 @@ import { setIsUpdate, setFormField } from './StudentSlice';
 import { setAccessToken } from '../../../service/axiosConfig';
 import { useOktaAuth } from '@okta/okta-react';
 
-export default function StudentInfo({ student }) {
+export default function ProfileDetail({ student }) {
     // const dispatch = useDispatch();
     // const { oktaAuth } = useOktaAuth();
 
