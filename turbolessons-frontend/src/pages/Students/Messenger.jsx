@@ -1,18 +1,27 @@
 import React from "react";
-import { Col, Card, Row } from "react-bootstrap";
-import SelectStudent from "../../components/TeacherComponents/Messages/SelectStudent";
+import { Card } from "react-bootstrap";
+import SelectUser from "../../components/StudentComponents/Messages/SelectUser";
 
+// Styles for equal height
+const cardStyle = {
+  height: '100%',
+  display: 'flex',
+  flexDirection: 'column'
+};
+
+const cardBodyStyle = {
+  flex: '1 1 auto' // Makes the card body expand to fill available space
+};
 
 export default function Messenger() {
-
     return (
-        <Row xs={10} style={{ backgroundColor: '#F4F4F5' }}>
-            <Col>
-                <Card>
-                    <h3>Student Messenger</h3>
-                    <SelectStudent />
-                </Card>
-            </Col>
-        </Row>
+        <Card style={cardStyle}>
+            <Card.Header>
+                Messenger
+            </Card.Header>
+            <Card.Body style={cardBodyStyle}>
+                <SelectUser />
+            </Card.Body>
+        </Card>
     )
 }

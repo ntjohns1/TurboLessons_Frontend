@@ -1,18 +1,21 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Form } from "react-bootstrap";
-import { useDispatch, useSelector } from 'react-redux';
 import SendMessage from './SendMessage';
 import DisplayMessages from './DisplayMessages';
-import { setSelectedStudent, selectSelectedStudent } from './StudentMessageSlice';
 
 export default function SelectUser() {
-  const students = useSelector((state) => state.students.studentsByTeacher);
-  const selectedUser = useSelector(selectSelectedStudent);
-  const dispatch = useDispatch();
+  // Dummy data for teachers
+  const dummyTeachers = [
+    { id: 1, displayName: 'John Smith', email: 'john.smith@example.com' },
+    { id: 2, displayName: 'Sarah Johnson', email: 'sarah.johnson@example.com' },
+    { id: 3, displayName: 'Michael Brown', email: 'michael.brown@example.com' }
+  ];
+  
+  // Local state for selected teacher
+  const [selectedUser, setSelectedUser] = useState('');
 
   const handleChange = (e) => {
-    const selectedUser = e.target.value;
-    dispatch(setSelectedStudent(selectedUser));
+    setSelectedUser(e.target.value);
   };
 
   return (
@@ -21,20 +24,20 @@ export default function SelectUser() {
         <Form.Group className='mb-3'>
           <Form.Select 
             name='selectUser' 
-            value={selectedUser || ''} 
+            value={selectedUser} 
             onChange={handleChange}
           >
-            <option value=''> Select a User </option>
-            {students && students.map((option) => (
-              <option value={option.displayName} key={option.id}>
-                {option.displayName}
+            <option value=''> Select a Teacher </option>
+            {dummyTeachers.map((teacher) => (
+              <option value={teacher.displayName} key={teacher.id}>
+                {teacher.displayName}
               </option>
             ))}
           </Form.Select>
         </Form.Group>
       </Form.Group>
       <DisplayMessages sendTo={selectedUser} />
-      <SendMessage />
+      <SendMessage selectedUser={selectedUser} />
     </>
   );
 }

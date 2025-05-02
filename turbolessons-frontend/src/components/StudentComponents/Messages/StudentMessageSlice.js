@@ -24,6 +24,7 @@ const studentMessageSlice = createSlice({
     initialState: {
         messages: [],
         loading: false,
+        selectedUser: null,
         error: null,
         messageText: "",
         showToast: false,
@@ -39,6 +40,9 @@ const studentMessageSlice = createSlice({
         setToastMessage: (state, action) => {
             state.toastMessage = action.payload;
         },
+        setSelectedUser: (state, action) => {
+            state.selectedUser = action.payload;
+        },  
         clearMessageForm: (state) => {
             state.messageText = "";
         }
@@ -83,11 +87,13 @@ export const {
     setMessageText,
     setShowToast,
     setToastMessage,
-    clearMessageForm
+    clearMessageForm,
+    setSelectedUser
 } = studentMessageSlice.actions;
 
 export const selectMessages = (state) => state.studentMessages.messages;
 export const selectMessageText = (state) => state.studentMessages.messageText;
+// export const selectSelectedUser = (state) => state.studentMessages.selectedUser;
 export const selectShowToast = (state) => state.studentMessages.showToast;
 export const selectToastMessage = (state) => state.studentMessages.toastMessage;
 export const selectLoading = (state) => state.studentMessages.loading;

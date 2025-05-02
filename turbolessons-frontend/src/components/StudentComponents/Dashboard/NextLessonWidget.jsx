@@ -1,7 +1,7 @@
 import React from 'react';
 import { Card } from 'react-bootstrap';
 
-export default function LessonOverview() {
+export default function NextLessonWidget() {
     const lesson = {
         day: "Monday",
         time: "10:00 AM",
@@ -10,7 +10,7 @@ export default function LessonOverview() {
     return (
         <Card className="m-2"> 
             <Card.Body>
-                <Card.Title>Lesson Overview</Card.Title>
+                <Card.Title>Next Lesson</Card.Title>
                 <Card.Text>Day: {lesson.day}</Card.Text>
                 <Card.Text>Time: {lesson.time}</Card.Text>
                 <Card.Text>Teacher: {lesson.teacher}</Card.Text>

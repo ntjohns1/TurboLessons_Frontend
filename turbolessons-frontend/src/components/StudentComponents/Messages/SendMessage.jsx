@@ -1,23 +1,15 @@
-import React from 'react';
-import { useOktaAuth } from '@okta/okta-react';
-import { setAccessToken } from '../../../service/axiosConfig';
+import React, { useState } from 'react';
 import { Button, Form, Container } from "react-bootstrap";
-import { useSocket } from '../../../util/context/WebSocketContext';
-import { useDispatch, useSelector } from 'react-redux';
-import { sendMessageThunk, selectSelectedStudent, selectMessageText, setMessageText } from './TeacherMessageSlice';
 import '../../../App';
 
-export default function SendMessage() {
-  const { oktaAuth } = useOktaAuth();
-  const { principle } = useSocket();
-  const dispatch = useDispatch();
-  const selectedStudent = useSelector(selectSelectedStudent);
-  const messageText = useSelector(selectMessageText);
+export default function SendMessage({ selectedUser }) {
+  // Local state for message text
+  const [messageText, setMessageText] = useState('');
   
   const handleFormSubmit = async (event) => {
     event.preventDefault();
-    if (!selectedStudent) {
-      console.log('Error: No student selected');
+    if (!selectedUser) {
+      console.log('Error: No teacher selected');
       return;
     }
     if (!messageText.trim()) {
@@ -25,40 +17,45 @@ export default function SendMessage() {
       return;
     }
 
+    // Create dummy message object (would normally be sent to API)
     const newMessage = {
-      sender: principle,
-      receiver: selectedStudent,
+      sender: 'Current Student',
+      receiver: selectedUser,
       msg: messageText,
       timestamp: new Date().toISOString()
     };
 
-    const accessToken = oktaAuth.getAccessToken();
-    setAccessToken(accessToken);
-    dispatch(sendMessageThunk(newMessage));
+    // Log the message to console instead of sending to API
+    console.log('Message would be sent:', newMessage);
+    
+    // Clear the message input after "sending"
+    setMessageText('');
+    
+    // Show a success message (optional)
+    alert(`Message sent to ${selectedUser}!`);
   };
 
   const handleInput = (e) => {
-    dispatch(setMessageText(e.target.value));
+    setMessageText(e.target.value);
   };
 
   return (
-    <Container className='my-3'>
+    <Container>
       <Form onSubmit={handleFormSubmit}>
-        <Form.Group id="addMessage">
-          <Form.Label></Form.Label>
+        <Form.Group className='mb-3'>
           <Form.Control
-            as="textarea"
-            name='msg'
+            as='textarea'
+            rows={3}
+            placeholder='Type your message here...'
             value={messageText}
             onChange={handleInput}
-            style={{ height: '100px' }}
           />
         </Form.Group>
         <Button
           className='my-2'
           type='submit'
-          variant='darkblue'
-          disabled={!selectedStudent}
+          variant='primary'
+          disabled={!selectedUser}
         >
           Send
         </Button>
