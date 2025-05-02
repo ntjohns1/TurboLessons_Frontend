@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { Card } from "react-bootstrap";
 
-const SubscriptionOverview = ({ subscription }) => {
+const SubscriptionOverview = () => {
     const subscription = {
         plan: "Basic",
         price: 10,
