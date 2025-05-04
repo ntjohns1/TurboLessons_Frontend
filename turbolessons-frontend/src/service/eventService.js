@@ -54,8 +54,6 @@ export const fetchAllEvents = async () => {
 export const fetchEventsByTeacher = async (teacher) => {
   try {
     const { data } = await api.get(`/lessons/teacher/${teacher}`);
-    console.log('data: ', data);
-    
     return destructureAndMap(data);
   } catch (error) {
     console.error("Error fetching events by teacher:", error);
@@ -97,7 +95,6 @@ export const fetchEventsByTeacherAndDate = async (teacher, date) => {
 
 export const editLessonEvent = async (id, formState) => {
   try {
-    console.log('event service: ', formState);
     const response = await api.put(`/lessons/${id}`, formState);
     return response.data;
   } catch (error) {
