@@ -1,9 +1,21 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { fetchEventsByStudent } from "../../../service/eventService";
-import { searchCustomerByOktaId, getSubscription } from "../../../service/billingService";
+import {
+  searchCustomerByOktaId,
+  getSubscription,
+} from "../../../service/billingService";
+import { getUserData } from "../../../service/adminService";
 import { adjustEvents } from "../../../util/formatters";
 
 // Thunks
+export const fetchStudentData = createAsyncThunk(
+  "lessons/fetchStudentData",
+  async ({ id }) => {
+    const userData = await getUserData(id);
+    return userData;
+  }
+);
+
 export const fetchStudentEvents = createAsyncThunk(
   "lessons/fetchStudentEvents",
   async ({ student }) => {
@@ -63,27 +75,51 @@ const calculateNextLesson = (lessons) => {
     return aTime - bTime;
   });
 
-  // Return the first (earliest) upcoming lesson
   return upcomingLessons[0];
 };
+
+export const extractTeachers = (groups) => {
+  if (!groups || !Array.isArray(groups)) {
+    return [];
+  }
+  
+  const teacherUsernames = [];
+  
+  for (const group of groups) {
+    if (group.startsWith("active_student_")) {
+      const teacherUsername = group.split("_")[2];
+      if (teacherUsername) {
+        teacherUsernames.push(teacherUsername);
+      }
+    }
+  }
+  
+  return teacherUsernames;
+}; 
 
 const initialState = {
   eventsByStudent: [],
   selectedEvent: null,
   nextLesson: null,
+  teachers: [],
   eventsLoaded: false,
   showModal: false,
   loading: false,
+  studentData: null,
   customer: null,
   subscription: null,
   customerLoading: false,
   subscriptionLoading: false,
   customerError: null,
-  subscriptionError: null
+  subscriptionError: null,
+  studentDataLoading: false,
+  studentDataError: null,
+  eventsLoading: false,
+  eventsError: null,
 };
 
-const lessonSlice = createSlice({
-  name: "lessons",
+const studentDashboardSlice = createSlice({
+  name: "studentDashboard",
   initialState,
   reducers: {
     setSelectedEvent(state, action) {
@@ -98,26 +134,39 @@ const lessonSlice = createSlice({
     setNextLesson(state, action) {
       state.nextLesson = action.payload;
     },
+    setTeachers(state, action) {
+      state.teachers = action.payload;
+    },  
   },
   extraReducers: (builder) => {
     builder
+      .addCase(fetchStudentData.pending, (state) => {
+        state.studentDataLoading = true;
+      })
+      .addCase(fetchStudentData.fulfilled, (state, action) => {
+        state.studentDataLoading = false;
+        state.studentData = action.payload;
+      })
+      .addCase(fetchStudentData.rejected, (state, action) => {
+        state.studentDataLoading = false;
+        state.studentDataError = action.error.message;
+      })
       // Student events reducers
       .addCase(fetchStudentEvents.pending, (state) => {
-        state.loading = true;
+        state.eventsLoading = true;
       })
       .addCase(fetchStudentEvents.fulfilled, (state, action) => {
-        state.loading = false;
+        state.eventsLoading = false;
         state.eventsByStudent = action.payload;
         state.eventsLoaded = true;
 
-        // Calculate and set the next lesson
         state.nextLesson = calculateNextLesson(action.payload);
       })
       .addCase(fetchStudentEvents.rejected, (state, action) => {
-        state.loading = false;
-        state.error = action.error.message;
+        state.eventsLoading = false;
+        state.eventsError = action.error.message;
       })
-      
+
       // Customer data reducers
       .addCase(fetchCustomerData.pending, (state) => {
         state.customerLoading = true;
@@ -131,7 +180,7 @@ const lessonSlice = createSlice({
         state.customerLoading = false;
         state.customerError = action.error.message;
       })
-      
+
       // Subscription data reducers
       .addCase(fetchCustomerSubscriptions.pending, (state) => {
         state.subscriptionLoading = true;
@@ -148,10 +197,10 @@ const lessonSlice = createSlice({
   },
 });
 
-export const { setSelectedEvent, setShowModal, setLoading, setNextLesson } =
-  lessonSlice.actions;
+export const { setSelectedEvent, setShowModal, setLoading, setNextLesson, setTeachers } =
+  studentDashboardSlice.actions;
 
 export const selectEventById = (state, eventId) =>
-  state.lessons.eventsByStudent.find((event) => event.id === eventId);
+  state.studentDashboard.eventsByStudent.find((event) => event.id === eventId);
 
-export default lessonSlice.reducer;
+export default studentDashboardSlice.reducer;

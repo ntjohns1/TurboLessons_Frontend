@@ -7,7 +7,7 @@ import billingReducer from "../components/TeacherComponents/Billing/BillingSlice
 import teacherMessageReducer from "../components/TeacherComponents/Messages/TeacherMessageSlice";
 import videoReducer from "../components/TeacherComponents/Videos/VideoSlice";
 
-import studentLessonsReducer from "../components/StudentComponents/Dashboard/StudentDashboardSlice";
+import studentDashboardReducer from "../components/StudentComponents/Dashboard/StudentDashboardSlice";
 import paymentsReducer from "../components/StudentComponents/Payments/PaymentsSlice";
 import studentMessageReducer from "../components/StudentComponents/Messages/StudentMessageSlice";
 import libraryReducer from "../components/StudentComponents/Library/LibrarySlice";
@@ -21,7 +21,7 @@ const createRoleBasedReducer = (role) => {
   if (role === 'student') {
     return {
       // Student role reducers
-      lessons: studentLessonsReducer,
+      studentDashboard: studentDashboardReducer,
       payments: paymentsReducer,
       studentMessages: studentMessageReducer,
       library: libraryReducer,

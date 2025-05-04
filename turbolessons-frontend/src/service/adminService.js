@@ -1,5 +1,15 @@
 import api from './axiosConfig';
 
+export const getUserData = async (id) => {
+  try {
+    const response = await api.get(`/users/${id}`);
+    return response.data;
+  } catch (error) {
+    console.error('Error fetching user data:', error);
+    throw error;
+  }
+};
+
 export const getStudentProfile = async (id) => {
   try {
     const response = await api.get(`/users/profile/${id}`);

@@ -16,8 +16,8 @@ const SubscriptionOverview = () => {
     const { authState, oktaAuth } = useOktaAuth();
     const id = authState?.idToken?.claims?.sub;
     const dispatch = useDispatch();
-    const customer = useSelector((state) => state.lessons?.customer);
-    const subscription = useSelector((state) => state.lessons?.subscription);
+    const customer = useSelector((state) => state.studentDashboard?.customer);
+    const subscription = useSelector((state) => state.studentDashboard?.subscription);
     const plan = subscription?.items?.data[0]?.price?.productObject?.description;
     const price = subscription?.items?.data[0]?.price?.unitAmount;
 
@@ -29,7 +29,7 @@ const SubscriptionOverview = () => {
                     
                     // Fetch customer data first
                     const customerResponse = await dispatch(fetchCustomerData({ id })).unwrap();
-                    console.log("Customer: ", JSON.stringify(customerResponse, null, 2));
+
                     // Check if customer has subscriptions
                     if (customerResponse?.subscriptions && customerResponse.subscriptions.length > 0) {
                         const subscriptionId = customerResponse.subscriptions[0];
@@ -46,11 +46,6 @@ const SubscriptionOverview = () => {
         fetchData();
     }, [authState?.isAuthenticated, id, dispatch, oktaAuth]);
 
-    useEffect(() => {
-        if (subscription) {
-            console.log("Subscription: ", JSON.stringify(subscription, null, 2));
-        }
-    }, [subscription]);
     
     return (
         <Card className="m-2">

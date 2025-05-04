@@ -14,8 +14,8 @@ export default function NextLessonWidget() {
     const student = authState?.idToken?.claims?.name;
     
     // Get data from Redux store
-    const nextLesson = useSelector((state) => state.lessons?.nextLesson);
-    const loading = useSelector((state) => state.lessons?.loading || false);
+    const nextLesson = useSelector((state) => state.studentDashboard?.nextLesson);
+    const loading = useSelector((state) => state.studentDashboard?.loading || false);
 
     // Fetch student events when component mounts
     useEffect(() => {
