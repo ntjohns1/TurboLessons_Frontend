@@ -1,6 +1,6 @@
 import React from "react";
 import { Card } from "react-bootstrap";
-import SelectUser from "../../components/StudentComponents/Messages/SelectUser";
+import ChatContainer from "../../components/StudentComponents/Messages/ChatContainer";
 
 // Styles for equal height
 const cardStyle = {
@@ -20,7 +20,7 @@ export default function Messenger() {
                 Messenger
             </Card.Header>
             <Card.Body style={cardBodyStyle}>
-                <SelectUser />
+                <ChatContainer />
             </Card.Body>
         </Card>
     )

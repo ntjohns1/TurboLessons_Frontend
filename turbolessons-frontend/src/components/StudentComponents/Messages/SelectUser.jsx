@@ -36,8 +36,6 @@ export default function SelectUser() {
           </Form.Select>
         </Form.Group>
       </Form.Group>
-      <DisplayMessages sendTo={selectedUser} />
-      <SendMessage selectedUser={selectedUser} />
     </>
   );
 }
