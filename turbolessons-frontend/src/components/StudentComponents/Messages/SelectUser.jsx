@@ -10,7 +10,7 @@ export default function SelectUser() {
 
   // Local state for selected teacher
   const [selectedUser, setSelectedUser] = useState('');
-  
+
   // Fetch student data when component mounts
   useEffect(() => {
     if (authState?.idToken?.claims?.sub) {
@@ -27,7 +27,8 @@ export default function SelectUser() {
     }
   }, [authState, dispatch]);
 
-  const teachers = useSelector((state) => state.studentDashboard.teachers || []);
+
+  const teachers = useSelector((state) => state.studentDashboard?.teachers || []);
 
   const handleChange = (e) => {
     console.log('Selected teacher:', e.target.value);
@@ -44,7 +45,7 @@ export default function SelectUser() {
             onChange={handleChange}
           >
             <option value=''> Select a Teacher </option>
-            {teachers.map((teacherUsername, index) => (
+            {teachers?.map((teacherUsername, index) => (
               <option value={teacherUsername} key={index}>
                 {teacherUsername}
               </option>

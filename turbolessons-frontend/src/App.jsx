@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { OktaAuth, toRelativeUrl } from '@okta/okta-auth-js';
 import { Security } from '@okta/okta-react';
@@ -24,6 +24,24 @@ const App = () => {
   const restoreOriginalUri = (_oktaAuth, originalUri) => {
     navigate(toRelativeUrl(originalUri || '/', window.location.origin));
   };
+
+  // Dispatch custom event when authentication state changes
+  useEffect(() => {
+    const handleAuthStateChange = (authState) => {
+      if (authState?.isAuthenticated) {
+        // Dispatch a custom event that StoreProvider can listen for
+        const loginEvent = new CustomEvent('okta-login-success');
+        window.dispatchEvent(loginEvent);
+        console.log('Auth state changed, dispatched okta-login-success event');
+      }
+    };
+
+    oktaAuth.authStateManager.subscribe(handleAuthStateChange);
+    
+    return () => {
+      oktaAuth.authStateManager.unsubscribe(handleAuthStateChange);
+    };
+  }, []);
 
   return (
     <Security oktaAuth={oktaAuth} restoreOriginalUri={restoreOriginalUri}>

@@ -116,6 +116,9 @@ const initialState = {
   studentDataError: null,
   eventsLoading: false,
   eventsError: null,
+  eventsInitialized: false,
+  customerInitialized: false,
+  subscriptionInitialized: false
 };
 
 const studentDashboardSlice = createSlice({
@@ -159,6 +162,7 @@ const studentDashboardSlice = createSlice({
         state.eventsLoading = false;
         state.eventsByStudent = action.payload;
         state.eventsLoaded = true;
+        state.eventsInitialized = true;
 
         state.nextLesson = calculateNextLesson(action.payload);
       })
@@ -175,6 +179,7 @@ const studentDashboardSlice = createSlice({
       .addCase(fetchCustomerData.fulfilled, (state, action) => {
         state.customerLoading = false;
         state.customer = action.payload;
+        state.customerInitialized = true;
       })
       .addCase(fetchCustomerData.rejected, (state, action) => {
         state.customerLoading = false;
@@ -189,6 +194,7 @@ const studentDashboardSlice = createSlice({
       .addCase(fetchCustomerSubscriptions.fulfilled, (state, action) => {
         state.subscriptionLoading = false;
         state.subscription = action.payload;
+        state.subscriptionInitialized = true;
       })
       .addCase(fetchCustomerSubscriptions.rejected, (state, action) => {
         state.subscriptionLoading = false;
