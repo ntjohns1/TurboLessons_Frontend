@@ -1,11 +1,19 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Button, Form, Container } from "react-bootstrap";
 import '../../../App';
+import { useOktaAuth } from '@okta/okta-react';
+import { useSocket } from '../../../util/context/WebSocketContext';
+import { useDispatch, useSelector } from 'react-redux';
+import { sendMessageThunk, selectMessageText, setMessageText, selectSelectedUser } from './StudentMessageSlice';
+import { setAccessToken } from '../../../service/axiosConfig';
 
-export default function SendMessage({ selectedUser }) {
-  // Local state for message text
-  const [messageText, setMessageText] = useState('');
-  
+export default function SendMessage() {
+  const { oktaAuth } = useOktaAuth();
+  const { principle } = useSocket();
+  const selectedUser = useSelector(selectSelectedUser);
+  const dispatch = useDispatch();
+  const messageText = useSelector(selectMessageText);
+
   const handleFormSubmit = async (event) => {
     event.preventDefault();
     if (!selectedUser) {
@@ -17,26 +25,21 @@ export default function SendMessage({ selectedUser }) {
       return;
     }
 
-    // Create dummy message object (would normally be sent to API)
     const newMessage = {
-      sender: 'Current Student',
+      sender: principle,
       receiver: selectedUser,
       msg: messageText,
       timestamp: new Date().toISOString()
     };
 
-    // Log the message to console instead of sending to API
-    console.log('Message would be sent:', newMessage);
-    
-    // Clear the message input after "sending"
-    setMessageText('');
-    
-    // Show a success message (optional)
-    alert(`Message sent to ${selectedUser}!`);
+    const accessToken = oktaAuth.getAccessToken();
+    setAccessToken(accessToken);
+    dispatch(sendMessageThunk(newMessage));
+    dispatch(setMessageText(''));
   };
 
   const handleInput = (e) => {
-    setMessageText(e.target.value);
+    dispatch(setMessageText(e.target.value));
   };
 
   return (
@@ -55,7 +58,7 @@ export default function SendMessage({ selectedUser }) {
           className='my-2'
           type='submit'
           variant='primary'
-          disabled={!selectedUser}
+          disabled={!selectedUser || !messageText.trim()}
         >
           Send
         </Button>

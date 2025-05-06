@@ -93,7 +93,7 @@ export const {
 
 export const selectMessages = (state) => state.studentMessages.messages;
 export const selectMessageText = (state) => state.studentMessages.messageText;
-// export const selectSelectedUser = (state) => state.studentMessages.selectedUser;
+export const selectSelectedUser = (state) => state.studentMessages.selectedUser;
 export const selectShowToast = (state) => state.studentMessages.showToast;
 export const selectToastMessage = (state) => state.studentMessages.toastMessage;
 export const selectLoading = (state) => state.studentMessages.loading;

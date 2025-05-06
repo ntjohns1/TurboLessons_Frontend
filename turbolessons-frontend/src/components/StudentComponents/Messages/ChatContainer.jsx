@@ -4,7 +4,7 @@ import DisplayMessages from './DisplayMessages';
 import SendMessage from './SendMessage';
 import SelectUser from './SelectUser';
 
-const MessageContainer = () => {
+const ChatContainer = () => {
     return (
         <Card>
             <Card.Body>
@@ -16,4 +16,4 @@ const MessageContainer = () => {
     );
 };
 
-export default MessageContainer;
+export default ChatContainer;
