@@ -1,6 +1,6 @@
 import React from "react";
 import { Col, Card, Row } from "react-bootstrap";
-import SelectStudent from "../../components/TeacherComponents/Messages/SelectStudent";
+import ChatContainer from "../../components/TeacherComponents/Messages/ChatContainer";
 
 
 export default function Messenger() {
@@ -10,7 +10,7 @@ export default function Messenger() {
             <Col>
                 <Card>
                     <h3>Student Messenger</h3>
-                    <SelectStudent />
+                    <ChatContainer />
                 </Card>
             </Col>
         </Row>
