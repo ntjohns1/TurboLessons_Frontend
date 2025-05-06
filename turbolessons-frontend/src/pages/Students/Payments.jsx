@@ -4,7 +4,7 @@ import InvoiceHistory from '../../components/StudentComponents/Payments/InvoiceH
 import CreatePaymentMethod from '../../components/StudentComponents/Payments/CreatePaymentMethod';
 import CreateSubscription from '../../components/StudentComponents/Payments/CreateSubscription';
 import CreateStripeAccount from '../../components/StudentComponents/Payments/CreateStripeAccount';
-import ManageSubscription from '../../components/StudentComponents/Payments/ManageSubscription';
+import SubscriptionDetail from '../../components/StudentComponents/Payments/SubscriptionDetail';
 import ManagePaymentMethod from '../../components/StudentComponents/Payments/ManagePaymentMethod';  
 
 const Payments = () => {
@@ -14,7 +14,7 @@ const Payments = () => {
             <InvoiceHistory />
             <CreateSubscription />
             <CreateStripeAccount />
-            <ManageSubscription />
+            <SubscriptionDetail />
             <ManagePaymentMethod />
             <Modal show={showModal} onHide={() => setShowModal(false)}>
                 <Modal.Header closeButton>

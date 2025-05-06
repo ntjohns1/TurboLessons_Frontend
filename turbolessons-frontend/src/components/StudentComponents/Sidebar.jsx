@@ -10,7 +10,7 @@ const sidebarItems = [
   { to: "/student_portal/library", label: "Library" },
   { to: "/student_portal/messages", label: "Messages" },
   { to: "/student_portal/settings", label: "Settings" },
-  { to: "/student_portal/billing", label: "Payments" },
+  { to: "/student_portal/payments", label: "Payments" },
 ];
 
 export default function Sidebar() {

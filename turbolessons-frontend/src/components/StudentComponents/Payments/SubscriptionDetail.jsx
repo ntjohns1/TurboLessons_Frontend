@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { Card } from "react-bootstrap";
 
-const SubscriptionOverview = ({ subscription }) => {
+const SubscriptionDetail = () => {
     const subscription = {
         plan: "Basic",
         price: 10,
@@ -19,4 +19,4 @@ const SubscriptionOverview = ({ subscription }) => {
             </Card>
     );
 };
-export default SubscriptionOverview;
+export default SubscriptionDetail;
