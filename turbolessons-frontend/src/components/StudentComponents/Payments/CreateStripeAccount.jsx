@@ -31,4 +31,4 @@ const CreateStripeAccount = () => {
     );
 };
 
-export default CreateStripeAccount; 
+export default CreateStripeAccount;

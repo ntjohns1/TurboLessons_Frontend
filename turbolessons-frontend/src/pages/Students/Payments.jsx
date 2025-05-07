@@ -1,5 +1,5 @@
 import React from 'react';
-import { Container, Modal } from 'react-bootstrap';
+import { Container, Modal, Row, Col } from 'react-bootstrap';
 import InvoiceHistory from '../../components/StudentComponents/Payments/InvoiceHistory';
 import CreatePaymentMethod from '../../components/StudentComponents/Payments/CreatePaymentMethod';
 import CreateSubscription from '../../components/StudentComponents/Payments/CreateSubscription';
@@ -11,11 +11,13 @@ const Payments = () => {
     const [showModal, setShowModal] = React.useState(false);
     return (
         <Container>
-            <InvoiceHistory />
-            <CreateSubscription />
-            <CreateStripeAccount />
-            <SubscriptionDetail />
-            <ManagePaymentMethod />
+            <Row>             
+                    <SubscriptionDetail /> 
+                    <InvoiceHistory />
+                    {/* <CreateSubscription />
+                    <CreateStripeAccount /> */}
+                    <ManagePaymentMethod />
+            </Row>
             <Modal show={showModal} onHide={() => setShowModal(false)}>
                 <Modal.Header closeButton>
                     <Modal.Title>Create Payment Method</Modal.Title>

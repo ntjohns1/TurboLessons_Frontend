@@ -257,6 +257,11 @@ export const buildReducers = (builder, entityThunks, adapter, namespace) => {
           if (!state.entities[namespace]) {
             state.entities[namespace] = adapter.getInitialState();
           }
+          if (namespace === "customer") {
+            state.loading = false;
+            state.entities[namespace] = adapter.upsertOne(state.entities["customer"], action.payload);
+            state.subscriptionId = action.payload.subscriptions[0] || null;
+          }
           if (namespace === "customers") {
             state.stripeCustomerId = action.payload.id || null;
             state.stripeCustomerSubscription =

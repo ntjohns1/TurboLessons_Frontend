@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from 'react-redux';
-import { Card, Container } from "react-bootstrap";
+import { Card } from "react-bootstrap";
 import { fetchAllPricesThunk, fetchAllProductsThunk } from "./BillingSlice";
 
 const SubscriptionDetails = ({ subscription }) => {

@@ -1,9 +1,5 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { fetchEventsByStudent } from "../../../service/eventService";
-import {
-  searchCustomerByOktaId,
-  getSubscription,
-} from "../../../service/billingService";
 import { getUserData } from "../../../service/adminService";
 import { adjustEvents } from "../../../util/formatters";
 
@@ -21,22 +17,6 @@ export const fetchStudentEvents = createAsyncThunk(
   async ({ student }) => {
     const plainEventObjects = await fetchEventsByStudent(student);
     return adjustEvents(plainEventObjects);
-  }
-);
-
-export const fetchCustomerData = createAsyncThunk(
-  "lessons/fetchCustomerData",
-  async ({ id }) => {
-    const customer = await searchCustomerByOktaId(id);
-    return customer;
-  }
-);
-
-export const fetchCustomerSubscriptions = createAsyncThunk(
-  "lessons/fetchCustomerSubscriptions",
-  async ({ id }) => {
-    const subscriptions = await getSubscription(id);
-    return subscriptions;
   }
 );
 
@@ -76,7 +56,7 @@ const calculateNextLesson = (lessons) => {
   });
 
   return upcomingLessons[0];
-};
+}; 
 
 export const extractTeachers = (groups) => {
   if (!groups || !Array.isArray(groups)) {
@@ -106,19 +86,11 @@ const initialState = {
   showModal: false,
   loading: false,
   studentData: null,
-  customer: null,
-  subscription: null,
-  customerLoading: false,
-  subscriptionLoading: false,
-  customerError: null,
-  subscriptionError: null,
+  eventsInitialized: false,
   studentDataLoading: false,
   studentDataError: null,
   eventsLoading: false,
-  eventsError: null,
-  eventsInitialized: false,
-  customerInitialized: false,
-  subscriptionInitialized: false
+  eventsError: null
 };
 
 const studentDashboardSlice = createSlice({
@@ -169,36 +141,6 @@ const studentDashboardSlice = createSlice({
       .addCase(fetchStudentEvents.rejected, (state, action) => {
         state.eventsLoading = false;
         state.eventsError = action.error.message;
-      })
-
-      // Customer data reducers
-      .addCase(fetchCustomerData.pending, (state) => {
-        state.customerLoading = true;
-        state.customerError = null;
-      })
-      .addCase(fetchCustomerData.fulfilled, (state, action) => {
-        state.customerLoading = false;
-        state.customer = action.payload;
-        state.customerInitialized = true;
-      })
-      .addCase(fetchCustomerData.rejected, (state, action) => {
-        state.customerLoading = false;
-        state.customerError = action.error.message;
-      })
-
-      // Subscription data reducers
-      .addCase(fetchCustomerSubscriptions.pending, (state) => {
-        state.subscriptionLoading = true;
-        state.subscriptionError = null;
-      })
-      .addCase(fetchCustomerSubscriptions.fulfilled, (state, action) => {
-        state.subscriptionLoading = false;
-        state.subscription = action.payload;
-        state.subscriptionInitialized = true;
-      })
-      .addCase(fetchCustomerSubscriptions.rejected, (state, action) => {
-        state.subscriptionLoading = false;
-        state.subscriptionError = action.error.message;
       });
   },
 });

@@ -7,33 +7,19 @@ import { buildThunks, buildReducers } from "../../../util/reduxUtil";
 
 import {
   getCustomer,
-  listAllCustomers,
   searchCustomerByOktaId,
   createCustomer,
   editCustomer,
   deleteCustomer,
-  listAllInvoices,
   listAllInvoicesByCustomer,
   listAllInvoicesBySubscription,
   getInvoice,
   getUpcomingInvoice,
-  createInvoice,
-  editInvoice,
-  deleteInvoice,
   finalizeInvoice,
   payInvoice,
   voidInvoice,
-  markUncollectibleInvoice,
   retrieveLineItems,
   retrieveUpcomingLineItems,
-  listAllMeters,
-  getMeter,
-  createMeter,
-  editMeter,
-  deactivateMeter,
-  reactivateMeter,
-  createMeterEvent,
-  listAllPaymentIntents,
   getPaymentIntent,
   searchPaymentIntentByCustomer,
   createPaymentIntent,
@@ -52,20 +38,13 @@ import {
   detachPaymentMethod,
   listAllPrices,
   getPrice,
-  createPrice,
-  editPrice,
   listAllProducts,
   getProduct,
-  createProduct,
-  editProduct,
-  deleteProduct,
-  listAllSetupIntents,
   getSetupIntent,
   createSetupIntent,
   confirmSetupIntent,
   editSetupIntent,
   cancelSetupIntent,
-  listAllSubscriptions,
   getSubscription,
   createSubscription,
   editSubscription,
@@ -73,7 +52,23 @@ import {
 } from "../../../service/billingService";
 
 // Entity Adapters
-const customerAdapter = createEntityAdapter();
+const customerAdapter = createEntityAdapter({
+  selectId: (customer) => {
+    // Check if the customer is an object with an id property
+    if (customer && typeof customer === 'object' && customer.id) {
+      return customer.id;
+    }
+    
+    // If it's a string (like a customer ID), use that directly
+    if (typeof customer === 'string') {
+      return customer;
+    }
+    
+    // For any other case, generate a fallback ID to prevent errors
+    console.warn('Customer entity without proper ID:', customer);
+    return `unknown_${Math.random().toString(36).substring(2, 15)}`;
+  }
+});
 const invoiceAdapter = createEntityAdapter();
 const invoiceLineItemAdapter = createEntityAdapter();
 const paymentIntentAdapter = createEntityAdapter();
@@ -200,6 +195,7 @@ const paymentsSlice = createSlice({
       subscriptions: subscriptionAdapter.getInitialState({}),
       subscriptionItems: subscriptionItemAdapter.getInitialState({}),
     },
+    subscriptionId: "",
     loading: false,
     successMessage: "",
     error: null,
@@ -318,7 +314,7 @@ const paymentsSlice = createSlice({
     },
   },
   extraReducers: (builder) => {
-    buildReducers(builder, customerThunks, customerAdapter, "customers");
+    buildReducers(builder, customerThunks, customerAdapter, "customer");
     buildReducers(builder, invoiceThunks, invoiceAdapter, "invoices");
     buildReducers(
       builder,
@@ -453,19 +449,19 @@ export const {
 } = subscriptionItemThunks;
 
 export const selectProducts = createSelector(
-  (state) => state.billing.entities["products"].entities,
+  (state) => state.payments.entities["products"].entities,
   (entities) => Object.values(entities || {})
 );
 
 export const selectPaymentMethods = createSelector(
-  (state) => state.billing.entities["paymentMethods"].entities,
+  (state) => state.payments.entities["paymentMethods"].entities,
   (entities) => Object.values(entities || {})
 );
 
 // Selector to fetch a customer by metadata.okta_id
 export const selectCustomerBySysId = createSelector(
   [
-    (state) => state.billing?.entities["customers"]?.entities || {}, // Ensure a fallback object
+    (state) => state.payments?.entities["customers"]?.entities || {}, // Ensure a fallback object
     (_, oktaId) => oktaId,
   ],
   (customers, oktaId) => {
