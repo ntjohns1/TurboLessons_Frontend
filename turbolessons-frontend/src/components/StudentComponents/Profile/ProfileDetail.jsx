@@ -2,7 +2,7 @@ import React from 'react';
 import { FaEdit } from "react-icons/fa";
 import { Button, Card, Col, Form, Row } from 'react-bootstrap';
 import { useDispatch } from 'react-redux';
-import { setIsUpdate, setFormField } from './StudentSlice';
+import { setIsUpdate, setFormField } from './ProfileSlice';
 import { setAccessToken } from '../../../service/axiosConfig';
 import { useOktaAuth } from '@okta/okta-react';
 

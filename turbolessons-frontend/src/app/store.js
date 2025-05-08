@@ -11,6 +11,7 @@ import studentDashboardReducer from "../components/StudentComponents/Dashboard/S
 import paymentsReducer from "../components/StudentComponents/Payments/PaymentsSlice";
 import studentMessageReducer from "../components/StudentComponents/Messages/StudentMessageSlice";
 import libraryReducer from "../components/StudentComponents/Library/LibrarySlice";
+import profileReducer from "../components/StudentComponents/Profile/ProfileSlice";
 
 /**
  * Creates a role-based reducer configuration
@@ -18,13 +19,14 @@ import libraryReducer from "../components/StudentComponents/Library/LibrarySlice
  * @returns {Object} - Reducer configuration for the specified role
  */
 const createRoleBasedReducer = (role) => {
-  if (role === 'student') {
+  if (role === "student") {
     return {
       // Student role reducers
       studentDashboard: studentDashboardReducer,
       payments: paymentsReducer,
       studentMessages: studentMessageReducer,
       library: libraryReducer,
+      profile: profileReducer,
     };
   } else {
     // Teacher/Admin role reducers
@@ -45,7 +47,7 @@ const createRoleBasedReducer = (role) => {
  */
 export const configureAppStore = (role) => {
   console.log(`Configuring store for role: ${role}`);
-  
+
   return configureStore({
     reducer: createRoleBasedReducer(role),
     // Add any middleware or other store enhancers here
@@ -53,6 +55,6 @@ export const configureAppStore = (role) => {
 };
 
 // Create a default store (will be replaced by the role-specific store)
-const store = configureAppStore('teacher');
+const store = configureAppStore("teacher");
 
 export default store;

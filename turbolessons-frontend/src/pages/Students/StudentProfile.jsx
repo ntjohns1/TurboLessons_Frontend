@@ -1,9 +1,9 @@
 import React from 'react';
 import { Card, Container, Row, Col, CardImg } from 'react-bootstrap';
-import EditProfile from './EditProfile';
-import ProfileDetail from './ProfileDetail';  
+import EditProfile from '../../components/StudentComponents/Profile/EditProfile';
+import ProfileDetail from '../../components/StudentComponents/Profile/ProfileDetail';  
 
-export default function Account() {
+export default function StudentProfile() {
   const isUpdate = false;
   const student = {
     displayName: "John Doe",

@@ -8,7 +8,7 @@ import {
 
 // Thunks
 export const fetchStudentProfile = createAsyncThunk(
-  "students/fetchStudentProfile",
+  "profile/fetchStudentProfile",
   async ({ id }) => {
     const response = await getStudentProfile(id);
     return response;
@@ -16,7 +16,7 @@ export const fetchStudentProfile = createAsyncThunk(
 );
 
 export const updateStudent = createAsyncThunk(
-  "students/updateStudent",
+  "profile/updateStudent",
   async ({ id, formState }) => {
     const response = editStudent(id, formState);
     return response;
@@ -24,11 +24,11 @@ export const updateStudent = createAsyncThunk(
 );
 
 // Slice
-const accountSlice = createSlice({
-  name: "account",
+const profileSlice = createSlice({
+  name: "profile",
   initialState: {
     formState: {
-      city: "",
+      city: "", 
       displayName: "",
       email: "",
       firstName: "",
@@ -105,20 +105,6 @@ const accountSlice = createSlice({
         state.loading = false;
         state.error = action.error;
       })
-      .addCase(removeStudent.pending, (state) => {
-        state.loading = true;
-        state.error = null;
-      })
-      .addCase(removeStudent.fulfilled, (state, action) => {
-        state.loading = false;
-        state.studentsByTeacher = state.studentsByTeacher.filter(
-          (student) => student.id !== action.payload
-        );
-      })
-      .addCase(removeStudent.rejected, (state, action) => {
-        state.loading = false;
-        state.error = action.error;
-      });
   },
 });
 
@@ -128,17 +114,17 @@ export const {
   setIsUpdate,
   setLoading,
   resetFormState,
-} = accountSlice.actions;
+} = profileSlice.actions;
 
 // Selectors
-export const selectStudentsByTeacher = (state) => state.students.studentsByTeacher;
-export const selectStudentProfile = (state) => state.students.studentProfile;
-export const selectIsUpdate = (state) => state.students.isUpdate;
-export const selectLoading = (state) => state.students.loading;
-export const selectError = (state) => state.students.error;
-export const selectFormState = (state) => state.students.formState;
-export const selectStudentsLoaded = (state) => state.students.studentsLoaded;
+export const selectStudentsByTeacher = (state) => state.profile.studentsByTeacher;
+export const selectStudentProfile = (state) => state.profile.studentProfile;
+export const selectIsUpdate = (state) => state.profile.isUpdate;
+export const selectLoading = (state) => state.profile.loading;
+export const selectError = (state) => state.profile.error;
+export const selectFormState = (state) => state.profile.formState;
+export const selectStudentsLoaded = (state) => state.profile.studentsLoaded;
 export const selectStudentById = (state, studentId) =>
-  state.students.studentsByTeacher.find((student) => student.id === studentId);
+  state.profile.studentsByTeacher.find((student) => student.id === studentId);
 
-export default accountSlice.reducer;
+export default profileSlice.reducer;
