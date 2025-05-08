@@ -1,22 +1,47 @@
-import React from 'react';
+import React, { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { useOktaAuth } from '@okta/okta-react';
 import { Card, Container, Row, Col, CardImg } from 'react-bootstrap';
 import EditProfile from '../../components/StudentComponents/Profile/EditProfile';
-import ProfileDetail from '../../components/StudentComponents/Profile/ProfileDetail';  
+import ProfileDetail from '../../components/StudentComponents/Profile/ProfileDetail';
+import { 
+  fetchStudentProfile, 
+  selectStudentProfile,
+  selectIsUpdate,
+  setIsUpdate,
+  selectLoading,
+  selectError 
+} from '../../components/StudentComponents/Profile/ProfileSlice';
+import { setAccessToken } from '../../service/axiosConfig';
 
 export default function StudentProfile() {
-  const isUpdate = false;
-  const student = {
-    displayName: "John Doe",
-    email: "john.doe@example.com",
-    firstName: "John",
-    middleName: "Doe",
-    lastName: "Doe", 
-    mobilePhone: "123-456-7890",
-    primaryPhone: "123-456-7890",
-    streetAddress: "123 Main St",
-    city: "Anytown",
-    state: "CA",
-    zipCode: "12345",
+  const dispatch = useDispatch();
+  const { authState, oktaAuth } = useOktaAuth();
+  const id = authState?.idToken?.claims?.sub;
+  
+  const student = useSelector(selectStudentProfile);
+  const isUpdate = useSelector(selectIsUpdate);
+  const loading = useSelector(selectLoading);
+  const error = useSelector(selectError);
+
+  useEffect(() => {
+    if (authState.isAuthenticated && id) {
+      const accessToken = oktaAuth.getAccessToken();
+      setAccessToken(accessToken);
+      dispatch(fetchStudentProfile({ id }));
+    }
+  }, [authState, id, dispatch]);
+
+  if (loading) {
+    return <div>Loading student profile...</div>;
+  }
+
+  if (error) {
+    return <div>Error loading student profile: {error.message}</div>;
+  }
+
+  if (!student || Object.keys(student).length === 0) {
+    return <div>Profile not found</div>;
   }
 
   return (

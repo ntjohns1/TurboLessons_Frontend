@@ -117,14 +117,12 @@ export const {
 } = profileSlice.actions;
 
 // Selectors
-export const selectStudentsByTeacher = (state) => state.profile.studentsByTeacher;
 export const selectStudentProfile = (state) => state.profile.studentProfile;
 export const selectIsUpdate = (state) => state.profile.isUpdate;
 export const selectLoading = (state) => state.profile.loading;
 export const selectError = (state) => state.profile.error;
 export const selectFormState = (state) => state.profile.formState;
 export const selectStudentsLoaded = (state) => state.profile.studentsLoaded;
-export const selectStudentById = (state, studentId) =>
-  state.profile.studentsByTeacher.find((student) => student.id === studentId);
+
 
 export default profileSlice.reducer;

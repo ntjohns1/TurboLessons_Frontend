@@ -2,25 +2,21 @@ import React from 'react';
 import { FaEdit } from "react-icons/fa";
 import { Button, Card, Col, Form, Row } from 'react-bootstrap';
 import { useDispatch } from 'react-redux';
-import { setIsUpdate, setFormField } from './ProfileSlice';
-import { setAccessToken } from '../../../service/axiosConfig';
-import { useOktaAuth } from '@okta/okta-react';
+import {
+    setIsUpdate,
+    setFormField
+} from './ProfileSlice';
 
 export default function ProfileDetail({ student }) {
-    // const dispatch = useDispatch();
-    // const { oktaAuth } = useOktaAuth();
 
-    // const handleEdit = () => {
-    //     // Initialize form state with current student data
-    //     Object.entries(student).forEach(([field, value]) => {
-    //         dispatch(setFormField({ field, value: value || "" }));
-    //     });
-    //     dispatch(setIsUpdate(true));
-    // };
-
+    const dispatch = useDispatch();
     const handleEdit = () => {
-        console.log(student);
-    }
+        // Initialize form state with current student data
+        Object.entries(student).forEach(([field, value]) => {
+            dispatch(setFormField({ field, value: value || "" }));
+        });
+        dispatch(setIsUpdate(true));
+    };
 
     return (
         <Card className="card-user">

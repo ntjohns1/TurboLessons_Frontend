@@ -3,7 +3,7 @@ import { Card, Form, Button, Row, Col } from 'react-bootstrap';
 import { FaRegWindowClose } from "react-icons/fa";
 import DeleteUserBtn from './DeleteUserBtn';
 
-export default function EditProfile({ student }) {
+export default function EditProfile({ student, id }) {
 
     const handleChange = (event) => {
         const { name, value } = event.target;
@@ -148,17 +148,16 @@ export default function EditProfile({ student }) {
                             />
                         </Col>
                     </Form.Group>
+                </Form>
+            </Card.Body>
+            <Card.Footer className='p-2 d-flex justify-content-center'>
                     <Button
                         type='submit'
                         variant='primary'
                         className='my-2'
                     >
-                        Update Student
+                        Update Profile
                     </Button>
-                </Form>
-            </Card.Body>
-            <Card.Footer className='p-2 d-flex justify-content-center'>
-                <DeleteUserBtn id={id} student={student} />
             </Card.Footer>
         </Card>
     );
