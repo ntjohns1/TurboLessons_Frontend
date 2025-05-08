@@ -8,7 +8,7 @@ import ManagePaymentMethod from '../../components/StudentComponents/Payments/Man
 import { useOktaAuth } from '@okta/okta-react';
 import { setAccessToken } from '../../service/axiosConfig';
 import { searchCustomersBySysIdThunk, fetchOneSubscriptionThunk } from "../../components/StudentComponents/Payments/PaymentsSlice";
-import { formatCurrency, formatDate } from "../../util/formatters";
+
 
 const Payments = () => {
     const [showModal, setShowModal] = React.useState(false);
@@ -62,7 +62,7 @@ const Payments = () => {
         <Container>
             <Row>
                 <SubscriptionDetail subscription={subscription} />
-                <InvoiceHistory />
+                <InvoiceHistory subscriptionId={subscriptionId} />
                 {/* <CreateSubscription />
                     <CreateStripeAccount /> */}
                 <ManagePaymentMethod />
