@@ -196,6 +196,7 @@ const paymentsSlice = createSlice({
       subscriptionItems: subscriptionItemAdapter.getInitialState({}),
     },
     subscriptionId: "",
+    customerId: "",
     loading: false,
     successMessage: "",
     error: null,

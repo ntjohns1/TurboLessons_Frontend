@@ -1,14 +1,27 @@
-import React from "react";
-import { Card, Button, Form, Row, Col } from "react-bootstrap";
+import React, { useEffect } from "react";
+import { Container, Row, Col, Table, Form, Button, Card } from "react-bootstrap";
+import { useDispatch, useSelector } from 'react-redux';
+import { fetchPaymentMethodsByCustomerThunk, selectPaymentMethods } from "./PaymentsSlice";
+import { setAccessToken } from "../../../service/axiosConfig";
+import { useOktaAuth } from '@okta/okta-react';
 
 const ManagePaymentMethod = ({ stripeCustomerId }) => {
-
+    const { authState, oktaAuth } = useOktaAuth();
+    const accessToken = oktaAuth.getAccessToken();
+    const dispatch = useDispatch();
+    const customerPaymentMethods = useSelector(selectPaymentMethods);
     const showDetails = false;
-    const customerPaymentMethods = [];
+
+    useEffect(() => {
+        setAccessToken(accessToken);
+        if (stripeCustomerId) {
+            dispatch(fetchPaymentMethodsByCustomerThunk({ customerId: stripeCustomerId }));
+        }
+    }, [dispatch, stripeCustomerId, accessToken]);
 
     const handleChange = (e) => {
-        e.preventDefault();
-        console.log('Form submitted', e.target);
+        const { name, value } = e.target;
+        dispatch(updatePaymentMethodFormState({ field: name, value }));
     };
 
     return (
@@ -22,11 +35,11 @@ const ManagePaymentMethod = ({ stripeCustomerId }) => {
                 ) : (
                     <Card.Body>
                         <h3>Payment Methods</h3>
-                        <Form onSubmit={handleChange}>
+                        <Form>
                             <Form.Group as={Row} controlId="paymentMethod">
                                 <Form.Label column sm="2">Payment Method</Form.Label>
                                 <Col sm="10">
-                                    <Form.Control as="select" name="paymentMethod">
+                                    <Form.Control as="select" name="paymentMethod" onChange={handleChange}>
                                         <option value="">Select Payment Method</option>
                                         {customerPaymentMethods.map((method) => (
                                             <option key={method.id} value={method.id}>{method.card.brand} **** **** **** {method.card.last4}</option>

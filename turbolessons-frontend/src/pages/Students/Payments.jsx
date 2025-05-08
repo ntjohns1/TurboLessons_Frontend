@@ -17,12 +17,10 @@ const Payments = () => {
     const id = authState?.idToken?.claims?.sub;
     const dispatch = useDispatch();
     const customerAdapter = useSelector((state) => state.payments.entities["customer"]);
-    const customerData = customerAdapter?.entities[id];
-
     const subscriptionId = useSelector((state) => state.payments?.subscriptionId);
+    const customerId = useSelector((state) => state.payments?.customerId);
     const subscriptions = useSelector((state) => state.payments?.entities?.subscriptions);
     const subscription = subscriptions?.entities[subscriptionId];
-
     const loading = useSelector((state) => state.payments?.loading);
 
     const plan = subscription?.items?.data[0]?.price?.productObject?.description;
@@ -30,7 +28,8 @@ const Payments = () => {
 
     useEffect(() => {
         const fetchCustomerData = async () => {
-            if (authState?.isAuthenticated && id && !customerData) {
+            if (authState?.isAuthenticated && id) {
+
                 try {
                     setAccessToken(oktaAuth.getAccessToken());
                     await dispatch(searchCustomersBySysIdThunk({ customerId: id })).unwrap();
@@ -41,7 +40,7 @@ const Payments = () => {
         };
 
         fetchCustomerData();
-    }, [authState?.isAuthenticated, id, dispatch, oktaAuth, customerData]);
+    }, [authState?.isAuthenticated, id, dispatch, oktaAuth]);
 
     useEffect(() => {
         const fetchSubscriptionData = async () => {
@@ -65,7 +64,7 @@ const Payments = () => {
                 <InvoiceHistory subscriptionId={subscriptionId} />
                 {/* <CreateSubscription />
                     <CreateStripeAccount /> */}
-                <ManagePaymentMethod />
+                <ManagePaymentMethod stripeCustomerId={customerId} />
             </Row>
             <Modal show={showModal} onHide={() => setShowModal(false)}>
                 <Modal.Header closeButton>
