@@ -183,6 +183,25 @@ export const buildThunks = (entityName, service) => {
     );
   }
 
+  if (service.updateDefaultPaymentMethod) {
+    thunks.updateDefaultPaymentMethod = createAsyncThunk(
+      `billing/updateDefaultPaymentMethodThunk`,
+      async ({ id, defaultPaymentMethodId }) => {
+        // Ensure the payment method ID is a clean string without extra quotes
+        const cleanPaymentMethodId = defaultPaymentMethodId.trim();
+        console.log('Updating default payment method:', id, cleanPaymentMethodId);
+        
+        try {
+          const response = await service.updateDefaultPaymentMethod(id, cleanPaymentMethodId);
+          return response;
+        } catch (error) {
+          console.error('Error in updateDefaultPaymentMethod thunk:', error);
+          throw error;
+        }
+      }
+    );
+  }
+
   return thunks;
 };
 

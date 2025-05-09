@@ -1,7 +1,6 @@
 import React from 'react';
 import { Card, Form, Button, Row, Col } from 'react-bootstrap';
 import { FaRegWindowClose } from "react-icons/fa";
-import DeleteUserBtn from './DeleteUserBtn';
 
 export default function EditProfile({ student, id }) {
 

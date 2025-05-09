@@ -32,6 +32,7 @@ import {
   updateSubscriptionItem,
   deleteSubscriptionItem,
   getPaymentMethod,
+  updateDefaultPaymentMethod,
   searchPaymentMethodByCustomer,
   cancelPaymentMethod,
   attachPaymentMethod,
@@ -104,6 +105,7 @@ const customerThunks = buildThunks("Customer", {
   create: createCustomer,
   update: editCustomer,
   delete: deleteCustomer,
+  updateDefaultPaymentMethod: updateDefaultPaymentMethod,
 });
 
 // Invoice
@@ -381,6 +383,7 @@ export const {
   fetchOne: fetchOneCustomerThunk,
   createItem: createCustomerThunk,
   updateItem: updateCustomerThunk,
+  updateDefaultPaymentMethod: updateDefaultPaymentMethodThunk,
   deleteItem: deleteCustomerThunk,
   fetchItemsByCustomer: searchCustomersBySysIdThunk,
 } = customerThunks;
