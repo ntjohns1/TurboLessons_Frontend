@@ -1,6 +1,7 @@
 import React from 'react';
 import { Card, Row, Col, Button } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
+import defaultThumbnail from '../../../util/icons/default_thumbnail_blue.png';
 
 const LibraryPreview = () => {
   // Dummy data for videos
@@ -8,19 +9,16 @@ const LibraryPreview = () => {
     {
       id: 1,
       name: 'Introduction to Piano',
-      thumbnailUrl: 'https://images.unsplash.com/photo-1520523839897-bd0b52f945a0?ixlib=rb-1.2.1&auto=format&fit=crop&w=300&q=80',
       duration: 1845 // 30:45 in seconds
     },
     {
       id: 2,
       name: 'Basic Guitar Chords',
-      thumbnailUrl: 'https://images.unsplash.com/photo-1525201548942-d8732f6617a0?ixlib=rb-1.2.1&auto=format&fit=crop&w=300&q=80',
       duration: 1230 // 20:30 in seconds
     },
     {
       id: 3,
       name: 'Vocal Warm-up Exercises',
-      thumbnailUrl: null, // Example with no thumbnail
       duration: 900 // 15:00 in seconds
     }
   ];
@@ -59,17 +57,21 @@ const LibraryPreview = () => {
                     className="video-thumbnail" 
                     style={{ 
                       height: '120px', 
-                      background: '#f0f0f0',
-                      backgroundImage: video.thumbnailUrl ? `url(${video.thumbnailUrl})` : 'none',
-                      backgroundSize: 'cover',
-                      backgroundPosition: 'center'
+                      display: 'flex',
+                      justifyContent: 'center',
+                      alignItems: 'center',
+                      overflow: 'hidden'
                     }}
                   >
-                    {!video.thumbnailUrl && (
-                      <div className="d-flex justify-content-center align-items-center h-100">
-                        <i className="bi bi-film" style={{ fontSize: '2rem' }}></i>
-                      </div>
-                    )}
+                    <img 
+                      src={defaultThumbnail} 
+                      alt="Video thumbnail" 
+                      style={{ 
+                        width: '100%',
+                        height: '100%',
+                        objectFit: 'cover'
+                      }} 
+                    />
                   </div>
                   <Card.Body>
                     <Card.Title className="h6">{video.name}</Card.Title>

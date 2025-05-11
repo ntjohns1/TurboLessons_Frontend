@@ -13,6 +13,7 @@ import {
   selectError 
 } from '../../components/StudentComponents/Profile/ProfileSlice';
 import { setAccessToken } from '../../service/axiosConfig';
+import NotificationSettings from '../../components/StudentComponents/Profile/NotificationSettings';
 
 export default function StudentProfile() {
   const dispatch = useDispatch();
@@ -63,6 +64,7 @@ export default function StudentProfile() {
                     {student.displayName}
                   </Card.Footer>
                 </Card>
+                <NotificationSettings />
               </Col>
               <Col md={8}>
                 {isUpdate ? (

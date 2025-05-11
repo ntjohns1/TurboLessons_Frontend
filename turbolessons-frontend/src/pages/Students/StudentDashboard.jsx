@@ -24,21 +24,21 @@ export default function StudentDashboard() {
 
                     {/* First row of widgets */}
                     <Row style={{ backgroundColor: '#F4F4F5' }}>
-                        <Col xs={4} className="d-flex">
+                        <Col xs={6} className="d-flex">
                             <div style={{ width: '100%' }}>
                                 <NextLessonWidget />
                             </div>
                         </Col>
-                        <Col xs={4} className="d-flex">
+                        <Col xs={6} className="d-flex">
                             <div style={{ width: '100%' }}>
                                 <SubscriptionOverview />
                             </div>
                         </Col>
-                        <Col xs={4} className="d-flex">
+                        {/* <Col xs={4} className="d-flex">
                             <div style={{ width: '100%' }}>
                                 <Notifications />
                             </div>
-                        </Col>
+                        </Col> */}
                     </Row>
                     
                     {/* Second row with library and messenger */}
