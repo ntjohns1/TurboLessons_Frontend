@@ -16,32 +16,32 @@ const StudentRoutes = () => {
   return (
     <Routes>
       {/* Student Dashboard */}
-      <Route path="/student_portal" element={<RequiredAuth requiredRoles={['Student', 'Teacher', 'Admin']} />}>
+      <Route path="/" element={<RequiredAuth requiredRoles={['Student', 'Teacher', 'Admin']} />}>
         <Route path="" element={<StudentLayoutWrapper component={StudentDashboard} />} />
       </Route>
 
       {/* Student Payments */}
-      <Route path="/student_portal/payments" element={<RequiredAuth requiredRoles={['Student', 'Teacher', 'Admin']} />}>
+      <Route path="/payments" element={<RequiredAuth requiredRoles={['Student', 'Teacher', 'Admin']} />}>
         <Route path="" element={<StudentLayoutWrapper component={Payments} />} />
       </Route>
 
       {/* Student Library */}
-      <Route path="/student_portal/library" element={<RequiredAuth requiredRoles={['Student', 'Teacher', 'Admin']} />}>
+      <Route path="/library" element={<RequiredAuth requiredRoles={['Student', 'Teacher', 'Admin']} />}>
         <Route path="" element={<StudentLayoutWrapper component={Library} />} />
       </Route>
 
       {/* Student Videos */}
-      <Route path="/student_portal/videos" element={<RequiredAuth requiredRoles={['Student', 'Teacher', 'Admin']} />}>
+      <Route path="/videos" element={<RequiredAuth requiredRoles={['Student', 'Teacher', 'Admin']} />}>
         <Route path="" element={<StudentLayoutWrapper component={Videos} />} />
       </Route>
 
       {/* Student Messages */}
-      <Route path="/student_portal/messages" element={<RequiredAuth requiredRoles={['Student', 'Teacher', 'Admin']} />}>
+      <Route path="/messages" element={<RequiredAuth requiredRoles={['Student', 'Teacher', 'Admin']} />}>
         <Route path="" element={<StudentLayoutWrapper component={Messenger} />} />
       </Route>
 
       {/* Student Profile */}
-      <Route path="/student_portal/profile" element={<RequiredAuth requiredRoles={['Student', 'Teacher', 'Admin']} />}>
+      <Route path="/profile" element={<RequiredAuth requiredRoles={['Student', 'Teacher', 'Admin']} />}>
         <Route path="" element={<StudentLayoutWrapper component={StudentProfile} />} />
       </Route>
     </Routes>

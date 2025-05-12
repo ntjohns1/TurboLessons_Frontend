@@ -22,41 +22,41 @@ const TeacherRoutes = () => {
   return (
     <Routes>
       {/* Teacher Dashboard */}
-      <Route path="/teacher_portal" element={<RequiredAuth requiredRoles={['Teacher', 'Admin']} />}>
+      <Route path="/" element={<RequiredAuth requiredRoles={['Teacher', 'Admin']} />}>
         <Route path="" element={<TeacherLayoutWrapper component={TeacherDashboard} />} />
       </Route>
       
       {/* Student Management Routes */}
-      <Route path="/teacher_portal/students" element={<RequiredAuth requiredRoles={['Teacher', 'Admin']} />}>
+      <Route path="/students" element={<RequiredAuth requiredRoles={['Teacher', 'Admin']} />}>
         <Route path="" element={<TeacherLayoutWrapper component={Students} />} />
       </Route>
-      <Route path="/teacher_portal/students/:id" element={<RequiredAuth requiredRoles={['Teacher', 'Admin']} />}>
+      <Route path="/students/:id" element={<RequiredAuth requiredRoles={['Teacher', 'Admin']} />}>
         <Route path="" element={<TeacherLayoutWrapper component={SingleStudent} />} />
       </Route>
-      <Route path="/teacher_portal/students/:id/subscription" element={<RequiredAuth requiredRoles={['Teacher', 'Admin']} />}>
+      <Route path="/students/:id/subscription" element={<RequiredAuth requiredRoles={['Teacher', 'Admin']} />}>
         <Route path="" element={<TeacherLayoutWrapper component={ManageSubscription} />} />
       </Route>
-      <Route path="/teacher_portal/students/:id/create_stripe_account" element={<RequiredAuth requiredRoles={['Teacher', 'Admin']} />}>
+      <Route path="/students/:id/create_stripe_account" element={<RequiredAuth requiredRoles={['Teacher', 'Admin']} />}>
         <Route path="" element={<TeacherLayoutWrapper component={CreateStripeCustomer} />} />
       </Route>
-      <Route path="/teacher_portal/students/:id/create_subscription" element={<RequiredAuth requiredRoles={['Teacher', 'Admin']} />}>
+      <Route path="/students/:id/create_subscription" element={<RequiredAuth requiredRoles={['Teacher', 'Admin']} />}>
         <Route path="" element={<TeacherLayoutWrapper component={NewSubscriptionForm} />} />
       </Route>
-      <Route path="/teacher_portal/addStudent" element={<RequiredAuth requiredRoles={['Teacher', 'Admin']} />}>
+      <Route path="/addStudent" element={<RequiredAuth requiredRoles={['Teacher', 'Admin']} />}>
         <Route path="" element={<TeacherLayoutWrapper component={AddStudent} />} />
       </Route>
       
       {/* Teacher Feature Routes */}
-      <Route path="/teacher_portal/calendar" element={<RequiredAuth requiredRoles={['Teacher', 'Admin']} />}>
+      <Route path="/calendar" element={<RequiredAuth requiredRoles={['Teacher', 'Admin']} />}>
         <Route path="" element={<TeacherLayoutWrapper component={LessonCalendar} />} />
       </Route>
-      <Route path="/teacher_portal/messages" element={<RequiredAuth requiredRoles={['Teacher', 'Admin']} />}>
+      <Route path="/messages" element={<RequiredAuth requiredRoles={['Teacher', 'Admin']} />}>
         <Route path="" element={<TeacherLayoutWrapper component={Messenger} />} />
       </Route>
-      <Route path="/teacher_portal/lessons" element={<RequiredAuth requiredRoles={['Teacher', 'Admin']} />}>
+      <Route path="/lessons" element={<RequiredAuth requiredRoles={['Teacher', 'Admin']} />}>
         <Route path="" element={<TeacherLayoutWrapper component={Lessons} />} />
       </Route>
-      <Route path="/teacher_portal/videos" element={<RequiredAuth requiredRoles={['Teacher', 'Admin']} />}>
+      <Route path="/videos" element={<RequiredAuth requiredRoles={['Teacher', 'Admin']} />}>
         <Route path="" element={<TeacherLayoutWrapper component={Videos} />} />
       </Route>
     </Routes>

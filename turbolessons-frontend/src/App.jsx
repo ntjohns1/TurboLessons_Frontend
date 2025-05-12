@@ -58,9 +58,14 @@ const App = () => {
             <Route path="/unauthorized" element={<RequiredAuth />}>
               <Route path="" element={<Unauthorized />} />
             </Route>
+            
+            {/* Include Teacher and Student Routes */}
+            {/* Teacher Routes */}
+            <Route path="/teacher_portal/*" element={<TeacherRoutes />} />
+            
+            {/* Student Routes */}
+            <Route path="/student_portal/*" element={<StudentRoutes />} />
           </Routes>
-          <TeacherRoutes />
-          <StudentRoutes />
         </Elements>
       </WebSocketProvider>
     </Security>
