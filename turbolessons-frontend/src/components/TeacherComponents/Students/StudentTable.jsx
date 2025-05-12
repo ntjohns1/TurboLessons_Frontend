@@ -30,13 +30,14 @@ export default function StudentTable() {
     useEffect(() => {
         if (authState?.isAuthenticated && principle && !studentsLoaded) {
             const accessToken = oktaAuth.getAccessToken();
+            console.log(authState.accessToken.claims.groups);
             setAccessToken(accessToken);
             dispatch(fetchTeacherStudents({ teacher: principle }));
         }
     }, [authState, principle, studentsLoaded, dispatch]);
 
     const goToStudent = (studentId) => {
-        navigate(`/students/${studentId}`);
+        navigate(`/teacher_portal/students/${studentId}`);
     };
 
     if (loading) {
@@ -62,7 +63,7 @@ export default function StudentTable() {
                         <p>No students found.</p>
                     </Card.Body>
                     <Card.Footer>
-                        <Button as={Link} to='/addStudent' variant='darkblue'>New Student</Button>
+                        <Button as={Link} to='/teacher_portal/addStudent' variant='darkblue'>New Student</Button>
                     </Card.Footer>
                 </Card>
             </div>
@@ -90,7 +91,7 @@ export default function StudentTable() {
                     ))}
                 </Card.Body>
                 <Card.Footer>
-                    <Button as={Link} to='/addStudent' variant='darkblue'>New Student</Button>
+                    <Button as={Link} to='/teacher_portal/addStudent' variant='darkblue'>New Student</Button>
                 </Card.Footer>
             </Card>
         </div>

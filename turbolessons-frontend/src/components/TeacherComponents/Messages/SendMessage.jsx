@@ -4,7 +4,7 @@ import { setAccessToken } from '../../../service/axiosConfig';
 import { Button, Form, Container } from "react-bootstrap";
 import { useSocket } from '../../../util/context/WebSocketContext';
 import { useDispatch, useSelector } from 'react-redux';
-import { sendMessageThunk, selectSelectedStudent, selectMessageText, setMessageText } from './MessageSlice';
+import { sendMessageThunk, selectSelectedStudent, selectMessageText, setMessageText } from './TeacherMessageSlice';
 import '../../../App';
 
 export default function SendMessage() {
@@ -17,7 +17,7 @@ export default function SendMessage() {
   const handleFormSubmit = async (event) => {
     event.preventDefault();
     if (!selectedStudent) {
-      console.log('Error: No student selected');
+      console.log('Error: No student selected');  
       return;
     }
     if (!messageText.trim()) {
@@ -35,6 +35,7 @@ export default function SendMessage() {
     const accessToken = oktaAuth.getAccessToken();
     setAccessToken(accessToken);
     dispatch(sendMessageThunk(newMessage));
+    dispatch(setMessageText(''));
   };
 
   const handleInput = (e) => {

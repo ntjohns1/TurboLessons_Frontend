@@ -81,6 +81,16 @@ export const editCustomer = async (id, formState) => {
   );
 };
 
+// route(PUT("/payments/api/customer/{id}/default-payment-method"), handler::updateDefaultPaymentMethod)
+export const updateDefaultPaymentMethod = async (id, defaultPaymentMethodId) => {
+  return apiCall(
+    "PUT",
+    `/payments/customer/${id}/default-payment-method`,
+    defaultPaymentMethodId, // Send the payment method ID directly as the request body
+    "Error updating default payment method:"
+  );
+};
+
 // route(DELETE("/payments/api/customer/{id}"), handler::delete);
 export const deleteCustomer = async (id) => {
   return apiCall(

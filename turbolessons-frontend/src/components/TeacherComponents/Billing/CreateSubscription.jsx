@@ -120,7 +120,7 @@ const CreateSubscription = () => {
         dispatch(setShowSuccessModal(false));
         dispatch(setSuccessMessage(""));
         dispatch(resetSubscriptionFormState());
-        navigate(`/students/${paramsId}`)
+        navigate(`/teacher_portal/students/${paramsId}`)
     }
 
     return (

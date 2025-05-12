@@ -11,14 +11,7 @@ const ManagePaymentMethod = ({ stripeCustomerId }) => {
     const accessToken = oktaAuth.getAccessToken();
     const dispatch = useDispatch();
     const customerPaymentMethods = useSelector(selectPaymentMethods);
-    const products = useSelector(selectProducts);
     const showDetails = useSelector((state) => state.billing.showPaymentModalDetails);
-
-    useEffect(() => {
-        if (!products.length) {
-            dispatch(fetchAllProductsThunk());
-        }
-    }, [dispatch, products.length]);
 
     useEffect(() => {
         setAccessToken(accessToken);

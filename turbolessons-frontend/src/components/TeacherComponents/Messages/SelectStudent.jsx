@@ -1,9 +1,7 @@
 import React from 'react';
 import { Form } from "react-bootstrap";
 import { useDispatch, useSelector } from 'react-redux';
-import SendMessage from './SendMessage';
-import DisplayMessages from './DisplayMessages';
-import { setSelectedStudent, selectSelectedStudent } from './MessageSlice';
+import { setSelectedStudent, selectSelectedStudent } from './TeacherMessageSlice';
 
 export default function SelectStudent() {
   const students = useSelector((state) => state.students.studentsByTeacher);
@@ -33,8 +31,6 @@ export default function SelectStudent() {
           </Form.Select>
         </Form.Group>
       </Form.Group>
-      <DisplayMessages sendTo={selectedStudent} />
-      <SendMessage />
     </>
   );
 }

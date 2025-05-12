@@ -49,7 +49,6 @@ const ManageSubscription = () => {
       <Row>
         <ManagePaymentMethod stripeCustomerId={customer?.id} className="m-2"/>
       </Row>
-     
     </Container>
   );
 };

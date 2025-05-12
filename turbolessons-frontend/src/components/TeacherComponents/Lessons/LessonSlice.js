@@ -5,22 +5,7 @@ import {
   editLessonEvent,
   deleteLessonEvent,
 } from "../../../service/eventService";
-
-const adjustEvents = (events) => {
-  return events.map((event) => {
-    const start = new Date(event.start);
-    const end = new Date(event.end);
-    return {
-      ...event,
-      start: new Date(
-        start.getTime() - start.getTimezoneOffset() * 60000
-      ).toISOString(),
-      end: new Date(
-        end.getTime() - end.getTimezoneOffset() * 60000
-      ).toISOString(),
-    };
-  });
-};
+import { adjustEvents } from "../../../util/formatters";
 
 // Thunks
 export const fetchTeacherEvents = createAsyncThunk(
@@ -35,8 +20,6 @@ export const fetchTeacherEvents = createAsyncThunk(
 export const createEvent = createAsyncThunk(
   "lessons/createEvent",
   async (lessonData) => {
-    console.log(lessonData);
-
     const response = await createLessonEvent(lessonData);
     return response;
   }

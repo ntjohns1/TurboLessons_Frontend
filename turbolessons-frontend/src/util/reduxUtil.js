@@ -183,6 +183,25 @@ export const buildThunks = (entityName, service) => {
     );
   }
 
+  if (service.updateDefaultPaymentMethod) {
+    thunks.updateDefaultPaymentMethod = createAsyncThunk(
+      `billing/updateDefaultPaymentMethodThunk`,
+      async ({ id, defaultPaymentMethodId }) => {
+        // Ensure the payment method ID is a clean string without extra quotes
+        const cleanPaymentMethodId = defaultPaymentMethodId.trim();
+        console.log('Updating default payment method:', id, cleanPaymentMethodId);
+        
+        try {
+          const response = await service.updateDefaultPaymentMethod(id, cleanPaymentMethodId);
+          return response;
+        } catch (error) {
+          console.error('Error in updateDefaultPaymentMethod thunk:', error);
+          throw error;
+        }
+      }
+    );
+  }
+
   return thunks;
 };
 
@@ -256,6 +275,12 @@ export const buildReducers = (builder, entityThunks, adapter, namespace) => {
         if (action.payload) {
           if (!state.entities[namespace]) {
             state.entities[namespace] = adapter.getInitialState();
+          }
+          if (namespace === "customer") {
+            state.loading = false;
+            state.entities[namespace] = adapter.upsertOne(state.entities["customer"], action.payload);
+            state.subscriptionId = action.payload.subscriptions[0] || null;
+            state.customerId = action.payload.id || null;
           }
           if (namespace === "customers") {
             state.stripeCustomerId = action.payload.id || null;
