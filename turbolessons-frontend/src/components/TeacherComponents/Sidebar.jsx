@@ -6,11 +6,11 @@ import { useSocket } from "../../util/context/WebSocketContext";
 import '../../App'
 
 const sidebarItems = [
-  { to: "/", label: "Home" },
-  { to: "/students", label: "Students" },
-  { to: "/lessons", label: "Schedule" },
-  { to: "/calendar", label: "Calendar" },
-  { to: "/messages", label: "Messages" },
+  { to: "/teacher_portal", label: "Home" },
+  { to: "/teacher_portal/students", label: "Students" },
+  { to: "/teacher_portal/lessons", label: "Schedule" },
+  { to: "/teacher_portal/calendar", label: "Calendar" },
+  { to: "/teacher_portal/messages", label: "Messages" },
 ];
 
 export default function Sidebar() {

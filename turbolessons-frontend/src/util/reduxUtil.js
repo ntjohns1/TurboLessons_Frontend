@@ -183,6 +183,25 @@ export const buildThunks = (entityName, service) => {
     );
   }
 
+  if (service.updateDefaultPaymentMethod) {
+    thunks.updateDefaultPaymentMethod = createAsyncThunk(
+      `billing/updateDefaultPaymentMethodThunk`,
+      async ({ id, defaultPaymentMethodId }) => {
+        // Ensure the payment method ID is a clean string without extra quotes
+        const cleanPaymentMethodId = defaultPaymentMethodId.trim();
+        console.log('Updating default payment method:', id, cleanPaymentMethodId);
+        
+        try {
+          const response = await service.updateDefaultPaymentMethod(id, cleanPaymentMethodId);
+          return response;
+        } catch (error) {
+          console.error('Error in updateDefaultPaymentMethod thunk:', error);
+          throw error;
+        }
+      }
+    );
+  }
+
   return thunks;
 };
 
@@ -211,7 +230,6 @@ export const buildReducers = (builder, entityThunks, adapter, namespace) => {
       })
       .addCase(entityThunks.fetchOne.fulfilled, (state, action) => {
         state.loading = false;
-        console.log(action.payload);
 
         adapter.upsertOne(state.entities[namespace], action.payload);
       })
@@ -231,7 +249,14 @@ export const buildReducers = (builder, entityThunks, adapter, namespace) => {
 
   if (entityThunks.updateItem) {
     builder.addCase(entityThunks.updateItem.fulfilled, (state, action) => {
-      adapter.upsertOne(state.entities[namespace], action.payload);
+      // Only try to update the store if we have a valid response with an ID
+      if (action.payload && action.payload.id) {
+        adapter.upsertOne(state.entities[namespace], action.payload);
+      } else if (namespace === "subscriptionItems") {
+        // For subscription items, we don't get a response with data
+        // Just set a success message without trying to update the store
+        state.successMessage = "Subscription updated successfully";
+      }
     });
   }
 
@@ -250,6 +275,12 @@ export const buildReducers = (builder, entityThunks, adapter, namespace) => {
         if (action.payload) {
           if (!state.entities[namespace]) {
             state.entities[namespace] = adapter.getInitialState();
+          }
+          if (namespace === "customer") {
+            state.loading = false;
+            state.entities[namespace] = adapter.upsertOne(state.entities["customer"], action.payload);
+            state.subscriptionId = action.payload.subscriptions[0] || null;
+            state.customerId = action.payload.id || null;
           }
           if (namespace === "customers") {
             state.stripeCustomerId = action.payload.id || null;
@@ -270,6 +301,50 @@ export const buildReducers = (builder, entityThunks, adapter, namespace) => {
       .addCase(entityThunks.fetchItemsByCustomer.rejected, (state) => {
         state.loading = false;
       });
+  }
+  if (entityThunks.fetchItemsBySubscription) {
+    builder
+      .addCase(entityThunks.fetchItemsBySubscription.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(
+        entityThunks.fetchItemsBySubscription.fulfilled,
+        (state, action) => {
+          state.loading = false;
+
+          if (!state.entities[namespace]) {
+            state.entities[namespace] = adapter.getInitialState();
+          }
+
+          // Handle different response formats
+          if (action.payload && action.payload.data) {
+            // Standard Stripe collection format with data array
+            adapter.setAll(state.entities[namespace], action.payload.data);
+          } else if (action.payload && Array.isArray(action.payload)) {
+            // Direct array format
+            adapter.setAll(state.entities[namespace], action.payload);
+          } else if (
+            action.payload &&
+            typeof action.payload === "object" &&
+            !Array.isArray(action.payload)
+          ) {
+            // Single object format
+            adapter.setAll(state.entities[namespace], [action.payload]);
+          } else {
+            console.warn(
+              "Unexpected subscription items response format:",
+              action.payload
+            );
+          }
+        }
+      )
+      .addCase(
+        entityThunks.fetchItemsBySubscription.rejected,
+        (state, action) => {
+          state.loading = false;
+          console.error("Error fetching subscription items:", action.error);
+        }
+      );
   }
   if (entityThunks.attachItem) {
     builder

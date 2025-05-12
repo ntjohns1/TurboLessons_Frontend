@@ -9,7 +9,7 @@ import {
   fetchConversationThunk,
   selectLoading,
   selectError
-} from './MessageSlice';
+} from './TeacherMessageSlice';
 import './DisplayMessages.css';
 
 export default function DisplayMessages({ sendTo }) {

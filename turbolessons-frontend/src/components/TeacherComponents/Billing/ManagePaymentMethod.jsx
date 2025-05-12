@@ -4,37 +4,21 @@ import { useDispatch, useSelector } from 'react-redux';
 import { fetchPaymentMethodsByCustomerThunk, selectPaymentMethods, selectProducts, fetchAllProductsThunk, selectCustomerBySysId, updatePaymentMethodFormState } from "./BillingSlice";
 import { setAccessToken } from "../../../service/axiosConfig";
 import { useOktaAuth } from '@okta/okta-react';
-import { use } from "react";
 
-const ManagePaymentMethod = ({ paramsId }) => {
+const ManagePaymentMethod = ({ stripeCustomerId }) => {
 
     const { authState, oktaAuth } = useOktaAuth();
     const accessToken = oktaAuth.getAccessToken();
     const dispatch = useDispatch();
-    const customer = useSelector((state) => selectCustomerBySysId(state, paramsId));
-    const stripeCustomerId = customer ? customer.id : "";
     const customerPaymentMethods = useSelector(selectPaymentMethods);
-    const products = useSelector(selectProducts);
     const showDetails = useSelector((state) => state.billing.showPaymentModalDetails);
-
-    useEffect(() => {
-        if (!products.length) {
-            dispatch(fetchAllProductsThunk());
-        }
-    }, []);
 
     useEffect(() => {
         setAccessToken(accessToken);
         if (stripeCustomerId) {
             dispatch(fetchPaymentMethodsByCustomerThunk({ customerId: stripeCustomerId }));
         }
-    }, [dispatch, stripeCustomerId]);
-
-    useEffect(() => {
-        if (customerPaymentMethods.length) {
-            console.log("Payment Methods: " + JSON.stringify(customerPaymentMethods));
-        }
-    }, [customerPaymentMethods]);
+    }, [dispatch, stripeCustomerId, accessToken]);
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -42,7 +26,7 @@ const ManagePaymentMethod = ({ paramsId }) => {
     };
 
     return (
-        <Card>
+        <Card className="m-2">
             {showDetails ?
                 (<Card.Body>
                     <h3>Payment Methods</h3>

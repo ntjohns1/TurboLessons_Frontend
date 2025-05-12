@@ -40,6 +40,11 @@ import {
   editPaymentIntent,
   capturePaymentIntent,
   cancelPaymentIntent,
+  listSubscriptionItems,
+  getSubscriptionItem,
+  createSubscriptionItem,
+  updateSubscriptionItem,
+  deleteSubscriptionItem,
   getPaymentMethod,
   searchPaymentMethodByCustomer,
   cancelPaymentMethod,
@@ -91,6 +96,11 @@ const setupIntentAdapter = createEntityAdapter({
   },
 });
 const subscriptionAdapter = createEntityAdapter();
+const subscriptionItemAdapter = createEntityAdapter({
+    selectId: (subscriptionItem) => {
+        return subscriptionItem.id;
+    },
+});
 
 // Thunks
 
@@ -195,6 +205,15 @@ const subscriptionThunks = buildThunks("Subscription", {
   delete: cancelSubscription,
 });
 
+// SubscriptionItem
+const subscriptionItemThunks = buildThunks("SubscriptionItem", {
+  searchBySubscription: listSubscriptionItems,
+  get: getSubscriptionItem,
+  create: createSubscriptionItem,
+  update: updateSubscriptionItem,
+  delete: deleteSubscriptionItem,
+});
+
 // Slice
 const billingSlice = createSlice({
   name: "billing",
@@ -211,6 +230,7 @@ const billingSlice = createSlice({
       products: productAdapter.getInitialState({}),
       setupIntents: setupIntentAdapter.getInitialState({}),
       subscriptions: subscriptionAdapter.getInitialState({}),
+      subscriptionItems: subscriptionItemAdapter.getInitialState({}),
     },
     loading: false,
     successMessage: "",
@@ -241,6 +261,12 @@ const billingSlice = createSlice({
     },
     paymentMethodFormState: {
       paymentMethodId: "",
+    },
+    subscriptionItemFormState: {
+      productId: "",
+      priceId: "",
+      subscriptionItemId: "",
+      currentPriceId: "",
     },
   },
   reducers: {
@@ -280,6 +306,18 @@ const billingSlice = createSlice({
       } else {
         state.subscriptionFormState[field] = value;
       }
+    },
+    updateSubscriptionItemFormState(state, action) {
+      const { field, value } = action.payload;
+      state.subscriptionItemFormState[field] = value;
+    },
+    resetSubscriptionItemFormState(state) {
+      state.subscriptionItemFormState = {
+        productId: "",
+        priceId: "",
+        subscriptionItemId: "",
+        currentPriceId: "",
+      };
     },
     resetSubscriptionFormState(state) {
       state.subscriptionFormState = {
@@ -348,6 +386,12 @@ const billingSlice = createSlice({
       subscriptionAdapter,
       "subscriptions"
     );
+    buildReducers(
+      builder,
+      subscriptionItemThunks,
+      subscriptionItemAdapter,
+      "subscriptionItems"
+    );
   },
 });
 
@@ -357,6 +401,8 @@ export const {
   resetCustomerFormState,
   updateSubscriptionFormState,
   resetSubscriptionFormState,
+  updateSubscriptionItemFormState,
+  resetSubscriptionItemFormState,
   updatePaymentMethodFormState,
   setLoading,
   setShow,
@@ -459,6 +505,15 @@ export const {
   updateItem: updateSubscriptionThunk,
   deleteItem: deleteSubscriptionThunk,
 } = subscriptionThunks;
+
+export const {
+  fetchAll: fetchAllSubscriptionItemsThunk,
+  fetchOne: fetchOneSubscriptionItemThunk,
+  createItem: createSubscriptionItemThunk,
+  updateItem: updateSubscriptionItemThunk,
+  deleteItem: deleteSubscriptionItemThunk,
+  fetchItemsBySubscription: fetchItemsBySubscriptionThunk,
+} = subscriptionItemThunks;
 
 export const selectProducts = createSelector(
   (state) => state.billing.entities["products"].entities,

@@ -57,7 +57,7 @@ export default function BillingOverview() {
                     <Card.Text>
                         We couldn't find your customer data for the user. Please create a new Stripe customer.
                     </Card.Text>
-                    <Button as={Link} to={`/students/${paramsId}/create_stripe_account`} variant="primary">
+                    <Button as={Link} to={`/teacher_portal/students/${paramsId}/create_stripe_account`} variant="primary">
                         Create Customer
                     </Button>
                 </Card.Body>
@@ -76,7 +76,7 @@ export default function BillingOverview() {
                         Email: {customer.email} <br /> */}
                         You don't have an active subscription. Start your subscription today!
                     </Card.Text>
-                    <Button as={Link} to={`/students/${paramsId}/create_subscription`} variant="primary">
+                    <Button as={Link} to={`/teacher_portal/students/${paramsId}/create_subscription`} variant="primary">
                         Start Subscription
                     </Button>
                 </Card.Body>
@@ -96,7 +96,7 @@ export default function BillingOverview() {
                         Plan: {subscription.planName} <br />
                         Status: {subscription.status} */}
                     </Card.Text>
-                    <Button as={Link} to={`/students/${paramsId}/subscription`} variant="primary">
+                    <Button as={Link} to={`/teacher_portal/students/${paramsId}/subscription`} variant="primary">
                         Manage Subscription
                     </Button>
                 </Card.Body>

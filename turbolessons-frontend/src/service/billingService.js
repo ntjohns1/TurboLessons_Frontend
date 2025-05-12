@@ -81,6 +81,16 @@ export const editCustomer = async (id, formState) => {
   );
 };
 
+// route(PUT("/payments/api/customer/{id}/default-payment-method"), handler::updateDefaultPaymentMethod)
+export const updateDefaultPaymentMethod = async (id, defaultPaymentMethodId) => {
+  return apiCall(
+    "PUT",
+    `/payments/customer/${id}/default-payment-method`,
+    defaultPaymentMethodId, // Send the payment method ID directly as the request body
+    "Error updating default payment method:"
+  );
+};
+
 // route(DELETE("/payments/api/customer/{id}"), handler::delete);
 export const deleteCustomer = async (id) => {
   return apiCall(
@@ -606,6 +616,57 @@ export const cancelSubscription = async (id) => {
     `/payments/subscription/${id}`,
     {},
     "Error canceling subscription:"
+  );
+};
+
+// List subscription items for a specific subscription
+export const listSubscriptionItems = async (subscriptionId) => {
+  return apiCall(
+    "GET",
+    `/payments/subscription_item/subscription/${subscriptionId}`,
+    {},
+    "Error listing subscription items:"
+  );
+};
+
+// Get a specific subscription item
+export const getSubscriptionItem = async (id) => {
+  return apiCall(
+    "GET",
+    `/payments/subscription_item/${id}`,
+    {},
+    "Error retrieving subscription item:"
+  );
+};
+
+// Create a new subscription item
+export const createSubscriptionItem = async (itemData) => {
+  const { subscriptionId, ...rest } = itemData;
+  return apiCall(
+    "POST",
+    `/payments/subscription_item/subscription/${subscriptionId}`,
+    rest,
+    "Error creating subscription item:"
+  );
+};
+
+// Update a subscription item
+export const updateSubscriptionItem = async (id, itemData) => {
+  return apiCall(
+    "PUT",
+    `/payments/subscription_item/${id}`,
+    itemData,
+    "Error updating subscription item:"
+  );
+};
+
+// Delete a subscription item
+export const deleteSubscriptionItem = async (id) => {
+  return apiCall(
+    "DELETE",
+    `/payments/subscription_item/${id}`,
+    {},
+    "Error deleting subscription item:"
   );
 };
 
