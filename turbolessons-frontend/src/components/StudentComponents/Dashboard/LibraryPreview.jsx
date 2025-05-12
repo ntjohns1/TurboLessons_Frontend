@@ -10,7 +10,8 @@ import {
   selectError 
 } from '../Library/LibrarySlice';
 import { setAccessToken } from '../../../service/axiosConfig';
-import defaultThumbnail from '../../../util/icons/default_thumbnail_blue.png';
+// Instead of importing the image directly, we'll use the public path
+// This is more robust and will work in both local and CI environments
 
 const LibraryPreview = () => {
   const dispatch = useDispatch();
@@ -74,7 +75,7 @@ const LibraryPreview = () => {
                     }}
                   >
                     <img 
-                      src={defaultThumbnail} 
+                      src="/assets/images/default_thumbnail_blue.png" 
                       alt="Video thumbnail" 
                       style={{ 
                         width: '100%',
