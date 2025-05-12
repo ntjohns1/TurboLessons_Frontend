@@ -34,9 +34,9 @@ export default function SelectVideo({ setSelected }) {
         setSelected(video);
     };
 
-    if (loading) {
-        return <Loading />;
-    }
+    // if (loading) {
+    //     return <Loading />;
+    // }
 
     if (error) {
         return (

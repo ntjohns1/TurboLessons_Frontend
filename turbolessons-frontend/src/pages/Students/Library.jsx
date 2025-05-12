@@ -1,11 +1,12 @@
 import React from 'react';
 import { Container } from 'react-bootstrap';
+import VideoPlayback from '../../components/StudentComponents/Library/VideoPlayback';
 
 const Library = () => {
     return (
         <Container>
-            <h1>Library</h1>
-            <p>Library content goes here.</p>
+            <VideoPlayback />
+
         </Container>
     );
 };

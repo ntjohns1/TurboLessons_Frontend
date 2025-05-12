@@ -1,30 +1,36 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Card, Row, Col, Button } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import { useOktaAuth } from '@okta/okta-react';
+import { 
+  fetchVideosThunk,
+  selectVideos,
+  selectLoading,
+  selectError 
+} from '../Library/LibrarySlice';
+import { setAccessToken } from '../../../service/axiosConfig';
 import defaultThumbnail from '../../../util/icons/default_thumbnail_blue.png';
 
 const LibraryPreview = () => {
-  // Dummy data for videos
-  const dummyVideos = [
-    {
-      id: 1,
-      name: 'Introduction to Piano',
-      duration: 1845 // 30:45 in seconds
-    },
-    {
-      id: 2,
-      name: 'Basic Guitar Chords',
-      duration: 1230 // 20:30 in seconds
-    },
-    {
-      id: 3,
-      name: 'Vocal Warm-up Exercises',
-      duration: 900 // 15:00 in seconds
+  const dispatch = useDispatch();
+  const { authState, oktaAuth } = useOktaAuth();
+  
+  // Redux selectors
+  const videos = useSelector(selectVideos);
+  const loading = useSelector(selectLoading);
+  const error = useSelector(selectError);
+
+  useEffect(() => {
+    if (authState?.isAuthenticated) {
+      const accessToken = oktaAuth.getAccessToken();
+      setAccessToken(accessToken);
+      dispatch(fetchVideosThunk());
     }
-  ];
+  }, [authState, oktaAuth, dispatch]);
 
   // Only show the first 3 videos in the preview
-  const previewVideos = dummyVideos.slice(0, 3);
+  const previewVideos = videos.slice(0, 3);
 
   // Styles for equal height
   const cardStyle = {
@@ -46,7 +52,11 @@ const LibraryPreview = () => {
         </Link>
       </Card.Header>
       <Card.Body style={cardBodyStyle}>
-        {previewVideos.length === 0 ? (
+        {loading ? (
+          <p className="text-center">Loading your library...</p>
+        ) : error ? (
+          <p className="text-center text-danger">Error loading content: {error}</p>
+        ) : previewVideos.length === 0 ? (
           <p className="text-center">No content available in your library</p>
         ) : (
           <Row>
