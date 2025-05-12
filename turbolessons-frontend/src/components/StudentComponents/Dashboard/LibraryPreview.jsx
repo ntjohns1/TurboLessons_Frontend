@@ -12,7 +12,6 @@ import {
 import { setAccessToken } from '../../../service/axiosConfig';
 // Instead of importing the image directly, we'll use the public path
 // This is more robust and will work in both local and CI environments
-
 const LibraryPreview = () => {
   const dispatch = useDispatch();
   const { authState, oktaAuth } = useOktaAuth();
