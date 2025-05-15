@@ -18,6 +18,9 @@ import ManageSubscription from '../components/TeacherComponents/Billing/ManageSu
 import CreateStripeCustomer from '../components/TeacherComponents/Billing/CreateStripeCustomer';
 import NewSubscriptionForm from '../components/TeacherComponents/Billing/CreateSubscription';
 
+// Admin components
+import SwaggerUI from '../components/Admin/SwaggerUI';
+
 const TeacherRoutes = () => {
   return (
     <Routes>
@@ -58,6 +61,11 @@ const TeacherRoutes = () => {
       </Route>
       <Route path="/videos" element={<RequiredAuth requiredRoles={['Teacher', 'Admin']} />}>
         <Route path="" element={<TeacherLayoutWrapper component={Videos} />} />
+      </Route>
+
+      {/* Admin Routes */}
+      <Route path="/admin/api-docs" element={<RequiredAuth requiredRoles={['Admin']} />}>
+        <Route path="" element={<TeacherLayoutWrapper component={SwaggerUI} />} />
       </Route>
     </Routes>
   );
