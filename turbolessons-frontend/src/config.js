@@ -24,9 +24,6 @@ export default {
     userAdminUrl: `${API_BASE_URL}/api/users`,
     messagesUrl: `${API_BASE_URL}/api/messages`,
     videoUrl: `${API_BASE_URL}/api/video`,
-    paymentsUrl: `${API_BASE_URL}/api/payments`,
     socketUri: `${API_BASE_URL.replace('http', 'ws').replace('https', 'wss')}/ws/messages?userId=`
   },
 };
-
-
