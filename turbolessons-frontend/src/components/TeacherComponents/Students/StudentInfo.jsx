@@ -5,6 +5,7 @@ import { useDispatch } from 'react-redux';
 import { setIsUpdate, setFormField } from './StudentSlice';
 import { setAccessToken } from '../../../service/axiosConfig';
 import { useOktaAuth } from '@okta/okta-react';
+import FormField from '../../common/FormField';
 
 export default function StudentInfo({ student }) {
     const dispatch = useDispatch();
@@ -38,66 +39,66 @@ export default function StudentInfo({ student }) {
             </Card.Header>
             <Card.Body>
                 <Form>
-                    <Form.Group as={Row} className="mb-1">
-                        <Form.Label column sm="4">Email</Form.Label>
-                        <Col sm="8">
-                            <Form.Control plaintext readOnly value={student.email || ''} />
-                        </Col>
-                    </Form.Group>
-                    <Form.Group as={Row} className="mb-1">
-                        <Form.Label column sm="4">First Name</Form.Label>
-                        <Col sm="8">
-                            <Form.Control plaintext readOnly value={student.firstName || ''} />
-                        </Col>
-                    </Form.Group>
-                    <Form.Group as={Row} className="mb-1">
-                        <Form.Label column sm="4">Middle Name</Form.Label>
-                        <Col sm="8">
-                            <Form.Control plaintext readOnly value={student.middleName || ''} />
-                        </Col>
-                    </Form.Group>
-                    <Form.Group as={Row} className="mb-1">
-                        <Form.Label column sm="4">Last Name</Form.Label>
-                        <Col sm="8">
-                            <Form.Control plaintext readOnly value={student.lastName || ''} />
-                        </Col>
-                    </Form.Group>
-                    <Form.Group as={Row} className="mb-1">
-                        <Form.Label column sm="4">Mobile Phone</Form.Label>
-                        <Col sm="8">
-                            <Form.Control plaintext readOnly value={student.mobilePhone || ''} />
-                        </Col>
-                    </Form.Group>
-                    <Form.Group as={Row} className="mb-1">
-                        <Form.Label column sm="4">Home Phone</Form.Label>
-                        <Col sm="8">
-                            <Form.Control plaintext readOnly value={student.primaryPhone || ''} />
-                        </Col>
-                    </Form.Group>
-                    <Form.Group as={Row} className="mb-1">
-                        <Form.Label column sm="4">Address</Form.Label>
-                        <Col sm="8">
-                            <Form.Control plaintext readOnly value={student.streetAddress || ''} />
-                        </Col>
-                    </Form.Group>
-                    <Form.Group as={Row} className="mb-1">
-                        <Form.Label column sm="4">City</Form.Label>
-                        <Col sm="8">
-                            <Form.Control plaintext readOnly value={student.city || ''} />
-                        </Col>
-                    </Form.Group>
-                    <Form.Group as={Row} className="mb-1">
-                        <Form.Label column sm="4">State</Form.Label>
-                        <Col sm="8">
-                            <Form.Control plaintext readOnly value={student.state || ''} />
-                        </Col>
-                    </Form.Group>
-                    <Form.Group as={Row} className="mb-1">
-                        <Form.Label column sm="4">Zip Code</Form.Label>
-                        <Col sm="8">
-                            <Form.Control plaintext readOnly value={student.zipCode || ''} />
-                        </Col>
-                    </Form.Group>
+                    <FormField
+                        label="Email"
+                        name="email"
+                        value={student.email}
+                        readOnly={true}
+                    />
+                    <FormField
+                        label="First Name"
+                        name="firstName"
+                        value={student.firstName}
+                        readOnly={true}
+                    />
+                    <FormField
+                        label="Middle Name"
+                        name="middleName"
+                        value={student.middleName}
+                        readOnly={true}
+                    />
+                    <FormField
+                        label="Last Name"
+                        name="lastName"
+                        value={student.lastName}
+                        readOnly={true}
+                    />
+                    <FormField
+                        label="Mobile Phone"
+                        name="mobilePhone"
+                        value={student.mobilePhone}
+                        readOnly={true}
+                    />
+                    <FormField
+                        label="Home Phone"
+                        name="primaryPhone"
+                        value={student.primaryPhone}
+                        readOnly={true}
+                    />
+                    <FormField
+                        label="Address"
+                        name="streetAddress"
+                        value={student.streetAddress}
+                        readOnly={true}
+                    />
+                    <FormField
+                        label="City"
+                        name="city"
+                        value={student.city}
+                        readOnly={true}
+                    />
+                    <FormField
+                        label="State"
+                        name="state"
+                        value={student.state}
+                        readOnly={true}
+                    />
+                    <FormField
+                        label="Zip Code"
+                        name="zipCode"
+                        value={student.zipCode}
+                        readOnly={true}
+                    />
                 </Form>
             </Card.Body>
         </Card>
