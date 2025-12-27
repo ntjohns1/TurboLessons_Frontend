@@ -32,7 +32,7 @@ export default function SingleStudent() {
       setAccessToken(accessToken);
       dispatch(fetchStudentProfile({ id }));
     }
-  }, [authState, id, dispatch]);
+  }, [authState, id, dispatch, oktaAuth]);
 
   if (loading) {
     return <div>Loading student profile...</div>;
