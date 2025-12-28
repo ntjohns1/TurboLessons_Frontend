@@ -6,6 +6,7 @@ import { setIsUpdate, setFormField } from './StudentSlice';
 import { setAccessToken } from '../../../service/axiosConfig';
 import { useOktaAuth } from '@okta/okta-react';
 import FormField from '../../common/FormField';
+import { STUDENT_FORM_FIELDS } from '../../../config/studentFormFields';
 
 export default function StudentInfo({ student }) {
     const dispatch = useDispatch();
@@ -39,66 +40,15 @@ export default function StudentInfo({ student }) {
             </Card.Header>
             <Card.Body>
                 <Form>
-                    <FormField
-                        label="Email"
-                        name="email"
-                        value={student.email}
-                        readOnly={true}
-                    />
-                    <FormField
-                        label="First Name"
-                        name="firstName"
-                        value={student.firstName}
-                        readOnly={true}
-                    />
-                    <FormField
-                        label="Middle Name"
-                        name="middleName"
-                        value={student.middleName}
-                        readOnly={true}
-                    />
-                    <FormField
-                        label="Last Name"
-                        name="lastName"
-                        value={student.lastName}
-                        readOnly={true}
-                    />
-                    <FormField
-                        label="Mobile Phone"
-                        name="mobilePhone"
-                        value={student.mobilePhone}
-                        readOnly={true}
-                    />
-                    <FormField
-                        label="Home Phone"
-                        name="primaryPhone"
-                        value={student.primaryPhone}
-                        readOnly={true}
-                    />
-                    <FormField
-                        label="Address"
-                        name="streetAddress"
-                        value={student.streetAddress}
-                        readOnly={true}
-                    />
-                    <FormField
-                        label="City"
-                        name="city"
-                        value={student.city}
-                        readOnly={true}
-                    />
-                    <FormField
-                        label="State"
-                        name="state"
-                        value={student.state}
-                        readOnly={true}
-                    />
-                    <FormField
-                        label="Zip Code"
-                        name="zipCode"
-                        value={student.zipCode}
-                        readOnly={true}
-                    />
+                    {STUDENT_FORM_FIELDS.map((field) => (
+                        <FormField
+                            key={field.name}
+                            label={field.label}
+                            name={field.name}
+                            value={student[field.name]}
+                            readOnly={true}
+                        />
+                    ))}
                 </Form>
             </Card.Body>
         </Card>

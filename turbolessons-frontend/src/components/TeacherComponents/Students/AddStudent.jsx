@@ -1,13 +1,14 @@
 import React from 'react';
-import { useOktaAuth } from '@okta/okta-react';
 import { Card, Container, Form, Button } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
 import { createNewStudent, setFormField, resetFormState } from './StudentSlice';
 import { useNavigate } from 'react-router-dom';
+import { useAuthToken } from '../../../hooks/useAuthToken';
+import { STUDENT_FORM_FIELDS } from '../../../config/studentFormFields';
 
 // Todo: assign student to teacher when created
 export default function AddStudent() {
-    const { authState, oktaAuth } = useOktaAuth();
+    const { authState } = useAuthToken();
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const formState = useSelector(state => state.students.formState);
@@ -21,8 +22,7 @@ export default function AddStudent() {
     const handleFormSubmit = async (event) => {
         event.preventDefault();
         try {
-            if (authState && authState.isAuthenticated) {
-                const accessToken = await oktaAuth.getAccessToken();
+            if (authState?.isAuthenticated) {
                 await dispatch(createNewStudent(formState)).unwrap();
                 alert(`Successfully Added Account for: ${formState.firstName} ${formState.lastName}`);
                 dispatch(resetFormState());
@@ -41,36 +41,18 @@ export default function AddStudent() {
                 </Card.Header>
                 <Card.Body className="p-3">
                     <Form onSubmit={handleFormSubmit} className="mb-3 px-3">
-                        <Form.Group className="mb-3 px-3" controlId="firstName">
-                            <Form.Label>First Name</Form.Label>
-                            <Form.Control
-                                type="text"
-                                name="firstName"
-                                value={formState.firstName}
-                                onChange={handleChange}
-                                required
-                            />
-                        </Form.Group>
-                        <Form.Group className="mb-3 px-3" controlId="lastName">
-                            <Form.Label>Last Name</Form.Label>
-                            <Form.Control
-                                type="text"
-                                name="lastName"
-                                value={formState.lastName}
-                                onChange={handleChange}
-                                required
-                            />
-                        </Form.Group>
-                        <Form.Group className="mb-3 px-3" controlId="email">
-                            <Form.Label>Email</Form.Label>
-                            <Form.Control
-                                type="email"
-                                name="email"
-                                value={formState.email}
-                                onChange={handleChange}
-                                required
-                            />
-                        </Form.Group>
+                        {STUDENT_FORM_FIELDS.filter(field => field.required).map((field) => (
+                            <Form.Group key={field.name} className="mb-3 px-3" controlId={field.name}>
+                                <Form.Label>{field.label}</Form.Label>
+                                <Form.Control
+                                    type={field.type}
+                                    name={field.name}
+                                    value={formState[field.name] || ''}
+                                    onChange={handleChange}
+                                    required={field.required}
+                                />
+                            </Form.Group>
+                        ))}
                         <Button
                             className="mx-3"
                             variant="success"

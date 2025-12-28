@@ -7,6 +7,7 @@ import { updateStudent, setFormField, setIsUpdate } from './StudentSlice';
 import { useOktaAuth } from '@okta/okta-react';
 import { setAccessToken } from '../../../service/axiosConfig';
 import FormField from '../../common/FormField';
+import { STUDENT_FORM_FIELDS } from '../../../config/studentFormFields';
 
 export default function EditStudent({ student, id }) {
     const dispatch = useDispatch();
@@ -58,79 +59,17 @@ export default function EditStudent({ student, id }) {
             </Card.Header>
             <Card.Body>
                 <Form onSubmit={handleSubmit}>
-                    <FormField
-                        label="Email"
-                        name="email"
-                        value={formState.email}
-                        onChange={handleChange}
-                        type="email"
-                        required={true}
-                    />
-                    <FormField
-                        label="First Name"
-                        name="firstName"
-                        value={formState.firstName}
-                        onChange={handleChange}
-                        type="text"
-                        required={true}
-                    />
-                    <FormField
-                        label="Middle Name"
-                        name="middleName"
-                        value={formState.middleName}
-                        onChange={handleChange}
-                        type="text"
-                    />
-                    <FormField
-                        label="Last Name"
-                        name="lastName"
-                        value={formState.lastName}
-                        onChange={handleChange}
-                        type="text"
-                        required={true}
-                    />
-                    <FormField
-                        label="Mobile Phone"
-                        name="mobilePhone"
-                        value={formState.mobilePhone}
-                        onChange={handleChange}
-                        type="tel"
-                    />
-                    <FormField
-                        label="Home Phone"
-                        name="primaryPhone"
-                        value={formState.primaryPhone}
-                        onChange={handleChange}
-                        type="tel"
-                    />
-                    <FormField
-                        label="Address"
-                        name="streetAddress"
-                        value={formState.streetAddress}
-                        onChange={handleChange}
-                        type="text"
-                    />
-                    <FormField
-                        label="City"
-                        name="city"
-                        value={formState.city}
-                        onChange={handleChange}
-                        type="text"
-                    />
-                    <FormField
-                        label="State"
-                        name="state"
-                        value={formState.state}
-                        onChange={handleChange}
-                        type="text"
-                    />
-                    <FormField
-                        label="Zip Code"
-                        name="zipCode"
-                        value={formState.zipCode}
-                        onChange={handleChange}
-                        type="text"
-                    />
+                    {STUDENT_FORM_FIELDS.map((field) => (
+                        <FormField
+                            key={field.name}
+                            label={field.label}
+                            name={field.name}
+                            value={formState[field.name]}
+                            onChange={handleChange}
+                            type={field.type}
+                            required={field.required || false}
+                        />
+                    ))}
                     <Button
                         type='submit'
                         variant='primary'
