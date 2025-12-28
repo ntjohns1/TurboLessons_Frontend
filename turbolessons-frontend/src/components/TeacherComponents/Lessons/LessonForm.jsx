@@ -36,7 +36,7 @@ const LessonForm = ({ onHide, onCreate, onUpdate }) => {
     return () => {
       dispatch(setUpdate(false));
     };
-  }, [setUpdate]);
+  }, [dispatch]);
 
   const handleDateChange = (date) => {
     console.log(date);
