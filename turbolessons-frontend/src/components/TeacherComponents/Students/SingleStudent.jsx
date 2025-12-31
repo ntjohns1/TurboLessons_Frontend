@@ -14,6 +14,9 @@ import {
   selectError 
 } from './StudentSlice';
 import { useAuthToken } from '../../../hooks/useAuthToken';
+import LoadingState from '../../common/LoadingState';
+import ErrorState from '../../common/ErrorState';
+import EmptyState from '../../common/EmptyState';
 
 export default function SingleStudent() {
   const dispatch = useDispatch();
@@ -32,15 +35,15 @@ export default function SingleStudent() {
   }, [authState, id, dispatch]);
 
   if (loading) {
-    return <div>Loading student profile...</div>;
+    return <LoadingState message="Loading student profile..." />;
   }
 
   if (error) {
-    return <div>Error loading student profile: {error.message}</div>;
+    return <ErrorState error={error} title="Error loading student profile" />;
   }
 
   if (!student || Object.keys(student).length === 0) {
-    return <div>No student found</div>;
+    return <EmptyState message="No student found" icon="👤" />;
   }
 
   return (
