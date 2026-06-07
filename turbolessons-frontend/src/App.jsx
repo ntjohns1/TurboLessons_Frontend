@@ -3,14 +3,14 @@ import { useNavigate } from 'react-router-dom';
 import { OktaAuth, toRelativeUrl } from '@okta/okta-auth-js';
 import { Security } from '@okta/okta-react';
 import { LoginCallback } from '@okta/okta-react';
-import Loading from './helpers/Loading';
+import LoadingSpinner from './components/common/LoadingSpinner';
 import config from './config';
 import { WebSocketProvider } from "./util/context/WebSocketContext.jsx";
 import { Elements } from "@stripe/react-stripe-js";
 import { loadStripe } from "@stripe/stripe-js";
 import { Route, Routes } from "react-router-dom";
-import { RequiredAuth } from "./helpers/SecureRoute";
-import Unauthorized from './helpers/Unauthorized';
+import { RequiredAuth } from "./routing/SecureRoute.jsx";
+import UnauthorizedState from './components/common/UnauthorizedState';
 import './App.css';
 import TeacherRoutes from './routes/TeacherRoutes';
 import StudentRoutes from './routes/StudentRoutes';
@@ -48,7 +48,7 @@ const App = () => {
       <WebSocketProvider>
         <Elements stripe={stripePromise}>
           <Routes>
-            <Route path="login/callback" element={<LoginCallback loadingElement={<Loading />} />} />
+            <Route path="login/callback" element={<LoginCallback loadingElement={<LoadingSpinner />} />} />
             
             {/* Root path - will redirect based on user role */}
             <Route path="/" element={<RequiredAuth />}>
@@ -56,7 +56,7 @@ const App = () => {
             </Route>
 
             <Route path="/unauthorized" element={<RequiredAuth />}>
-              <Route path="" element={<Unauthorized />} />
+              <Route path="" element={<UnauthorizedState />} />
             </Route>
             
             {/* Include Teacher and Student Routes */}

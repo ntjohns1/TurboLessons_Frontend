@@ -3,3 +3,7 @@ turbolessons-frontend/spec/redux_auth_notes.md
 turbolessons-frontend/spec/StripeObjects.md
 .DS_Store
 
+.idea/
+.windsurf/
+
+.idea/misc.xml

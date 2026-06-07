@@ -3,6 +3,7 @@ module.exports = {
   setupFilesAfterEnv: ['<rootDir>/jest.setup.js'],
   moduleNameMapper: {
     '\\.(css|less|scss|sass)$': 'identity-obj-proxy',
+    '\\.(svg|png|jpg|jpeg|gif|webp|ico)$': '<rootDir>/__mocks__/fileMock.js',
   },
   transform: {
     '^.+\\.(js|jsx)$': ['babel-jest', { 
@@ -12,6 +13,9 @@ module.exports = {
       ]
     }],
   },
+  transformIgnorePatterns: [
+    '/node_modules/(?!(@fullcalendar|preact|@okta|@stripe|@babel/runtime)/)',
+  ],
   moduleFileExtensions: ['js', 'jsx'],
   testMatch: [
     '**/__tests__/**/*.[jt]s?(x)',

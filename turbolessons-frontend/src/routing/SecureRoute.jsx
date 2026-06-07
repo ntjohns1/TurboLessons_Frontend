@@ -3,19 +3,19 @@ import { useOktaAuth } from '@okta/okta-react';
 import { toRelativeUrl } from '@okta/okta-auth-js';
 import { Navigate, Outlet, useLocation } from 'react-router-dom';
 
-import Loading from './Loading';
+import LoadingSpinner from '../components/common/LoadingSpinner';
 
 export const RequiredAuth = ({ requiredRoles = [] }) => {
   const { oktaAuth, authState } = useOktaAuth();
   const location = useLocation();
 
-  if (!authState) return <Loading />;
+  if (!authState) return <LoadingSpinner />;
 
   if (!authState.isAuthenticated) {
     const originalUri = toRelativeUrl(window.location.href, window.location.origin);
     oktaAuth.setOriginalUri(originalUri);
     oktaAuth.signInWithRedirect();
-    return <Loading />;
+    return <LoadingSpinner />;
   }
 
   // Role-based access control

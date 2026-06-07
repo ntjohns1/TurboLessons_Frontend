@@ -10,7 +10,7 @@ import {
     selectError 
 } from './LibrarySlice';
 import { setAccessToken } from '../../../service/axiosConfig';
-import Loading from '../../../helpers/Loading';
+import LoadingSpinner from '../../common/LoadingSpinner';
 
 export default function SelectVideo({ setSelected }) {
     const dispatch = useDispatch();
@@ -35,7 +35,7 @@ export default function SelectVideo({ setSelected }) {
     };
 
     // if (loading) {
-    //     return <Loading />;
+    //     return <LoadingSpinner />;
     // }
 
     if (error) {

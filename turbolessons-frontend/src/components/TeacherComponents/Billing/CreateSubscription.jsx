@@ -21,7 +21,7 @@ import {
 } from "./BillingSlice";
 import { selectStudentById } from "../Students/StudentSlice";
 import CreatePaymentMethod from "./CreatePaymentMethod";
-import SuccessModal from "../../../helpers/SuccessModal";
+import SuccessModal from "../../common/SuccessModal";
 
 const CreateSubscription = () => {
 
