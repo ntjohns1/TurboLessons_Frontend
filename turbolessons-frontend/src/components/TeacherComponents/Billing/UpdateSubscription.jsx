@@ -14,7 +14,7 @@ import {
 } from './BillingSlice';
 import { selectProducts } from './BillingSlice';
 import { setAccessToken } from "../../../service/axiosConfig";
-import { useOktaAuth } from '@okta/okta-react';
+import { useOktaAuth } from '@ntjohns1/react-oidc/okta-compat';
 import { Card, Form, Button, Row, Col, Alert } from 'react-bootstrap';
 
 const UpdateSubscription = ({ stripeSubscriptionId }) => {

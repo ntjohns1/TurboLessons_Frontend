@@ -1,23 +1,23 @@
-const CLIENT_ID = process.env.CLIENT_ID || '{clientId}';
-const ISSUER = process.env.ISSUER || 'https://{yourOktaDomain}/oauth2/default';
-const OKTA_TESTING_DISABLEHTTPSCHECK = process.env.OKTA_TESTING_DISABLEHTTPSCHECK || false;
+const CLIENT_ID = process.env.CLIENT_ID || 'turbolessons-spa';
+// ISSUER is the Keycloak realm issuer, e.g. https://auth.nelsonjohns.com/realms/turbolessons[-qac]
+const ISSUER = process.env.ISSUER || 'https://auth.nelsonjohns.com/realms/turbolessons';
 const REDIRECT_URI = `${window.location.origin}/login/callback`;
-const VITE_STRIPE_PUBLISHABLE_KEY = process.env.VITE_STRIPE_PUBLISHABLE_KEY
-const API_BASE_URL = process.env.NODE_ENV === 'development' 
-  ? 'http://localhost:8080' 
+const VITE_STRIPE_PUBLISHABLE_KEY = process.env.VITE_STRIPE_PUBLISHABLE_KEY;
+const API_BASE_URL = process.env.NODE_ENV === 'development'
+  ? 'http://localhost:8080'
   : 'https://www.turbolessons.com';
 
 // eslint-disable-next-line
 export default {
+  // Config for @ntjohns1/react-oidc <AuthProvider>
   oidc: {
+    authority: ISSUER,
     clientId: CLIENT_ID,
-    issuer: ISSUER,
     redirectUri: REDIRECT_URI,
-    scopes: ['openid', 'profile', 'email'],
-    pkce: true,
-    disableHttpsCheck: OKTA_TESTING_DISABLEHTTPSCHECK,
+    postLogoutRedirectUri: window.location.origin,
+    scope: 'openid profile email',
+    rolesClaim: 'groups',
     stripeApiKey: VITE_STRIPE_PUBLISHABLE_KEY,
-
   },
   resourceServer: {
     eventsUrl: `${API_BASE_URL}/api/lessons`,

@@ -1,6 +1,6 @@
 import React, { useEffect, useRef } from 'react';
 import { Card, Container, Toast } from 'react-bootstrap';
-import { useOktaAuth } from '@okta/okta-react';
+import { useOktaAuth } from '@ntjohns1/react-oidc/okta-compat';
 import { useSocket } from '../../../util/context/WebSocketContext';
 import { useDispatch, useSelector } from 'react-redux';
 import { setAccessToken } from '../../../service/axiosConfig';

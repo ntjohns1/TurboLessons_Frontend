@@ -4,7 +4,7 @@ import { FaRegWindowClose } from "react-icons/fa";
 import DeleteUserBtn from './DeleteUserBtn';
 import { useDispatch, useSelector } from 'react-redux';
 import { updateStudent, setFormField, setIsUpdate } from './StudentSlice';
-import { useOktaAuth } from '@okta/okta-react';
+import { useOktaAuth } from '@ntjohns1/react-oidc/okta-compat';
 import { setAccessToken } from '../../../service/axiosConfig';
 import FormField from '../../common/FormField';
 import { STUDENT_FORM_FIELDS } from '../../../config/studentFormFields';

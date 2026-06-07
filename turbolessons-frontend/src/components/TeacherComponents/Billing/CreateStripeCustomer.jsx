@@ -7,7 +7,7 @@ import { fetchStudentProfile } from "../Students/StudentSlice";
 import SuccessModal from "../../common/SuccessModal";
 import LoadingSpinner from "../../common/LoadingSpinner";
 import { setAccessToken } from "../../../service/axiosConfig";
-import { useOktaAuth } from '@okta/okta-react';
+import { useOktaAuth } from '@ntjohns1/react-oidc/okta-compat';
 
 const CreateStripeCustomer = () => {
     const dispatch = useDispatch();

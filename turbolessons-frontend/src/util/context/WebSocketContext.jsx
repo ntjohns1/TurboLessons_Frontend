@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef, createContext, useContext } from 'react';
-import { useOktaAuth } from '@okta/okta-react';
+import { useOktaAuth } from '@ntjohns1/react-oidc/okta-compat';
 import config from '../../config';
 const WebSocketContext = createContext(null);
 

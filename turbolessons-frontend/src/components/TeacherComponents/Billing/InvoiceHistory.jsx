@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import { Table, Button, Card, Container, Spinner, Alert } from "react-bootstrap";
 import { useDispatch, useSelector } from 'react-redux';
 import { setAccessToken } from "../../../service/axiosConfig";
-import { useOktaAuth } from '@okta/okta-react';
+import { useOktaAuth } from '@ntjohns1/react-oidc/okta-compat';
 import { fetchInvoicesBySubscriptionThunk } from './BillingSlice';
 import { formatCurrency, formatTimestamp, capitalize } from '../../../util/formatters';
 

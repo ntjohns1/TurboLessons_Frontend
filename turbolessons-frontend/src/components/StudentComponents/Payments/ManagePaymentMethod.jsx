@@ -9,7 +9,7 @@ import {
   setShowPaymentMethodDetails,
 } from "./PaymentsSlice";
 import { setAccessToken } from "../../../service/axiosConfig";
-import { useOktaAuth } from '@okta/okta-react';
+import { useOktaAuth } from '@ntjohns1/react-oidc/okta-compat';
 import CreatePaymentMethod from './CreatePaymentMethod';
 import { FaCreditCard, FaPlus } from 'react-icons/fa';
 

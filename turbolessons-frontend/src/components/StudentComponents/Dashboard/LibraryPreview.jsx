@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { Card, Row, Col, Button } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { useOktaAuth } from '@okta/okta-react';
+import { useOktaAuth } from '@ntjohns1/react-oidc/okta-compat';
 import { 
   fetchVideosThunk,
   selectVideos,

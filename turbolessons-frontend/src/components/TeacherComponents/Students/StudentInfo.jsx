@@ -4,7 +4,7 @@ import { Button, Card, Col, Form, Row } from 'react-bootstrap';
 import { useDispatch } from 'react-redux';
 import { setIsUpdate, setFormField } from './StudentSlice';
 import { setAccessToken } from '../../../service/axiosConfig';
-import { useOktaAuth } from '@okta/okta-react';
+import { useOktaAuth } from '@ntjohns1/react-oidc/okta-compat';
 import FormField from '../../common/FormField';
 import { STUDENT_FORM_FIELDS } from '../../../config/studentFormFields';
 

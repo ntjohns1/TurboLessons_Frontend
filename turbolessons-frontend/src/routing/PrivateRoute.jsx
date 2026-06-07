@@ -1,4 +1,4 @@
-import { useOktaAuth } from '@okta/okta-react';
+import { useOktaAuth } from '@ntjohns1/react-oidc/okta-compat';
 
 const PrivateRoute = ({ children }) => {
  const { auth } = useOktaAuth();

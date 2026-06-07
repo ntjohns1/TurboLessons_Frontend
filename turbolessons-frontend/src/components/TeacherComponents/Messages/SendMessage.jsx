@@ -1,5 +1,5 @@
 import React from 'react';
-import { useOktaAuth } from '@okta/okta-react';
+import { useOktaAuth } from '@ntjohns1/react-oidc/okta-compat';
 import { setAccessToken } from '../../../service/axiosConfig';
 import { Button, Form, Container } from "react-bootstrap";
 import { useSocket } from '../../../util/context/WebSocketContext';

@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { useOktaAuth } from '@okta/okta-react';
+import { useOktaAuth } from '@ntjohns1/react-oidc/okta-compat';
 import { useNavigate } from 'react-router-dom';
 import LoadingSpinner from './common/LoadingSpinner';
 

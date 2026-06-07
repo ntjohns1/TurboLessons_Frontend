@@ -1,5 +1,5 @@
 import React from "react";
-import { useOktaAuth } from '@okta/okta-react';
+import { useOktaAuth } from '@ntjohns1/react-oidc/okta-compat';
 import { deleteLessonEvent } from '../../../service/eventService';
 import { setAccessToken } from '../../../service/axiosConfig';
 import { Modal, Button, ButtonGroup } from 'react-bootstrap';

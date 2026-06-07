@@ -7,7 +7,7 @@ import EditStudent from './EditStudent';
 import studentReducer, { setFormField, updateStudent, setIsUpdate } from './StudentSlice';
 
 // Mock dependencies
-jest.mock('@okta/okta-react', () => ({
+jest.mock('@ntjohns1/react-oidc/okta-compat', () => ({
   useOktaAuth: () => ({
     oktaAuth: {
       getAccessToken: jest.fn(() => 'mock-access-token'),
