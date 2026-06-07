@@ -1,6 +1,6 @@
 import React from 'react';
 import { Route, Routes } from 'react-router-dom';
-import { RequiredAuth } from '../helpers/SecureRoute';
+import { RequiredAuth } from '../routing/SecureRoute';
 import TeacherLayoutWrapper from '../layouts/TeacherLayoutWrapper';
 
 // Teacher components

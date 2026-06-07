@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { useOktaAuth } from '@okta/okta-react';
 import { useNavigate } from 'react-router-dom';
-import Loading from '../helpers/Loading';
+import LoadingSpinner from './common/LoadingSpinner';
 
 const RoleRouter = () => {
   const { authState } = useOktaAuth();
@@ -28,7 +28,7 @@ const RoleRouter = () => {
   }, [authState, navigate]);
 
   // Show loading while checking auth state and redirecting
-  return <Loading />;
+  return <LoadingSpinner />;
 };
 
 export default RoleRouter;

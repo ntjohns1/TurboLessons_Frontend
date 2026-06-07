@@ -1,7 +1,6 @@
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
-import { useOktaAuth } from '@okta/okta-react';
 import { Card, Container, Row, Col, CardImg } from 'react-bootstrap';
 import EditStudent from './EditStudent';
 import StudentInfo from './StudentInfo';
@@ -14,11 +13,14 @@ import {
   selectLoading,
   selectError 
 } from './StudentSlice';
-import { setAccessToken } from '../../../service/axiosConfig';
+import { useAuthToken } from '../../../hooks/useAuthToken';
+import LoadingState from '../../common/LoadingState';
+import ErrorState from '../../common/ErrorState';
+import EmptyState from '../../common/EmptyState';
 
 export default function SingleStudent() {
   const dispatch = useDispatch();
-  const { authState, oktaAuth } = useOktaAuth();
+  const { authState } = useAuthToken();
   const { id } = useParams();
   
   const student = useSelector(selectStudentProfile);
@@ -27,23 +29,21 @@ export default function SingleStudent() {
   const error = useSelector(selectError);
 
   useEffect(() => {
-    if (authState.isAuthenticated && id) {
-      const accessToken = oktaAuth.getAccessToken();
-      setAccessToken(accessToken);
+    if (authState?.isAuthenticated && id) {
       dispatch(fetchStudentProfile({ id }));
     }
   }, [authState, id, dispatch]);
 
   if (loading) {
-    return <div>Loading student profile...</div>;
+    return <LoadingState message="Loading student profile..." />;
   }
 
   if (error) {
-    return <div>Error loading student profile: {error.message}</div>;
+    return <ErrorState error={error} title="Error loading student profile" />;
   }
 
   if (!student || Object.keys(student).length === 0) {
-    return <div>No student found</div>;
+    return <EmptyState message="No student found" icon="👤" />;
   }
 
   return (
