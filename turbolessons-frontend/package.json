@@ -20,7 +20,7 @@
     "@fullcalendar/moment-timezone": "^6.1.15",
     "@fullcalendar/react": "^6.1.9",
     "@fullcalendar/timegrid": "^6.1.9",
-    "@ntjohns1/react-oidc": "file:../../react-oidc",
+    "@ntjohns1/react-oidc": "^0.1.0",
     "@reduxjs/toolkit": "^2.2.7",
     "@stomp/stompjs": "^6.1.2",
     "@stripe/react-stripe-js": "^3.1.1",
