@@ -1,6 +1,6 @@
 import React, { useEffect, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useOktaAuth } from '@okta/okta-react';
+import { useOktaAuth } from '@ntjohns1/react-oidc/okta-compat';
 import { 
     getVideoThunk,
     selectVideoUrls,
@@ -10,7 +10,7 @@ import {
 } from './VideoSlice';
 import { setAccessToken } from '../../../service/axiosConfig';
 import config from '../../../config';
-import Loading from '../../../helpers/Loading';
+import LoadingSpinner from '../../common/LoadingSpinner';
 
 const PlayVideo = ({ selected }) => {
     const dispatch = useDispatch();
@@ -60,7 +60,7 @@ const PlayVideo = ({ selected }) => {
     }
 
     if (loading) {
-        return <Loading />;
+        return <LoadingSpinner />;
     }
 
     if (error) {

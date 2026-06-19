@@ -3,7 +3,7 @@ import { Container, Row, Col, Table, Form, Button, Card } from "react-bootstrap"
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchPaymentMethodsByCustomerThunk, selectPaymentMethods, selectProducts, fetchAllProductsThunk, selectCustomerBySysId, updatePaymentMethodFormState } from "./BillingSlice";
 import { setAccessToken } from "../../../service/axiosConfig";
-import { useOktaAuth } from '@okta/okta-react';
+import { useOktaAuth } from '@ntjohns1/react-oidc/okta-compat';
 
 const ManagePaymentMethod = ({ stripeCustomerId }) => {
 

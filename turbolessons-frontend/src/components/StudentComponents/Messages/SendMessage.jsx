@@ -1,7 +1,7 @@
 import React from 'react';
 import { Button, Form, Container } from "react-bootstrap";
 import '../../../App';
-import { useOktaAuth } from '@okta/okta-react';
+import { useOktaAuth } from '@ntjohns1/react-oidc/okta-compat';
 import { useSocket } from '../../../util/context/WebSocketContext';
 import { useDispatch, useSelector } from 'react-redux';
 import { sendMessageThunk, selectMessageText, setMessageText, selectSelectedUser } from './StudentMessageSlice';

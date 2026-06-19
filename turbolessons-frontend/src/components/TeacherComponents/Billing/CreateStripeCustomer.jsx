@@ -4,10 +4,10 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useParams, useNavigate } from 'react-router-dom';
 import { createCustomerThunk, updateCustomerFormState, resetCustomerFormState, setShowSuccessModal, setSuccessMessage } from "./BillingSlice";
 import { fetchStudentProfile } from "../Students/StudentSlice";
-import SuccessModal from "../../../helpers/SuccessModal";
-import Loading from "../../../helpers/Loading";
+import SuccessModal from "../../common/SuccessModal";
+import LoadingSpinner from "../../common/LoadingSpinner";
 import { setAccessToken } from "../../../service/axiosConfig";
-import { useOktaAuth } from '@okta/okta-react';
+import { useOktaAuth } from '@ntjohns1/react-oidc/okta-compat';
 
 const CreateStripeCustomer = () => {
     const dispatch = useDispatch();
@@ -123,7 +123,7 @@ const CreateStripeCustomer = () => {
         return (
             <Card>
                 <Card.Body className="d-flex justify-content-center align-items-center">
-                    <Loading />
+                    <LoadingSpinner />
                 </Card.Body>
             </Card>
         );

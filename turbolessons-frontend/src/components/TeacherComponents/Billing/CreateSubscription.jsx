@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { useParams, useNavigate } from 'react-router-dom';
-import { useOktaAuth } from "@okta/okta-react";
+import { useOktaAuth } from "@ntjohns1/react-oidc/okta-compat";
 import { setAccessToken } from "../../../service/axiosConfig";
 import { Form, Button, Modal, Row, Col, Spinner } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
@@ -21,7 +21,7 @@ import {
 } from "./BillingSlice";
 import { selectStudentById } from "../Students/StudentSlice";
 import CreatePaymentMethod from "./CreatePaymentMethod";
-import SuccessModal from "../../../helpers/SuccessModal";
+import SuccessModal from "../../common/SuccessModal";
 
 const CreateSubscription = () => {
 

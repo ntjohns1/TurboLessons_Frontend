@@ -1,9 +1,9 @@
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Card, Toast, Button } from 'react-bootstrap';
-import { useOktaAuth } from '@okta/okta-react';
+import { useOktaAuth } from '@ntjohns1/react-oidc/okta-compat';
 import { Link, useNavigate } from 'react-router-dom';
-import Loading from '../../../helpers/Loading';
+import LoadingSpinner from '../../common/LoadingSpinner';
 import '../../../App';
 import { 
     fetchTeacherStudents, 
@@ -41,7 +41,7 @@ export default function StudentTable() {
     };
 
     if (loading) {
-        return <Loading />;
+        return <LoadingSpinner />;
     }
 
     if (error) {

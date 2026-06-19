@@ -4,8 +4,10 @@ import { FaRegWindowClose } from "react-icons/fa";
 import DeleteUserBtn from './DeleteUserBtn';
 import { useDispatch, useSelector } from 'react-redux';
 import { updateStudent, setFormField, setIsUpdate } from './StudentSlice';
-import { useOktaAuth } from '@okta/okta-react';
+import { useOktaAuth } from '@ntjohns1/react-oidc/okta-compat';
 import { setAccessToken } from '../../../service/axiosConfig';
+import FormField from '../../common/FormField';
+import { STUDENT_FORM_FIELDS } from '../../../config/studentFormFields';
 
 export default function EditStudent({ student, id }) {
     const dispatch = useDispatch();
@@ -57,119 +59,17 @@ export default function EditStudent({ student, id }) {
             </Card.Header>
             <Card.Body>
                 <Form onSubmit={handleSubmit}>
-                    <Form.Group as={Row} className="mb-3">
-                        <Form.Label column sm="4">Email</Form.Label>
-                        <Col sm="8">
-                            <Form.Control
-                                name="email"
-                                value={formState.email ?? ""}
-                                onChange={handleChange}
-                                type="email"
-                                required
-                            />
-                        </Col>
-                    </Form.Group>
-                    <Form.Group as={Row} className="mb-3">
-                        <Form.Label column sm="4">First Name</Form.Label>
-                        <Col sm="8">
-                            <Form.Control
-                                name="firstName"
-                                value={formState.firstName ?? ""}
-                                onChange={handleChange}
-                                type="text"
-                                required
-                            />
-                        </Col>
-                    </Form.Group>
-                    <Form.Group as={Row} className="mb-3">
-                        <Form.Label column sm="4">Middle Name</Form.Label>
-                        <Col sm="8">
-                            <Form.Control
-                                name="middleName"
-                                value={formState.middleName ?? ""}
-                                onChange={handleChange}
-                                type="text"
-                            />
-                        </Col>
-                    </Form.Group>
-                    <Form.Group as={Row} className="mb-3">
-                        <Form.Label column sm="4">Last Name</Form.Label>
-                        <Col sm="8">
-                            <Form.Control
-                                name="lastName"
-                                value={formState.lastName ?? ""}
-                                onChange={handleChange}
-                                type="text"
-                                required
-                            />
-                        </Col>
-                    </Form.Group>
-                    <Form.Group as={Row} className="mb-3">
-                        <Form.Label column sm="4">Mobile Phone</Form.Label>
-                        <Col sm="8">
-                            <Form.Control
-                                name="mobilePhone"
-                                value={formState.mobilePhone ?? ""}
-                                onChange={handleChange}
-                                type="tel"
-                            />
-                        </Col>
-                    </Form.Group>
-                    <Form.Group as={Row} className="mb-3">
-                        <Form.Label column sm="4">Home Phone</Form.Label>
-                        <Col sm="8">
-                            <Form.Control
-                                name="primaryPhone"
-                                value={formState.primaryPhone ?? ""}
-                                onChange={handleChange}
-                                type="tel"
-                            />
-                        </Col>
-                    </Form.Group>
-                    <Form.Group as={Row} className="mb-3">
-                        <Form.Label column sm="4">Address</Form.Label>
-                        <Col sm="8">
-                            <Form.Control
-                                name="streetAddress"
-                                value={formState.streetAddress ?? ""}
-                                onChange={handleChange}
-                                type="text"
-                            />
-                        </Col>
-                    </Form.Group>
-                    <Form.Group as={Row} className="mb-3">
-                        <Form.Label column sm="4">City</Form.Label>
-                        <Col sm="8">
-                            <Form.Control
-                                name="city"
-                                value={formState.city ?? ""}
-                                onChange={handleChange}
-                                type="text"
-                            />
-                        </Col>
-                    </Form.Group>
-                    <Form.Group as={Row} className="mb-3">
-                        <Form.Label column sm="4">State</Form.Label>
-                        <Col sm="8">
-                            <Form.Control
-                                name="state"
-                                value={formState.state ?? ""}
-                                onChange={handleChange}
-                                type="text"
-                            />
-                        </Col>
-                    </Form.Group>
-                    <Form.Group as={Row} className="mb-3">
-                        <Form.Label column sm="4">Zip Code</Form.Label>
-                        <Col sm="8">
-                            <Form.Control
-                                name="zipCode"
-                                value={formState.zipCode ?? ""}
-                                onChange={handleChange}
-                                type="text"
-                            />
-                        </Col>
-                    </Form.Group>
+                    {STUDENT_FORM_FIELDS.map((field) => (
+                        <FormField
+                            key={field.name}
+                            label={field.label}
+                            name={field.name}
+                            value={formState[field.name]}
+                            onChange={handleChange}
+                            type={field.type}
+                            required={field.required || false}
+                        />
+                    ))}
                     <Button
                         type='submit'
                         variant='primary'

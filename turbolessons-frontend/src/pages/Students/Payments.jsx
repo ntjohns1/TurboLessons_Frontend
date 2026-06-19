@@ -5,7 +5,7 @@ import InvoiceHistory from '../../components/StudentComponents/Payments/InvoiceH
 import CreatePaymentMethod from '../../components/StudentComponents/Payments/CreatePaymentMethod';
 import SubscriptionDetail from '../../components/StudentComponents/Payments/SubscriptionDetail';
 import ManagePaymentMethod from '../../components/StudentComponents/Payments/ManagePaymentMethod';
-import { useOktaAuth } from '@okta/okta-react';
+import { useOktaAuth } from '@ntjohns1/react-oidc/okta-compat';
 import { setAccessToken } from '../../service/axiosConfig';
 import { searchCustomersBySysIdThunk, fetchOneSubscriptionThunk } from "../../components/StudentComponents/Payments/PaymentsSlice";
 

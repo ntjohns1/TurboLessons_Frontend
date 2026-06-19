@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from 'react';
-import { useOktaAuth } from '@okta/okta-react';
+import { useOktaAuth } from '@ntjohns1/react-oidc/okta-compat';
 import { Card, Container, Toast } from "react-bootstrap";
 import { useSocket } from '../../../util/context/WebSocketContext';
 import { useDispatch, useSelector } from 'react-redux';

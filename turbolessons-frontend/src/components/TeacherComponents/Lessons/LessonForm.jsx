@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo } from 'react';
 import { Button, Card, Container, Form } from "react-bootstrap";
-import { useOktaAuth } from '@okta/okta-react';
+import { useOktaAuth } from '@ntjohns1/react-oidc/okta-compat';
 import { setAccessToken } from '../../../service/axiosConfig';
 import DatePicker from "react-datepicker";
 import { useSelector, useDispatch } from 'react-redux';
@@ -36,7 +36,7 @@ const LessonForm = ({ onHide, onCreate, onUpdate }) => {
     return () => {
       dispatch(setUpdate(false));
     };
-  }, [setUpdate]);
+  }, [dispatch]);
 
   const handleDateChange = (date) => {
     console.log(date);

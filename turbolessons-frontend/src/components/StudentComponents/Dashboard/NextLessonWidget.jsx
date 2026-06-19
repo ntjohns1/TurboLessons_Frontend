@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { Card } from 'react-bootstrap';
-import { useOktaAuth } from '@okta/okta-react';
+import { useOktaAuth } from '@ntjohns1/react-oidc/okta-compat';
 import { setAccessToken } from '../../../service/axiosConfig';
 import { useSelector, useDispatch } from 'react-redux';
 import { fetchStudentEvents } from './StudentDashboardSlice';

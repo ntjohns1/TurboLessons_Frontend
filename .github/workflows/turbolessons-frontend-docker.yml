@@ -33,11 +33,5 @@ jobs:
             ISSUER=${{ secrets.ISSUER }}
             CLIENT_ID=${{ secrets.CLIENT_ID }}
             VITE_STRIPE_PUBLISHABLE_KEY=${{ secrets.VITE_STRIPE_PUBLISHABLE_KEY }}
-            
-      - name: Trigger Jenkins Multiple Jobs
-        uses: appleboy/jenkins-action@v0.0.2
-        with:
-          url: "https://mostly-certain-primate.ngrok-free.app/"
-          user: "noslen"
-          token: ${{ secrets.JENKINS_TOKEN }}
-          job: "frontend"
+          secrets: |
+            gh_token=${{ secrets.GH_PACKAGES_TOKEN }}

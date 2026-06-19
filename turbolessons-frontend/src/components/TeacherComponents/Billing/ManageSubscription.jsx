@@ -5,7 +5,7 @@ import { useParams } from 'react-router-dom';
 import SubscriptionDetails from "./SubscriptionDetails";
 import { fetchOneSubscriptionThunk, fetchItemsBySubscriptionThunk } from "./BillingSlice";
 import { setAccessToken } from "../../../service/axiosConfig";
-import { useOktaAuth } from '@okta/okta-react';
+import { useOktaAuth } from '@ntjohns1/react-oidc/okta-compat';
 import ManagePaymentMethod from "./ManagePaymentMethod";
 import InvoiceHistory from "./InvoiceHistory";
 import UpdateSubscription from "./UpdateSubscription";

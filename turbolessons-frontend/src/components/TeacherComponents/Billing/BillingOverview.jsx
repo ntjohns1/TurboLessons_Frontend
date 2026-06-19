@@ -6,7 +6,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Link, useParams } from 'react-router-dom';
 import '../../../App'
 import { setAccessToken } from "../../../service/axiosConfig";
-import { useOktaAuth } from '@okta/okta-react';
+import { useOktaAuth } from '@ntjohns1/react-oidc/okta-compat';
 import { searchCustomersBySysIdThunk, fetchPaymentMethodsByCustomerThunk, selectCustomerBySysId } from "./BillingSlice";
 
 export default function BillingOverview() {

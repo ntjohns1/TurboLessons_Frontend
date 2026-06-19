@@ -1,11 +1,11 @@
-import React, { useCallback, useEffect } from 'react'
+import React, { useCallback, useEffect, useMemo } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
 import { Container } from 'react-bootstrap'
 import FullCalendar from '@fullcalendar/react'
 import dayGridPlugin from '@fullcalendar/daygrid'
 import timeGridPlugin from '@fullcalendar/timegrid'
 import interactionPlugin from '@fullcalendar/interaction'
-import { useOktaAuth } from '@okta/okta-react';
+import { useOktaAuth } from '@ntjohns1/react-oidc/okta-compat';
 import LessonModal from './LessonModal'
 import {
     fetchTeacherEvents,
@@ -46,7 +46,7 @@ export default function LessonCalendar() {
     }, [authState, accessToken, teacher, dispatch, eventsLoaded]);
 
 
-    const events = useCallback(() => {
+    const events = useMemo(() => {
         return eventsByTeacher.map(event => ({
             id: event.id,
             title: event.title,
@@ -128,7 +128,7 @@ export default function LessonCalendar() {
                     center: 'title',
                     right: 'dayGridMonth,timeGridWeek,timeGridDay'
                 }}
-                events={events()}
+                events={events}
                 initialView='dayGridMonth'
                 height={'90vh'}
                 contentHeight={800}

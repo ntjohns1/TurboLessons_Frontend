@@ -1,6 +1,6 @@
 import { Button, Spinner, Alert, Card } from 'react-bootstrap';
 import React, { useEffect } from "react";
-import { useOktaAuth } from "@okta/okta-react";
+import { useOktaAuth } from "@ntjohns1/react-oidc/okta-compat";
 import { useStripe, useElements, CardElement } from "@stripe/react-stripe-js";
 import { useDispatch, useSelector } from "react-redux";
 import { createSetupIntentThunk, attachPaymentMethodThunk, setSuccessMessage } from "./PaymentsSlice";

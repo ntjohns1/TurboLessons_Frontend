@@ -4,7 +4,7 @@ import { Card, Table } from 'react-bootstrap';
 import { fetchEventsByTeacher } from '../../../service/eventService';
 import LessonForm from './LessonForm';
 import LogLesson from '../Billing/LogLesson';
-import { useOktaAuth } from '@okta/okta-react';
+import { useOktaAuth } from '@ntjohns1/react-oidc/okta-compat';
 
 
 const LessonList = () => {

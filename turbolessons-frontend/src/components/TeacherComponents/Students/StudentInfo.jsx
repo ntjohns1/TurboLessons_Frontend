@@ -4,7 +4,9 @@ import { Button, Card, Col, Form, Row } from 'react-bootstrap';
 import { useDispatch } from 'react-redux';
 import { setIsUpdate, setFormField } from './StudentSlice';
 import { setAccessToken } from '../../../service/axiosConfig';
-import { useOktaAuth } from '@okta/okta-react';
+import { useOktaAuth } from '@ntjohns1/react-oidc/okta-compat';
+import FormField from '../../common/FormField';
+import { STUDENT_FORM_FIELDS } from '../../../config/studentFormFields';
 
 export default function StudentInfo({ student }) {
     const dispatch = useDispatch();
@@ -38,66 +40,15 @@ export default function StudentInfo({ student }) {
             </Card.Header>
             <Card.Body>
                 <Form>
-                    <Form.Group as={Row} className="mb-1">
-                        <Form.Label column sm="4">Email</Form.Label>
-                        <Col sm="8">
-                            <Form.Control plaintext readOnly value={student.email || ''} />
-                        </Col>
-                    </Form.Group>
-                    <Form.Group as={Row} className="mb-1">
-                        <Form.Label column sm="4">First Name</Form.Label>
-                        <Col sm="8">
-                            <Form.Control plaintext readOnly value={student.firstName || ''} />
-                        </Col>
-                    </Form.Group>
-                    <Form.Group as={Row} className="mb-1">
-                        <Form.Label column sm="4">Middle Name</Form.Label>
-                        <Col sm="8">
-                            <Form.Control plaintext readOnly value={student.middleName || ''} />
-                        </Col>
-                    </Form.Group>
-                    <Form.Group as={Row} className="mb-1">
-                        <Form.Label column sm="4">Last Name</Form.Label>
-                        <Col sm="8">
-                            <Form.Control plaintext readOnly value={student.lastName || ''} />
-                        </Col>
-                    </Form.Group>
-                    <Form.Group as={Row} className="mb-1">
-                        <Form.Label column sm="4">Mobile Phone</Form.Label>
-                        <Col sm="8">
-                            <Form.Control plaintext readOnly value={student.mobilePhone || ''} />
-                        </Col>
-                    </Form.Group>
-                    <Form.Group as={Row} className="mb-1">
-                        <Form.Label column sm="4">Home Phone</Form.Label>
-                        <Col sm="8">
-                            <Form.Control plaintext readOnly value={student.primaryPhone || ''} />
-                        </Col>
-                    </Form.Group>
-                    <Form.Group as={Row} className="mb-1">
-                        <Form.Label column sm="4">Address</Form.Label>
-                        <Col sm="8">
-                            <Form.Control plaintext readOnly value={student.streetAddress || ''} />
-                        </Col>
-                    </Form.Group>
-                    <Form.Group as={Row} className="mb-1">
-                        <Form.Label column sm="4">City</Form.Label>
-                        <Col sm="8">
-                            <Form.Control plaintext readOnly value={student.city || ''} />
-                        </Col>
-                    </Form.Group>
-                    <Form.Group as={Row} className="mb-1">
-                        <Form.Label column sm="4">State</Form.Label>
-                        <Col sm="8">
-                            <Form.Control plaintext readOnly value={student.state || ''} />
-                        </Col>
-                    </Form.Group>
-                    <Form.Group as={Row} className="mb-1">
-                        <Form.Label column sm="4">Zip Code</Form.Label>
-                        <Col sm="8">
-                            <Form.Control plaintext readOnly value={student.zipCode || ''} />
-                        </Col>
-                    </Form.Group>
+                    {STUDENT_FORM_FIELDS.map((field) => (
+                        <FormField
+                            key={field.name}
+                            label={field.label}
+                            name={field.name}
+                            value={student[field.name]}
+                            readOnly={true}
+                        />
+                    ))}
                 </Form>
             </Card.Body>
         </Card>
