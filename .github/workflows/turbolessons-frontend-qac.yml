@@ -1,13 +1,13 @@
 name: turbolessons-frontend-qac
 
-# QAC environment pipeline (Git Flow: dev -> QAC, main -> prod).
+# QAC environment pipeline (Git Flow: develop -> QAC, main -> prod).
 # Build runs on a GitHub-hosted runner; deploy runs on the self-hosted
 # runner (server_8, label `qac`) which redeploys the qac compose stack locally.
 on:
   workflow_dispatch:
   push:
     branches:
-      - 'dev'
+      - 'develop'
 
 jobs:
   build:
