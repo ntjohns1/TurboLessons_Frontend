@@ -1,78 +1,69 @@
-import React, { useCallback, useEffect, useMemo } from "react";
+import { useMemo } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useAuth } from "@ntjohns1/react-oidc";
 import {
-  fetchTeacherEvents,
-  createEvent,
-  updateEvent,
-  deleteEvent,
-  setSelectedEvent,
-  setDateClick,
-  setShowModal,
-} from "./LessonSlice";
-import { setAccessToken } from "../../../service/axiosConfig";
+  useGetTeacherEventsQuery,
+  useCreateEventMutation,
+  useUpdateEventMutation,
+  useDeleteEventMutation,
+} from "./lessonsApi";
+import { setSelectedEvent, setDateClick, setShowModal } from "./LessonSlice";
 
+/**
+ * Feature facade for the lesson calendar.
+ * - Server state (events + mutations) comes from RTK Query (lessonsApi).
+ * - Client/UI state (modal open, selection, dateClick) comes from LessonSlice.
+ * No useEffect, no manual loading flag, no setAccessToken: the query fetches on
+ * mount, caches, and refetches automatically after mutations invalidate tags.
+ */
 export default function useLessonCalendar() {
-  const { isAuthenticated, claims, getAccessToken } = useAuth();
-  const accessToken = getAccessToken();
-  const dispatch = useDispatch();
-  const eventsByTeacher = useSelector((state) => state.lessons.eventsByTeacher);
-  // const loading = useSelector((state) => state.lessons.loading);
-  const eventsLoaded = useSelector((state) => state.lessons.eventsLoaded);
-  const showModal = useSelector((state) => state.lessons.showModal);
+  const { claims } = useAuth();
   const teacher = claims.name;
-  const handleCloseModal = () => {
-    dispatch(setShowModal(false));
-  };
+  const dispatch = useDispatch();
 
-  const handleShowModal = () => {
-    dispatch(setShowModal(true));
-  };
+  const showModal = useSelector((state) => state.lessons.showModal);
 
-  useEffect(() => {
-    if (isAuthenticated) {
-      setAccessToken(accessToken);
-      dispatch(fetchTeacherEvents({ teacher }));
-    }
-  }, [isAuthenticated, accessToken, teacher, dispatch, eventsLoaded]);
+  // Server state. `skip` avoids firing until we know the teacher.
+  const {
+    data: events = [],
+    isLoading,
+    isError,
+  } = useGetTeacherEventsQuery(teacher, { skip: !teacher });
 
-  const events = useMemo(() => {
-    return eventsByTeacher.map((event) => ({
-      id: event.id,
-      title: event.title,
-      start: new Date(event.start),
-      end: new Date(event.end),
-    }));
-  }, [eventsByTeacher]);
+  const [createEvent] = useCreateEventMutation();
+  const [updateEvent] = useUpdateEventMutation();
+  const [deleteEvent] = useDeleteEventMutation();
+
+  const handleCloseModal = () => dispatch(setShowModal(false));
+  const handleShowModal = () => dispatch(setShowModal(true));
+
+  // FullCalendar wants Date objects; the query returns ISO strings.
+  const calendarEvents = useMemo(
+    () =>
+      events.map((event) => ({
+        id: event.id,
+        title: event.title,
+        start: new Date(event.start),
+        end: new Date(event.end),
+      })),
+    [events]
+  );
 
   const handleDateClick = (arg) => {
-    // Parse the date string as UTC
     let utcDate = new Date(Date.parse(arg.dateStr + "T00:00:00Z"));
-
-    // Set the start time to 12:00 PM UTC
     utcDate.setUTCHours(12, 0, 0, 0);
     utcDate = new Date(utcDate.getTime() + utcDate.getTimezoneOffset() * 60000);
     const startTime = utcDate.toISOString();
-
-    // Create the end time (12:30 PM UTC)
     const endDate = new Date(utcDate);
     endDate.setUTCMinutes(endDate.getUTCMinutes() + 30);
     const endTime = endDate.toISOString();
-    dispatch(
-      setSelectedEvent({
-        start: startTime,
-        end: endTime,
-      }),
-    );
-
+    dispatch(setSelectedEvent({ start: startTime, end: endTime }));
     dispatch(setDateClick(true));
     dispatch(setShowModal(true));
   };
 
   const handleEventClick = (info) => {
-    const event = eventsByTeacher.find(
-      (e) => e.id === parseInt(info.event.id, 10),
-    );
+    const event = events.find((e) => e.id === parseInt(info.event.id, 10));
     if (event) {
       dispatch(setDateClick(false));
       dispatch(setSelectedEvent(event));
@@ -80,37 +71,29 @@ export default function useLessonCalendar() {
     }
   };
 
-  const handleEventAdd = (addInfo) => {
-    dispatch(
-      createEvent({
-        ...addInfo,
-        start: new Date(addInfo.startTime),
-        end: new Date(addInfo.endTime),
-      }),
-    );
-  };
+  const handleEventAdd = (addInfo) =>
+    createEvent({
+      ...addInfo,
+      start: new Date(addInfo.startTime),
+      end: new Date(addInfo.endTime),
+    });
 
-  const handleEventChange = (id, changeInfo) => {
-    // console.log(changeInfo);
-    dispatch(
-      updateEvent({
-        id,
-        formState: {
-          ...changeInfo,
-          start: new Date(changeInfo.startTime),
-          end: new Date(changeInfo.endTime),
-        },
-      }),
-    );
-  };
+  const handleEventChange = (id, changeInfo) =>
+    updateEvent({
+      id,
+      formState: {
+        ...changeInfo,
+        start: new Date(changeInfo.startTime),
+        end: new Date(changeInfo.endTime),
+      },
+    });
 
-  const handleEventRemove = (removeInfo) => {
-    const event = removeInfo.event;
-    dispatch(deleteEvent(event.id));
-  };
+  const handleEventRemove = (removeInfo) => deleteEvent(removeInfo.event.id);
 
   return {
-    events,
+    events: calendarEvents,
+    isLoading,
+    isError,
     showModal,
     handleShowModal,
     handleCloseModal,
@@ -118,6 +101,6 @@ export default function useLessonCalendar() {
     handleEventClick,
     handleEventAdd,
     handleEventChange,
-    handleEventRemove
+    handleEventRemove,
   };
 }
