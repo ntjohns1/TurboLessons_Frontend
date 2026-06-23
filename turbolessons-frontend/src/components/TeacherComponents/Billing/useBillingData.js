@@ -36,11 +36,13 @@ export default function useBillingData(oktaId) {
   return {
     customer,
     customerId,
+    subscriptionId,
     subscription,
     paymentMethods,
     invoices,
     upcomingInvoice,
     hasCustomer: !!customerId,
+    hasSubscription: !!subscriptionId,
     isLoading: customerLoading,
   };
 }

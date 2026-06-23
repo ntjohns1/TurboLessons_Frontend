@@ -1,36 +1,35 @@
-import React, { useEffect } from "react";
-import { useDispatch, useSelector } from 'react-redux';
+import React from "react";
 import { Card } from "react-bootstrap";
-import { fetchAllPricesThunk, fetchAllProductsThunk } from "./BillingSlice";
 
+// Everything needed comes from the (expanded) subscription object, so no
+// separate product/price fetches are required.
 const SubscriptionDetails = ({ subscription }) => {
-    const dispatch = useDispatch();
-    const productAdapter = useSelector((state) => state.billing.entities["products"]);
-    const priceAdapter = useSelector((state) => state.billing.entities["prices"]);
-    const product = Object.values(productAdapter.entities).find(p => p.id === subscription?.items?.data[0].price.product);
-    const price = Object.values(priceAdapter.entities).find(p => p.id === subscription?.items?.data[0].price.id);
-    const periodStart = subscription?.currentPeriodStart;
-    const startDate = periodStart ? new Date(periodStart * 1000).toLocaleDateString() : 'N/A';
-    const periodEnd = subscription?.currentPeriodEnd;
-    const endDate = periodEnd ? new Date(periodEnd * 1000).toLocaleDateString() : 'N/A';
-    useEffect(() => {
-        if (!productAdapter.ids.length || !priceAdapter.ids.length) {
-            dispatch(fetchAllPricesThunk());
-            dispatch(fetchAllProductsThunk());
+    const price = subscription?.items?.data?.[0]?.price;
+    const planName = price?.nickname || "Music Lessons";
+    const unitAmount =
+        price?.unitAmountDecimal != null
+            ? (parseInt(price.unitAmountDecimal, 10) / 100).toFixed(2)
+            : price?.unit_amount != null
+            ? (price.unit_amount / 100).toFixed(2)
+            : null;
 
-        }
-    }, [productAdapter, priceAdapter]);
+    const startDate = subscription?.currentPeriodStart
+        ? new Date(subscription.currentPeriodStart * 1000).toLocaleDateString()
+        : "N/A";
+    const endDate = subscription?.currentPeriodEnd
+        ? new Date(subscription.currentPeriodEnd * 1000).toLocaleDateString()
+        : "N/A";
+
     return (
-
-            <Card className="m-2">
-                <Card.Body>
-                    <Card.Title>Subscription Details</Card.Title>
-                    <Card.Text>Plan:    {product?.description}</Card.Text>
-                    <Card.Text>Price:   ${price ? (parseInt(price.unitAmountDecimal, 10) / 100).toFixed(2) : 'N/A'}</Card.Text>
-                    <Card.Text>Billing Period: {startDate} - {endDate}</Card.Text>
-                </Card.Body>
-            </Card>
-   
+        <Card className="m-2">
+            <Card.Body>
+                <Card.Title>Subscription Details</Card.Title>
+                <Card.Text>Plan: {planName}</Card.Text>
+                <Card.Text>Price: ${unitAmount ?? "N/A"} per lesson unit</Card.Text>
+                <Card.Text>Billing Period: {startDate} - {endDate}</Card.Text>
+            </Card.Body>
+        </Card>
     );
 };
+
 export default SubscriptionDetails;

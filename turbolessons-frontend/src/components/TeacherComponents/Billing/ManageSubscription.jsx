@@ -1,53 +1,29 @@
-import React, { useEffect } from "react";
-import { Container, Row, Col, Form, Button, Card } from "react-bootstrap";
-import { useDispatch, useSelector } from 'react-redux';
+import React from "react";
+import { Container, Row } from "react-bootstrap";
 import { useParams } from 'react-router-dom';
 import SubscriptionDetails from "./SubscriptionDetails";
-import { fetchOneSubscriptionThunk, fetchItemsBySubscriptionThunk } from "./BillingSlice";
-import { setAccessToken } from "../../../service/axiosConfig";
-import { useOktaAuth } from '@ntjohns1/react-oidc/okta-compat';
 import ManagePaymentMethod from "./ManagePaymentMethod";
 import InvoiceHistory from "./InvoiceHistory";
 import UpdateSubscription from "./UpdateSubscription";
-
-
+import useBillingData from "./useBillingData";
 
 const ManageSubscription = () => {
-
-  const { authState, oktaAuth } = useOktaAuth();
-  const accessToken = oktaAuth.getAccessToken();
-  const dispatch = useDispatch();
   const paramsId = useParams().id;
-  const customerAdapter = useSelector((state) => state.billing.entities["customers"]);
-  const subscriptionAdapter = useSelector((state) => state.billing.entities["subscriptions"]);
-  const customer = Object.values(customerAdapter.entities).find(
-    (c) => c.metadata?.okta_id === paramsId
-  );
-  // Todo: This should handle multiple subscriptions
-  const stripeSubscriptionId = customer?.subscriptions?.[0] || "";
-  const subscription = Object.values(subscriptionAdapter.entities).find((s) => s.id === stripeSubscriptionId);
-
-  useEffect(() => {
-    setAccessToken(accessToken);
-    if (stripeSubscriptionId) {
-      dispatch(fetchOneSubscriptionThunk(stripeSubscriptionId));
-    }
-
-  }, [dispatch, stripeSubscriptionId, accessToken]);
+  const { customerId, subscriptionId, subscription } = useBillingData(paramsId);
 
   return (
-    <Container >
+    <Container>
       <Row>
-        <SubscriptionDetails subscription={subscription} className="m-2"/>
+        <SubscriptionDetails subscription={subscription} className="m-2" />
       </Row>
       <Row>
-        <UpdateSubscription stripeSubscriptionId={stripeSubscriptionId} className="m-2"/>
+        <UpdateSubscription stripeSubscriptionId={subscriptionId} className="m-2" />
       </Row>
       <Row>
-        <InvoiceHistory subscriptionId={stripeSubscriptionId} className="m-2"/>
+        <InvoiceHistory customerId={customerId} className="m-2" />
       </Row>
       <Row>
-        <ManagePaymentMethod stripeCustomerId={customer?.id} className="m-2"/>
+        <ManagePaymentMethod stripeCustomerId={customerId} className="m-2" />
       </Row>
     </Container>
   );
