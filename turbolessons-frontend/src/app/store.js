@@ -5,6 +5,7 @@ import { setupListeners } from "@reduxjs/toolkit/query";
 import { lessonsApi } from "../components/TeacherComponents/Lessons/lessonsApi";
 import { studentsApi } from "../components/TeacherComponents/Students/studentsApi";
 import { messagesApi } from "../service/messagesApi";
+import { billingApi } from "../service/billingApi";
 
 // Import all reducers from both student and teacher stores
 import teacherLessonsReducer from "../components/TeacherComponents/Lessons/LessonSlice";
@@ -61,12 +62,14 @@ export const configureAppStore = (role) => {
       [lessonsApi.reducerPath]: lessonsApi.reducer,
       [studentsApi.reducerPath]: studentsApi.reducer,
       [messagesApi.reducerPath]: messagesApi.reducer,
+      [billingApi.reducerPath]: billingApi.reducer,
     },
     middleware: (getDefaultMiddleware) =>
       getDefaultMiddleware()
         .concat(lessonsApi.middleware)
         .concat(studentsApi.middleware)
-        .concat(messagesApi.middleware),
+        .concat(messagesApi.middleware)
+        .concat(billingApi.middleware),
   });
 
   // Enables refetchOnFocus / refetchOnReconnect behavior for RTK Query.
