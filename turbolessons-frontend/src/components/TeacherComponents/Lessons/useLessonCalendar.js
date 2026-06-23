@@ -1,0 +1,123 @@
+import React, { useCallback, useEffect, useMemo } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { useAuth } from "@ntjohns1/react-oidc";
+import {
+  fetchTeacherEvents,
+  createEvent,
+  updateEvent,
+  deleteEvent,
+  setSelectedEvent,
+  setDateClick,
+  setShowModal,
+} from "./LessonSlice";
+import { setAccessToken } from "../../../service/axiosConfig";
+
+export default function useLessonCalendar() {
+  const { isAuthenticated, claims, getAccessToken } = useAuth();
+  const accessToken = getAccessToken();
+  const dispatch = useDispatch();
+  const eventsByTeacher = useSelector((state) => state.lessons.eventsByTeacher);
+  // const loading = useSelector((state) => state.lessons.loading);
+  const eventsLoaded = useSelector((state) => state.lessons.eventsLoaded);
+  const showModal = useSelector((state) => state.lessons.showModal);
+  const teacher = claims.name;
+  const handleCloseModal = () => {
+    dispatch(setShowModal(false));
+  };
+
+  const handleShowModal = () => {
+    dispatch(setShowModal(true));
+  };
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      setAccessToken(accessToken);
+      dispatch(fetchTeacherEvents({ teacher }));
+    }
+  }, [isAuthenticated, accessToken, teacher, dispatch, eventsLoaded]);
+
+  const events = useMemo(() => {
+    return eventsByTeacher.map((event) => ({
+      id: event.id,
+      title: event.title,
+      start: new Date(event.start),
+      end: new Date(event.end),
+    }));
+  }, [eventsByTeacher]);
+
+  const handleDateClick = (arg) => {
+    // Parse the date string as UTC
+    let utcDate = new Date(Date.parse(arg.dateStr + "T00:00:00Z"));
+
+    // Set the start time to 12:00 PM UTC
+    utcDate.setUTCHours(12, 0, 0, 0);
+    utcDate = new Date(utcDate.getTime() + utcDate.getTimezoneOffset() * 60000);
+    const startTime = utcDate.toISOString();
+
+    // Create the end time (12:30 PM UTC)
+    const endDate = new Date(utcDate);
+    endDate.setUTCMinutes(endDate.getUTCMinutes() + 30);
+    const endTime = endDate.toISOString();
+    dispatch(
+      setSelectedEvent({
+        start: startTime,
+        end: endTime,
+      }),
+    );
+
+    dispatch(setDateClick(true));
+    dispatch(setShowModal(true));
+  };
+
+  const handleEventClick = (info) => {
+    const event = eventsByTeacher.find(
+      (e) => e.id === parseInt(info.event.id, 10),
+    );
+    if (event) {
+      dispatch(setDateClick(false));
+      dispatch(setSelectedEvent(event));
+      handleShowModal();
+    }
+  };
+
+  const handleEventAdd = (addInfo) => {
+    dispatch(
+      createEvent({
+        ...addInfo,
+        start: new Date(addInfo.startTime),
+        end: new Date(addInfo.endTime),
+      }),
+    );
+  };
+
+  const handleEventChange = (id, changeInfo) => {
+    // console.log(changeInfo);
+    dispatch(
+      updateEvent({
+        id,
+        formState: {
+          ...changeInfo,
+          start: new Date(changeInfo.startTime),
+          end: new Date(changeInfo.endTime),
+        },
+      }),
+    );
+  };
+
+  const handleEventRemove = (removeInfo) => {
+    const event = removeInfo.event;
+    dispatch(deleteEvent(event.id));
+  };
+
+  return {
+    events,
+    showModal,
+    handleShowModal,
+    handleCloseModal,
+    handleDateClick,
+    handleEventClick,
+    handleEventAdd,
+    handleEventChange,
+    handleEventRemove
+  };
+}
