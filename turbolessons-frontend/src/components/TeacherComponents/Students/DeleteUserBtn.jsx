@@ -1,54 +1,41 @@
 import React, { useState } from 'react';
 import { Button, Modal, Form, Row } from 'react-bootstrap';
-import { deleteStudent } from '../../../service/adminService';
-import { setAccessToken } from '../../../service/axiosConfig';
-import config from '../../../config';
+import { useNavigate } from 'react-router-dom';
+import { useDeleteStudentMutation } from './studentsApi';
 
-export default function DeletUserBtn({ oktaAuth, id, student }) {
+export default function DeleteUserBtn({ id, student }) {
+    const navigate = useNavigate();
+    const [deleteStudent] = useDeleteStudentMutation();
     const [valid, setValid] = useState(false);
-    const [inputTxt, setInputTxt] = useState({
-        inputTxt: ''
-    });
+    const [inputTxt, setInputTxt] = useState({ inputTxt: '' });
     const [show, setShow] = useState(false);
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
     const studentName = student.firstName + " " + student.lastName;
+
     const handleChange = (event) => {
         const { name, value } = event.target;
-
         if (value === studentName) {
             setValid(true);
         }
-
-        setInputTxt({
-            ...inputTxt,
-            [name]: value,
-        });
+        setInputTxt({ ...inputTxt, [name]: value });
     };
 
-    // TODO: possible caching issue where state is not being updated upon
-    // deleting a user
     const handleDelete = async (event) => {
         event.preventDefault();
         try {
-            const accessToken = oktaAuth.getAccessToken();
-            setAccessToken(accessToken);
-            await deleteStudent(id);
+            // Tag invalidation refetches the roster, so the deleted student
+            // drops out of the list automatically.
+            await deleteStudent(id).unwrap();
             alert(`${studentName} Deleted`);
-            goBack();
-        }
-        catch (err) {
-            return console.error(err);
+            navigate('/teacher_portal/students');
+        } catch (err) {
+            console.error(err);
         }
     };
 
-
-    function goBack() {
-        document.location.replace(`/students`);
-    }
     return (
         <>
-
             <Button onClick={handleShow} variant="danger">Delete Student</Button>
             <Modal
                 show={show}
@@ -62,10 +49,9 @@ export default function DeletUserBtn({ oktaAuth, id, student }) {
                 <Modal.Body>
                     <Form>
                         <Form.Group as={Row} className="mb-3" controlId="formPlaininputTxtEmail">
-                            <Form.Label >
+                            <Form.Label>
                                 Retype the Users's First and Last Name to Continue: {studentName}
                             </Form.Label>
-
                             <Form.Control
                                 name="inputTxt"
                                 onChange={handleChange}
@@ -76,15 +62,14 @@ export default function DeletUserBtn({ oktaAuth, id, student }) {
                     </Form>
                 </Modal.Body>
                 <Modal.Footer className="d-flex justify-content-end">
-                    <Button onClick={() => handleDelete()} variant="outline-danger" disabled={!valid}>
+                    <Button onClick={handleDelete} variant="outline-danger" disabled={!valid}>
                         Confirm
                     </Button>
                     <Button onClick={handleClose} variant="outline-danger">
                         Cancel
                     </Button>
                 </Modal.Footer>
-
             </Modal>
         </>
-    )
+    );
 }

@@ -3,7 +3,7 @@ import { Card, Form, Row, Col, Button, Alert, Spinner } from "react-bootstrap";
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams, useNavigate } from 'react-router-dom';
 import { createCustomerThunk, updateCustomerFormState, resetCustomerFormState, setShowSuccessModal, setSuccessMessage } from "./BillingSlice";
-import { fetchStudentProfile } from "../Students/StudentSlice";
+import { useGetStudentProfileQuery } from "../Students/studentsApi";
 import SuccessModal from "../../common/SuccessModal";
 import LoadingSpinner from "../../common/LoadingSpinner";
 import { setAccessToken } from "../../../service/axiosConfig";
@@ -29,25 +29,12 @@ const CreateStripeCustomer = () => {
     };
     const successMessage = useSelector((state) => state.billing.successMessage);
     const show = useSelector((state) => state.billing.showSuccessModal);
-    const loading = useSelector((state) => state.students.loading);
-    const studentProfile = useSelector((state) => state.students.studentProfile);
     const paramsId = useParams().id;
-
-    useEffect(() => {
-        const fetchProfile = async () => {
-            try {
-                const accessToken = oktaAuth.getAccessToken();
-                setAccessToken(accessToken);
-                await dispatch(fetchStudentProfile({ id: paramsId })).unwrap();
-            } catch (error) {
-                console.error('Error fetching student profile:', error);
-            }
-        };
-
-        if (authState.isAuthenticated) {
-            fetchProfile();
-        }
-    }, [authState, oktaAuth, dispatch, paramsId]);
+    // Student profile now comes from RTK Query (studentsApi).
+    const { data: studentProfile, isLoading: loading } = useGetStudentProfileQuery(
+        paramsId,
+        { skip: !paramsId }
+    );
 
     useEffect(() => {
         if (studentProfile) {

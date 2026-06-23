@@ -3,16 +3,15 @@ import { Card, Form, Button, Row, Col } from 'react-bootstrap';
 import { FaRegWindowClose } from "react-icons/fa";
 import DeleteUserBtn from './DeleteUserBtn';
 import { useDispatch, useSelector } from 'react-redux';
-import { updateStudent, setFormField, setIsUpdate } from './StudentSlice';
-import { useOktaAuth } from '@ntjohns1/react-oidc/okta-compat';
-import { setAccessToken } from '../../../service/axiosConfig';
+import { setFormField, setIsUpdate } from './StudentSlice';
+import { useEditStudentMutation } from './studentsApi';
 import FormField from '../../common/FormField';
 import { STUDENT_FORM_FIELDS } from '../../../config/studentFormFields';
 
 export default function EditStudent({ student, id }) {
     const dispatch = useDispatch();
-    const { oktaAuth } = useOktaAuth();
     const formState = useSelector(state => state.students.formState);
+    const [editStudent] = useEditStudentMutation();
 
     useEffect(() => {
         // Initialize form with student data
@@ -29,9 +28,7 @@ export default function EditStudent({ student, id }) {
     const handleSubmit = async (evt) => {
         evt.preventDefault();
         try {
-            const accessToken = oktaAuth.getAccessToken();
-            setAccessToken(accessToken);
-            await dispatch(updateStudent({ id, formState })).unwrap();
+            await editStudent({ id, formState }).unwrap();
             alert(`${formState.displayName} successfully updated`);
             dispatch(setIsUpdate(false));
         } catch (error) {
