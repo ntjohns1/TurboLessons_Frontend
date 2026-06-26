@@ -1,12 +1,13 @@
 import React from 'react';
 import { Button, Card, Spinner } from 'react-bootstrap';
-import { Link, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import '../../../App'
 import useBillingData from './useBillingData';
 
 export default function BillingOverview() {
     const paramsId = useParams().id;
-    const { hasCustomer, hasSubscription, isLoading } = useBillingData(paramsId);
+    const { hasSubscription, isLoading, isRedirecting, enroll, openPortal } =
+        useBillingData(paramsId);
 
     if (isLoading) {
         return (
@@ -23,47 +24,35 @@ export default function BillingOverview() {
         );
     }
 
-    // No Stripe customer yet
-    if (!hasCustomer) {
-        return (
-            <Card className="text-center">
-                <Card.Body>
-                    <Card.Title>No Customer Found</Card.Title>
-                    <Card.Text>
-                        We couldn't find customer data for this user. Please create a new Stripe customer.
-                    </Card.Text>
-                    <Button as={Link} to={`/teacher_portal/students/${paramsId}/create_stripe_account`} variant="primary">
-                        Create Customer
-                    </Button>
-                </Card.Body>
-            </Card>
-        );
-    }
-
-    // Customer exists, no subscription
+    // Not subscribed yet → Stripe Checkout enrollment (creates the customer if
+    // needed, collects the card, and creates the metered subscription).
     if (!hasSubscription) {
         return (
             <Card className="text-center">
                 <Card.Body>
-                    <Card.Title>No Subscription</Card.Title>
+                    <Card.Title>No Active Subscription</Card.Title>
                     <Card.Text>
-                        You don't have an active subscription. Start your subscription today!
+                        Enroll this student in lesson billing. They'll be charged monthly
+                        for the lessons logged that period.
                     </Card.Text>
-                    <Button as={Link} to={`/teacher_portal/students/${paramsId}/create_subscription`} variant="primary">
-                        Start Subscription
+                    <Button variant="primary" onClick={enroll} disabled={isRedirecting}>
+                        {isRedirecting ? <Spinner animation="border" size="sm" /> : 'Enroll in Billing'}
                     </Button>
                 </Card.Body>
             </Card>
         );
     }
 
-    // Customer and subscription exist
+    // Subscribed → manage via the Stripe Customer Portal.
     return (
         <Card className="text-center">
             <Card.Body>
-                <Card.Title>Subscription Details</Card.Title>
-                <Button as={Link} to={`/teacher_portal/students/${paramsId}/subscription`} variant="primary">
-                    Manage Subscription
+                <Card.Title>Subscription Active</Card.Title>
+                <Card.Text>
+                    Manage payment methods, view invoices, or cancel in the billing portal.
+                </Card.Text>
+                <Button variant="primary" onClick={openPortal} disabled={isRedirecting}>
+                    {isRedirecting ? <Spinner animation="border" size="sm" /> : 'Manage Billing'}
                 </Button>
             </Card.Body>
         </Card>

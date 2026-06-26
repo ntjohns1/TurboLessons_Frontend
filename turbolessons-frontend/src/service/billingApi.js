@@ -120,6 +120,22 @@ export const billingApi = createApi({
       providesTags: [{ type: "Invoice", id: "UPCOMING" }],
     }),
 
+    // --- Checkout + Customer Portal (Stripe-hosted enroll / manage) ---
+    createCheckoutSession: build.mutation({
+      query: (body) => ({
+        url: `/payments/checkout/session`,
+        method: "post",
+        data: body,
+      }),
+    }),
+    createPortalSession: build.mutation({
+      query: (body) => ({
+        url: `/payments/portal/session`,
+        method: "post",
+        data: body,
+      }),
+    }),
+
     // --- Meter event (the "Log Lesson" action) ---
     createMeterEvent: build.mutation({
       query: (formState) => ({
@@ -147,5 +163,7 @@ export const {
   useCancelSubscriptionMutation,
   useListInvoicesByCustomerQuery,
   useGetUpcomingInvoiceQuery,
+  useCreateCheckoutSessionMutation,
+  useCreatePortalSessionMutation,
   useCreateMeterEventMutation,
 } = billingApi;
