@@ -3,7 +3,6 @@ import { Card, Table } from 'react-bootstrap';
 import { useAuth } from '@ntjohns1/react-oidc';
 import { useGetTeacherEventsQuery } from './lessonsApi';
 import LessonForm from './LessonForm';
-import LogLesson from '../Billing/LogLesson';
 
 const LessonList = () => {
     const { claims } = useAuth();
@@ -35,7 +34,6 @@ const LessonList = () => {
                                     <tr>
                                         <th>Date</th>
                                         <th>Title</th>
-                                        <th>Log Lesson</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -45,7 +43,6 @@ const LessonList = () => {
                                             <tr onClick={() => handleEdit(lesson)} key={lesson.id}>
                                                 <td>{lesson.date}</td>
                                                 <td>{lesson.title}</td>
-                                                <td><LogLesson /></td>
                                             </tr>
                                         ))}
                                 </tbody>
