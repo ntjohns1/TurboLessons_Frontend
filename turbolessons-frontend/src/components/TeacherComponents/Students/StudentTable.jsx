@@ -1,53 +1,26 @@
-import React, { useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import React from 'react';
 import { Card, Toast, Button } from 'react-bootstrap';
-import { useOktaAuth } from '@ntjohns1/react-oidc/okta-compat';
 import { Link, useNavigate } from 'react-router-dom';
 import LoadingSpinner from '../../common/LoadingSpinner';
 import '../../../App';
-import { 
-    fetchTeacherStudents, 
-    selectStudentsByTeacher,
-    selectStudentsLoaded,
-    selectLoading,
-    selectError 
-} from './StudentSlice';
-import { setAccessToken } from '../../../service/axiosConfig';
+import useStudentData from './useStudentData';
 
 export default function StudentTable() {
-    const dispatch = useDispatch();
     const navigate = useNavigate();
-    const { authState, oktaAuth } = useOktaAuth();
-    
-    // Redux selectors
-    const students = useSelector(selectStudentsByTeacher);
-    const studentsLoaded = useSelector(selectStudentsLoaded);
-    const loading = useSelector(selectLoading);
-    const error = useSelector(selectError);
-    
-    const principle = authState?.idToken?.claims?.name;
-
-    useEffect(() => {
-        if (authState?.isAuthenticated && principle && !studentsLoaded) {
-            const accessToken = oktaAuth.getAccessToken();
-            console.log(authState.accessToken.claims.groups);
-            setAccessToken(accessToken);
-            dispatch(fetchTeacherStudents({ teacher: principle }));
-        }
-    }, [authState, principle, studentsLoaded, dispatch]);
+    const { students, isLoading, isError, error } = useStudentData();
 
     const goToStudent = (studentId) => {
         navigate(`/teacher_portal/students/${studentId}`);
     };
 
-    if (loading) {
+    if (isLoading) {
         return <LoadingSpinner />;
     }
 
-    if (error) {
+    if (isError) {
         return (
             <div className="alert alert-danger" role="alert">
-                Error loading students: {error.message}
+                Error loading students: {error?.data?.message || error?.data || 'Unknown error'}
             </div>
         );
     }
@@ -78,8 +51,8 @@ export default function StudentTable() {
                 </Card.Header>
                 <Card.Body style={{ overflowY: 'auto' }}>
                     {students.map((student) => (
-                        <Toast 
-                            onClick={() => goToStudent(student.id)} 
+                        <Toast
+                            onClick={() => goToStudent(student.id)}
                             key={student.id}
                             role="button"
                             className="student-toast"

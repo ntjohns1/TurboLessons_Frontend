@@ -13,10 +13,10 @@ import Messenger from '../pages/Teachers/Messenger';
 import Lessons from '../pages/Teachers/Lessons';
 import Videos from '../pages/Teachers/Videos';
 
-// Billing components
+// Billing components. Enroll + manage now happen via Stripe Checkout/Portal
+// inline in BillingOverview, so the create_stripe_account/create_subscription
+// routes are gone.
 import ManageSubscription from '../components/TeacherComponents/Billing/ManageSubscription';
-import CreateStripeCustomer from '../components/TeacherComponents/Billing/CreateStripeCustomer';
-import NewSubscriptionForm from '../components/TeacherComponents/Billing/CreateSubscription';
 
 const TeacherRoutes = () => {
   return (
@@ -35,12 +35,6 @@ const TeacherRoutes = () => {
       </Route>
       <Route path="/students/:id/subscription" element={<RequiredAuth requiredRoles={['Teacher', 'Admin']} />}>
         <Route path="" element={<TeacherLayoutWrapper component={ManageSubscription} />} />
-      </Route>
-      <Route path="/students/:id/create_stripe_account" element={<RequiredAuth requiredRoles={['Teacher', 'Admin']} />}>
-        <Route path="" element={<TeacherLayoutWrapper component={CreateStripeCustomer} />} />
-      </Route>
-      <Route path="/students/:id/create_subscription" element={<RequiredAuth requiredRoles={['Teacher', 'Admin']} />}>
-        <Route path="" element={<TeacherLayoutWrapper component={NewSubscriptionForm} />} />
       </Route>
       <Route path="/addStudent" element={<RequiredAuth requiredRoles={['Teacher', 'Admin']} />}>
         <Route path="" element={<TeacherLayoutWrapper component={AddStudent} />} />

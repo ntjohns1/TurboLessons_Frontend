@@ -1,41 +1,31 @@
 import React from 'react';
-import { useOktaAuth } from '@ntjohns1/react-oidc/okta-compat';
-import { setAccessToken } from '../../../service/axiosConfig';
 import { Button, Form, Container } from "react-bootstrap";
-import { useSocket } from '../../../util/context/WebSocketContext';
 import { useDispatch, useSelector } from 'react-redux';
-import { sendMessageThunk, selectSelectedStudent, selectMessageText, setMessageText } from './TeacherMessageSlice';
+import { selectMessageText, setMessageText } from './TeacherMessageSlice';
+import useMessageData from './useMessageData';
 import '../../../App';
 
-export default function SendMessage() {
-  const { oktaAuth } = useOktaAuth();
-  const { principle } = useSocket();
+export default function SendMessage({ sendTo }) {
   const dispatch = useDispatch();
-  const selectedStudent = useSelector(selectSelectedStudent);
   const messageText = useSelector(selectMessageText);
-  
+  const { send } = useMessageData(sendTo);
+
   const handleFormSubmit = async (event) => {
     event.preventDefault();
-    if (!selectedStudent) {
-      console.log('Error: No student selected');  
+    if (!sendTo) {
+      console.log('Error: No student selected');
       return;
     }
     if (!messageText.trim()) {
       console.log('Error: Message is blank or empty');
       return;
     }
-
-    const newMessage = {
-      sender: principle,
-      receiver: selectedStudent,
-      msg: messageText,
-      timestamp: new Date().toISOString()
-    };
-
-    const accessToken = oktaAuth.getAccessToken();
-    setAccessToken(accessToken);
-    dispatch(sendMessageThunk(newMessage));
-    dispatch(setMessageText(''));
+    try {
+      await send(messageText).unwrap();
+      dispatch(setMessageText(''));
+    } catch (error) {
+      console.error('Error sending message:', error);
+    }
   };
 
   const handleInput = (e) => {
@@ -59,7 +49,7 @@ export default function SendMessage() {
           className='my-2'
           type='submit'
           variant='darkblue'
-          disabled={!selectedStudent}
+          disabled={!sendTo}
         >
           Send
         </Button>

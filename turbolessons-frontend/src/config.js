@@ -3,9 +3,10 @@ const CLIENT_ID = process.env.CLIENT_ID || 'turbolessons-spa';
 const ISSUER = process.env.ISSUER || 'https://auth.nelsonjohns.com/realms/turbolessons';
 const REDIRECT_URI = `${window.location.origin}/login/callback`;
 const VITE_STRIPE_PUBLISHABLE_KEY = process.env.VITE_STRIPE_PUBLISHABLE_KEY;
-const API_BASE_URL = process.env.NODE_ENV === 'development'
-  ? 'http://localhost:8080'
-  : 'https://www.turbolessons.com';
+// API is reached same-origin: the Vite dev proxy forwards /api + /ws to the
+// configured backend (qac by default) in `npm run start`, and nginx proxies
+// them in the built container. Keep paths relative so neither env hardcodes a host.
+const WS_BASE_URL = window.location.origin.replace(/^http/, 'ws');
 
 // eslint-disable-next-line
 export default {
@@ -20,10 +21,10 @@ export default {
     stripeApiKey: VITE_STRIPE_PUBLISHABLE_KEY,
   },
   resourceServer: {
-    eventsUrl: `${API_BASE_URL}/api/lessons`,
-    userAdminUrl: `${API_BASE_URL}/api/users`,
-    messagesUrl: `${API_BASE_URL}/api/messages`,
-    videoUrl: `${API_BASE_URL}/api/video`,
-    socketUri: `${API_BASE_URL.replace('http', 'ws').replace('https', 'wss')}/ws/messages?userId=`
+    eventsUrl: `/api/lessons`,
+    userAdminUrl: `/api/users`,
+    messagesUrl: `/api/messages`,
+    videoUrl: `/api/video`,
+    socketUri: `${WS_BASE_URL}/ws/messages?userId=`
   },
 };

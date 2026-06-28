@@ -1,18 +1,18 @@
 import React from 'react';
 import { Button, Form, Container } from "react-bootstrap";
-import '../../../App';
-import { useOktaAuth } from '@ntjohns1/react-oidc/okta-compat';
-import { useSocket } from '../../../util/context/WebSocketContext';
+import { useAuth } from '@ntjohns1/react-oidc';
 import { useDispatch, useSelector } from 'react-redux';
-import { sendMessageThunk, selectMessageText, setMessageText, selectSelectedUser } from './StudentMessageSlice';
-import { setAccessToken } from '../../../service/axiosConfig';
+import { selectMessageText, setMessageText, selectSelectedUser } from './StudentMessageSlice';
+import { useSendMessageMutation } from '../../../service/messagesApi';
+import '../../../App';
 
 export default function SendMessage() {
-  const { oktaAuth } = useOktaAuth();
-  const { principle } = useSocket();
+  const { claims } = useAuth();
+  const principle = claims.name;
   const selectedUser = useSelector(selectSelectedUser);
-  const dispatch = useDispatch();
   const messageText = useSelector(selectMessageText);
+  const dispatch = useDispatch();
+  const [sendMessage] = useSendMessageMutation();
 
   const handleFormSubmit = async (event) => {
     event.preventDefault();
@@ -24,18 +24,20 @@ export default function SendMessage() {
       console.log('Error: Message is blank or empty');
       return;
     }
-
-    const newMessage = {
-      sender: principle,
-      receiver: selectedUser,
-      msg: messageText,
-      timestamp: new Date().toISOString()
-    };
-
-    const accessToken = oktaAuth.getAccessToken();
-    setAccessToken(accessToken);
-    dispatch(sendMessageThunk(newMessage));
-    dispatch(setMessageText(''));
+    try {
+      await sendMessage({
+        sendTo: selectedUser,
+        message: {
+          sender: principle,
+          receiver: selectedUser,
+          msg: messageText,
+          timestamp: new Date().toISOString(),
+        },
+      }).unwrap();
+      dispatch(setMessageText(''));
+    } catch (error) {
+      console.error('Error sending message:', error);
+    }
   };
 
   const handleInput = (e) => {

@@ -1,53 +1,29 @@
-import React, { useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import React, { useState } from 'react';
 import { Card, Table } from 'react-bootstrap';
-import { fetchEventsByTeacher } from '../../../service/eventService';
+import { useAuth } from '@ntjohns1/react-oidc';
+import { useGetTeacherEventsQuery } from './lessonsApi';
 import LessonForm from './LessonForm';
-import LogLesson from '../Billing/LogLesson';
-import { useOktaAuth } from '@ntjohns1/react-oidc/okta-compat';
-
 
 const LessonList = () => {
-    const { authState, oktaAuth } = useOktaAuth();
-    const principle = authState && authState.idToken && authState.idToken.claims.name;
-    const dispatch = useDispatch();
-    const editLesson = useSelector((state) => state.lessons.isUpdate);
-    const setEditLesson = (lesson) => dispatch({ type: 'lessons/setEditLesson', payload: lesson });
-    const lessons = useSelector((state) => state.lessons.eventsByTeacher);
+    const { claims } = useAuth();
+    const teacher = claims.name;
 
+    // Shared RTK Query cache with the calendar (deduped — no double fetch).
+    const { data: lessons = [] } = useGetTeacherEventsQuery(teacher, {
+        skip: !teacher,
+    });
 
-    useEffect(() => {
-        const loadLessons = async () => {
-            try {
-                const data = await fetchEventsByTeacher(principle);
-            } catch (error) {
-                console.error('Error fetching lessons:', error);
-            }
-        };
-        if (!lessons.length) {
-            loadLessons();
-        }
-    }, []);
+    // Which lesson is being edited is local UI state.
+    const [editLesson, setEditLesson] = useState(null);
 
-    const handleEdit = (lesson) => {
-        setEditLesson(lesson);
-    };
-
-    const handleSave = () => {
-        setEditLesson(null);
-        const loadLessons = async () => {
-            try {
-                const data = await fetchEventsByTeacher(principle);
-            } catch (error) {
-                console.error('Error fetching lessons:', error);
-            }
-        };
-        loadLessons();
-    };
+    const handleEdit = (lesson) => setEditLesson(lesson);
+    // Mutations invalidate the Lesson list tag, so the query refetches on save;
+    // we just exit edit mode here.
+    const handleSave = () => setEditLesson(null);
 
     return (
         <div style={{ height: '90vh' }}>
-            <Card >
+            <Card>
                 {editLesson ? (
                     <LessonForm event={editLesson} handleSave={handleSave} />
                 ) : (
@@ -58,26 +34,23 @@ const LessonList = () => {
                                     <tr>
                                         <th>Date</th>
                                         <th>Title</th>
-                                        <th>Log Lesson</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {lessons &&
-                                        [...lessons]
-                                            .sort((a, b) => new Date(b.date) - new Date(a.date)) // Sorting by date
-                                            .map((lesson) => (
-                                                <tr onClick={() => handleEdit(lesson)} key={lesson.id}>
-                                                    <td>{lesson.date}</td>
-                                                    <td>{lesson.title}</td>
-                                                    <td><LogLesson /></td>
-                                                </tr>
-                                            ))}
+                                    {[...lessons]
+                                        .sort((a, b) => new Date(b.date) - new Date(a.date))
+                                        .map((lesson) => (
+                                            <tr onClick={() => handleEdit(lesson)} key={lesson.id}>
+                                                <td>{lesson.date}</td>
+                                                <td>{lesson.title}</td>
+                                            </tr>
+                                        ))}
                                 </tbody>
                             </Table>
                         </div>
-                    </ Card.Body>
+                    </Card.Body>
                 )}
-            </ Card>
+            </Card>
         </div>
     );
 };

@@ -3,7 +3,8 @@ import { useNavigate } from 'react-router-dom';
 import { AuthProvider, AuthCallback } from '@ntjohns1/react-oidc';
 import LoadingSpinner from './components/common/LoadingSpinner';
 import config from './config';
-import { WebSocketProvider } from "./util/context/WebSocketContext.jsx";
+import MessageStreamSubscriber from "./components/MessageStreamSubscriber";
+import ApiAuthBridge from "./components/ApiAuthBridge";
 import { Elements } from "@stripe/react-stripe-js";
 import { loadStripe } from "@stripe/stripe-js";
 import { Route, Routes } from "react-router-dom";
@@ -28,9 +29,10 @@ const App = () => {
 
   return (
     <AuthProvider config={{ ...config.oidc, onSigninCallback }}>
-      <WebSocketProvider>
-        <Elements stripe={stripePromise}>
-          <Routes>
+      <ApiAuthBridge />
+      <MessageStreamSubscriber />
+      <Elements stripe={stripePromise}>
+        <Routes>
             <Route path="login/callback" element={<AuthCallback loading={<LoadingSpinner />} />} />
 
             {/* Root path - will redirect based on user role */}
@@ -49,8 +51,7 @@ const App = () => {
             {/* Student Routes */}
             <Route path="/student_portal/*" element={<StudentRoutes />} />
           </Routes>
-        </Elements>
-      </WebSocketProvider>
+      </Elements>
     </AuthProvider>
   );
 };

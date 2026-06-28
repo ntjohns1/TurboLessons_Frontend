@@ -1,4 +1,11 @@
-import { configureStore, combineReducers } from "@reduxjs/toolkit";
+import { configureStore } from "@reduxjs/toolkit";
+import { setupListeners } from "@reduxjs/toolkit/query";
+
+// RTK Query APIs (server state)
+import { lessonsApi } from "../components/TeacherComponents/Lessons/lessonsApi";
+import { studentsApi } from "../components/TeacherComponents/Students/studentsApi";
+import { messagesApi } from "../service/messagesApi";
+import { billingApi } from "../service/billingApi";
 
 // Import all reducers from both student and teacher stores
 import teacherLessonsReducer from "../components/TeacherComponents/Lessons/LessonSlice";
@@ -48,10 +55,27 @@ const createRoleBasedReducer = (role) => {
 export const configureAppStore = (role) => {
   console.log(`Configuring store for role: ${role}`);
 
-  return configureStore({
-    reducer: createRoleBasedReducer(role),
-    // Add any middleware or other store enhancers here
+  const store = configureStore({
+    reducer: {
+      ...createRoleBasedReducer(role),
+      // RTK Query API reducers (always present so their middleware has a home).
+      [lessonsApi.reducerPath]: lessonsApi.reducer,
+      [studentsApi.reducerPath]: studentsApi.reducer,
+      [messagesApi.reducerPath]: messagesApi.reducer,
+      [billingApi.reducerPath]: billingApi.reducer,
+    },
+    middleware: (getDefaultMiddleware) =>
+      getDefaultMiddleware()
+        .concat(lessonsApi.middleware)
+        .concat(studentsApi.middleware)
+        .concat(messagesApi.middleware)
+        .concat(billingApi.middleware),
   });
+
+  // Enables refetchOnFocus / refetchOnReconnect behavior for RTK Query.
+  setupListeners(store.dispatch);
+
+  return store;
 };
 
 // Create a default store (will be replaced by the role-specific store)
