@@ -1,43 +1,19 @@
-
-
-import React, { useEffect } from 'react';
+import React from 'react';
 import { Button, Card, Spinner } from 'react-bootstrap';
-import { useDispatch, useSelector } from 'react-redux';
-import { Link, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import '../../../App'
-import { setAccessToken } from "../../../service/axiosConfig";
-import { useOktaAuth } from '@ntjohns1/react-oidc/okta-compat';
-import { searchCustomersBySysIdThunk, fetchPaymentMethodsByCustomerThunk, selectCustomerBySysId } from "./BillingSlice";
+import useBillingData from './useBillingData';
 
 export default function BillingOverview() {
-
-    const dispatch = useDispatch();
     const paramsId = useParams().id;
-    const { authState, oktaAuth } = useOktaAuth();
-    const customerAdapter = useSelector((state) => state.billing.entities["customers"]);
-    const customer = useSelector((state) => selectCustomerBySysId(state, paramsId));
-    const stripeCustomerId = customer ? customer.id : "";
-    // Todo: This should handle multiple subscriptions
-    const stripeSubscriptionId = customer ? customer.subscriptions[0] : "";
-    const accessToken = oktaAuth.getAccessToken();
-    const loading = useSelector((state) => state.billing.loading);
+    const { hasSubscription, isLoading, isRedirecting, enroll, openPortal } =
+        useBillingData(paramsId);
 
-
-    useEffect(() => {
-        if (authState && authState.isAuthenticated) {
-            setAccessToken(accessToken)
-            dispatch(searchCustomersBySysIdThunk({ customerId: paramsId }));
-        }
-    }, []);
-
-
-    if (loading) {  // Loading 
+    if (isLoading) {
         return (
             <Card className="text-center">
                 <Card.Body>
-                    <Card.Title>
-                        Loading...
-                    </Card.Title>
+                    <Card.Title>Loading...</Card.Title>
                     <Button disabled variant="secondary">
                         <Spinner animation="grow" size="sm" />
                         <Spinner animation="grow" size="sm" />
@@ -45,64 +21,40 @@ export default function BillingOverview() {
                     </Button>
                 </Card.Body>
             </Card>
-        )
+        );
     }
 
-    // No resolved Stripe customer ID
-    if (!stripeCustomerId) {
+    // Not subscribed yet → Stripe Checkout enrollment (creates the customer if
+    // needed, collects the card, and creates the metered subscription).
+    if (!hasSubscription) {
         return (
             <Card className="text-center">
                 <Card.Body>
-                    <Card.Title>No Customer Found</Card.Title>
+                    <Card.Title>No Active Subscription</Card.Title>
                     <Card.Text>
-                        We couldn't find your customer data for the user. Please create a new Stripe customer.
+                        Enroll this student in lesson billing. They'll be charged monthly
+                        for the lessons logged that period.
                     </Card.Text>
-                    <Button as={Link} to={`/teacher_portal/students/${paramsId}/create_stripe_account`} variant="primary">
-                        Create Customer
+                    <Button variant="primary" onClick={enroll} disabled={isRedirecting}>
+                        {isRedirecting ? <Spinner animation="border" size="sm" /> : 'Enroll in Billing'}
                     </Button>
                 </Card.Body>
             </Card>
         );
     }
 
-    // Customer exists, no subscription
-    if (stripeCustomerId && !stripeSubscriptionId) {
-        return (
-            <Card className="text-center">
-                <Card.Body>
-                    <Card.Title>No Subscription</Card.Title>
-                    <Card.Text>
-                        {/* Customer: {customer.name} <br />
-                        Email: {customer.email} <br /> */}
-                        You don't have an active subscription. Start your subscription today!
-                    </Card.Text>
-                    <Button as={Link} to={`/teacher_portal/students/${paramsId}/create_subscription`} variant="primary">
-                        Start Subscription
-                    </Button>
-                </Card.Body>
-            </Card>
-        );
-    }
-
-    // Customer and subscription exist
-    if (stripeCustomerId && stripeSubscriptionId) {
-        return (
-            <Card className="text-center">
-                <Card.Body>
-                    <Card.Title>Subscription Details</Card.Title>
-                    <Card.Text>
-                        {/* Customer: {customer.name} <br />
-                        Email: {customer.email} <br />
-                        Plan: {subscription.planName} <br />
-                        Status: {subscription.status} */}
-                    </Card.Text>
-                    <Button as={Link} to={`/teacher_portal/students/${paramsId}/subscription`} variant="primary">
-                        Manage Subscription
-                    </Button>
-                </Card.Body>
-            </Card>
-        );
-    }
-
-    return null; // Default fallback
+    // Subscribed → manage via the Stripe Customer Portal.
+    return (
+        <Card className="text-center">
+            <Card.Body>
+                <Card.Title>Subscription Active</Card.Title>
+                <Card.Text>
+                    Manage payment methods, view invoices, or cancel in the billing portal.
+                </Card.Text>
+                <Button variant="primary" onClick={openPortal} disabled={isRedirecting}>
+                    {isRedirecting ? <Spinner animation="border" size="sm" /> : 'Manage Billing'}
+                </Button>
+            </Card.Body>
+        </Card>
+    );
 }

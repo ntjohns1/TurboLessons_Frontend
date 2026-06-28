@@ -1,55 +1,17 @@
-import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import {
-  fetchEventsByTeacher,
-  createLessonEvent,
-  editLessonEvent,
-  deleteLessonEvent,
-} from "../../../service/eventService";
-import { adjustEvents } from "../../../util/formatters";
+import { createSlice } from "@reduxjs/toolkit";
 
-// Thunks
-export const fetchTeacherEvents = createAsyncThunk(
-  "lessons/fetchTeacherEvents",
-  async ({ teacher }) => {
-    const plainEventObjects = await fetchEventsByTeacher(teacher);
-    const adjustedEvents = adjustEvents(plainEventObjects);
-    return adjustedEvents;
-  }
-);
-
-export const createEvent = createAsyncThunk(
-  "lessons/createEvent",
-  async (lessonData) => {
-    const response = await createLessonEvent(lessonData);
-    return response;
-  }
-);
-
-export const updateEvent = createAsyncThunk(
-  "lessons/updateEvent",
-  async ({ id, formState }) => {
-    // Ensure dates are in ISO string format before sending to the API
-    const response = await editLessonEvent(id, formState);
-    return response;
-  }
-);
-
-export const deleteEvent = createAsyncThunk(
-  "lessons/deleteEvent",
-  async (id) => {
-    const response = await deleteLessonEvent(id);
-    return response;
-  }
-);
+/**
+ * Client/UI state for the lessons feature: modal visibility, the current
+ * selection, and the lesson form. Server state (the events list + CRUD) now
+ * lives in lessonsApi (RTK Query) — see lessonsApi.js. This slice no longer
+ * fetches or caches lessons.
+ */
 
 const initialState = {
-  eventsByTeacher: [],
   selectedEvent: null,
-  eventsLoaded: false,
   dateClick: false,
   showModal: false,
   showConfirm: false,
-  loading: false,
   validated: false,
   isUpdate: false,
   formState: {
@@ -82,9 +44,6 @@ const lessonSlice = createSlice({
     },
     setShowConfirm(state, action) {
       state.showConfirm = action.payload;
-    },
-    setLoading(state, action) {
-      state.loading = action.payload;
     },
     setValidated(state, action) {
       state.validated = action.payload;
@@ -146,7 +105,6 @@ const lessonSlice = createSlice({
     setInitialFormState(state, action) {
       const { event, teacherName, teacherEmail } = action.payload;
       if (event) {
-        // const initialDate = new Date(event.startTime || new Date());
         const initialStartTime = new Date(event.startTime || new Date());
         const durationMinutes = event.durationOption === "1h" ? 60 : 30;
         state.formState = {
@@ -172,36 +130,6 @@ const lessonSlice = createSlice({
       state.formState = { ...initialState.formState };
     },
   },
-  extraReducers: (builder) => {
-    builder
-      .addCase(fetchTeacherEvents.pending, (state) => {
-        state.loading = true;
-      })
-      .addCase(fetchTeacherEvents.fulfilled, (state, action) => {
-        state.loading = false;
-        state.eventsByTeacher = action.payload;
-        state.eventsLoaded = true;
-      })
-      .addCase(fetchTeacherEvents.rejected, (state) => {
-        state.loading = false;
-      })
-      .addCase(createEvent.fulfilled, (state, action) => {
-        state.eventsByTeacher.push(action.payload);
-      })
-      .addCase(updateEvent.fulfilled, (state, action) => {
-        const index = state.eventsByTeacher.findIndex(
-          (event) => event.id === action.payload.id
-        );
-        if (index !== -1) {
-          state.eventsByTeacher[index] = action.payload;
-        }
-      })
-      .addCase(deleteEvent.fulfilled, (state, action) => {
-        state.eventsByTeacher = state.eventsByTeacher.filter(
-          (event) => event.id !== action.payload
-        );
-      });
-  },
 });
 
 export const {
@@ -209,15 +137,11 @@ export const {
   setDateClick,
   setShowModal,
   setShowConfirm,
-  setLoading,
   setValidated,
   setUpdate,
   setFormField,
   setInitialFormState,
   resetFormState,
 } = lessonSlice.actions;
-
-export const selectEventById = (state, eventId) =>
-  state.lessons.eventsByTeacher.find((event) => event.id === eventId);
 
 export default lessonSlice.reducer;

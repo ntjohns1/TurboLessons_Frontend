@@ -1,17 +1,17 @@
 import React from 'react';
 import { Card, Container, Form, Button } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
-import { createNewStudent, setFormField, resetFormState } from './StudentSlice';
+import { setFormField, resetFormState } from './StudentSlice';
+import { useCreateStudentMutation } from './studentsApi';
 import { useNavigate } from 'react-router-dom';
-import { useAuthToken } from '../../../hooks/useAuthToken';
 import { STUDENT_FORM_FIELDS } from '../../../config/studentFormFields';
 
 // Todo: assign student to teacher when created
 export default function AddStudent() {
-    const { authState } = useAuthToken();
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const formState = useSelector(state => state.students.formState);
+    const [createStudent] = useCreateStudentMutation();
 
     // update state based on form input changes
     const handleChange = (event) => {
@@ -22,12 +22,10 @@ export default function AddStudent() {
     const handleFormSubmit = async (event) => {
         event.preventDefault();
         try {
-            if (authState?.isAuthenticated) {
-                await dispatch(createNewStudent(formState)).unwrap();
-                alert(`Successfully Added Account for: ${formState.firstName} ${formState.lastName}`);
-                dispatch(resetFormState());
-                navigate('/teacher_portal/students');
-            }
+            await createStudent(formState).unwrap();
+            alert(`Successfully Added Account for: ${formState.firstName} ${formState.lastName}`);
+            dispatch(resetFormState());
+            navigate('/teacher_portal/students');
         } catch (error) {
             console.error('Error creating student:', error);
         }

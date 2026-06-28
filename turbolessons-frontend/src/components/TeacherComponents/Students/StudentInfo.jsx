@@ -3,14 +3,11 @@ import { FaEdit } from "react-icons/fa";
 import { Button, Card, Col, Form, Row } from 'react-bootstrap';
 import { useDispatch } from 'react-redux';
 import { setIsUpdate, setFormField } from './StudentSlice';
-import { setAccessToken } from '../../../service/axiosConfig';
-import { useOktaAuth } from '@ntjohns1/react-oidc/okta-compat';
 import FormField from '../../common/FormField';
 import { STUDENT_FORM_FIELDS } from '../../../config/studentFormFields';
 
 export default function StudentInfo({ student }) {
     const dispatch = useDispatch();
-    const { oktaAuth } = useOktaAuth();
 
     const handleEdit = () => {
         // Initialize form state with current student data

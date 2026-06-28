@@ -2,9 +2,10 @@ import React from 'react';
 import { Form } from "react-bootstrap";
 import { useDispatch, useSelector } from 'react-redux';
 import { setSelectedStudent, selectSelectedStudent } from './TeacherMessageSlice';
+import useStudentData from '../Students/useStudentData';
 
 export default function SelectStudent() {
-  const students = useSelector((state) => state.students.studentsByTeacher);
+  const { students } = useStudentData();
   const selectedStudent = useSelector(selectSelectedStudent);
   const dispatch = useDispatch();
 

@@ -45,17 +45,20 @@ export default defineConfig({
   server: {
     port: process.env.PORT || 3000,
     proxy: {
-      // Proxy API requests to backend server
+      // Dev proxy: forward API + WS to the live backend (qac by default) so
+      // `npm run start` runs against it without a local backend. Override with
+      // VITE_API_PROXY_TARGET=http://localhost:8080 to hit a local stack.
+      // changeOrigin rewrites Host so Caddy routes qac.turbolessons.com correctly.
       '/api': {
-        target: 'http://localhost:8080',
+        target: process.env.VITE_API_PROXY_TARGET || 'https://qac.turbolessons.com',
         changeOrigin: true,
-        secure: false,
+        secure: true,
       },
-      // Proxy WebSocket connections
       '/ws': {
-        target: 'ws://localhost:8080',
-        ws: true,
+        target: process.env.VITE_API_PROXY_TARGET || 'https://qac.turbolessons.com',
         changeOrigin: true,
+        secure: true,
+        ws: true,
       }
     },
   },
