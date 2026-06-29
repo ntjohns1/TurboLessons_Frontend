@@ -113,9 +113,19 @@ function checkValidServiceWorker(swUrl) {
 }
 
 export function unregister() {
+  // Unregister ALL service workers (getRegistrations, not .ready, which hangs
+  // when there is no active controller) and purge their caches, so a stale SW
+  // from an older build can't keep serving cached assets or intercept fetches.
   if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.ready.then(registration => {
-      registration.unregister();
-    });
+    navigator.serviceWorker
+      .getRegistrations()
+      .then((registrations) => registrations.forEach((r) => r.unregister()))
+      .catch(() => {});
+  }
+  if (typeof caches !== 'undefined' && caches.keys) {
+    caches
+      .keys()
+      .then((keys) => Promise.all(keys.map((key) => caches.delete(key))))
+      .catch(() => {});
   }
 }

@@ -7,10 +7,7 @@ import './index.css';
 import './util/fonts/fonts.css'
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { StoreProvider } from './app/storeProvider';
-
-
-
-// import registerServiceWorker from './registerServiceWorker';
+import { unregister } from './registerServiceWorker';
 
 const container = document.getElementById('root');
 const root = createRoot(container);
@@ -20,4 +17,8 @@ root.render(
       <App />
     </StoreProvider>
   </BrowserRouter>);
-// registerServiceWorker();
+
+// We don't ship a service worker, but older CRA builds did. Actively unregister
+// any lingering service worker (and its caches) so it can't serve stale assets
+// or intercept API calls — the cause of the "no internet"/offline weirdness.
+unregister();
