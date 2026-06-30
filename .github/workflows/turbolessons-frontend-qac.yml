@@ -1,13 +1,13 @@
 name: turbolessons-frontend-qac
 
-# QAC environment pipeline (Git Flow: develop -> QAC, main -> prod).
+# QAC environment pipeline (Git Flow: release/* -> QAC, main -> prod).
 # Build runs on a GitHub-hosted runner; deploy runs on the self-hosted
 # runner (server_8, label `qac`) which redeploys the qac compose stack locally.
 on:
   workflow_dispatch:
   push:
     branches:
-      - 'develop'
+      - 'release/**'
 
 jobs:
   build:
@@ -30,6 +30,7 @@ jobs:
         with:
           context: ./turbolessons-frontend
           push: true
+          provenance: false
           tags: noslenj/turbolessons-frontend:qac
           build-args: |
             ISSUER=${{ secrets.ISSUER_QAC }}
@@ -49,4 +50,4 @@ jobs:
         run: |
           cd ~/turbolessons-qac
           docker-compose pull turbolessons-frontend
-          docker-compose up -d turbolessons-frontend
+          docker-compose up -d --force-recreate turbolessons-frontend
