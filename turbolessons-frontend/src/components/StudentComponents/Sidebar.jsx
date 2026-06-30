@@ -1,8 +1,7 @@
 import React from "react";
 import { NavLink } from "react-router-dom";
 import { Nav } from "react-bootstrap";
-import { useOktaAuth } from '@okta/okta-react';
-import { useSocket } from "../../util/context/WebSocketContext";
+import { useOktaAuth } from '@ntjohns1/react-oidc/okta-compat';
 import '../../App'
 
 const sidebarItems = [
@@ -15,10 +14,10 @@ const sidebarItems = [
 
 export default function Sidebar() {
 
-  const { authState, oktaAuth } = useOktaAuth();
-  const { disconnectSocket } = useSocket();
-  const logout = async () => {
-    await disconnectSocket();
+  const { oktaAuth } = useOktaAuth();
+  // The message WebSocket closes automatically when MessageStreamSubscriber
+  // unmounts on logout, so no manual disconnect is needed here.
+  const logout = () => {
     oktaAuth.signOut();
   };
 

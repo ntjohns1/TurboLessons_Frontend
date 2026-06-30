@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Button, Card, Container, Form, ProgressBar } from "react-bootstrap";
 import { useDispatch, useSelector } from 'react-redux';
-import { useOktaAuth } from '@okta/okta-react';
+import { useOktaAuth } from '@ntjohns1/react-oidc/okta-compat';
 import { 
     uploadVideoThunk,
     selectUploadProgress,

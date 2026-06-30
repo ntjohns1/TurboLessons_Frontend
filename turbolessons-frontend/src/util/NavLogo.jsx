@@ -1,7 +1,7 @@
 import React from 'react';
 import logo from './icons/TurboLessonsLogo_White.svg';
 import { Link } from 'react-router-dom';
-import { useOktaAuth } from '@okta/okta-react';
+import { useOktaAuth } from '@ntjohns1/react-oidc/okta-compat';
 
 export default function NavLogo() {
   const { authState } = useOktaAuth();

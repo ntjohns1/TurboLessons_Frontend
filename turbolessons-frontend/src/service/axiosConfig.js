@@ -1,9 +1,9 @@
 import axios from 'axios';
 
-// Determine base URL based on environment
-const BASE_URL = process.env.NODE_ENV === 'development' 
-  ? 'http://localhost:8080/api'
-  : 'https://www.turbolessons.com/api';
+// Relative base: same-origin in every env. The Vite dev proxy forwards /api to
+// the configured backend (qac by default) for `npm run start`, and nginx proxies
+// /api -> api-gateway in the built container.
+const BASE_URL = '/api';
 
 // Base configuration
 const api = axios.create({

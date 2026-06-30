@@ -1,44 +1,32 @@
-import React, { useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import React from 'react';
+import { useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import { Card, Container, Row, Col, CardImg } from 'react-bootstrap';
 import EditStudent from './EditStudent';
 import StudentInfo from './StudentInfo';
 import BillingOverview from '../Billing/BillingOverview';
-import { 
-  fetchStudentProfile, 
-  selectStudentProfile,
-  selectIsUpdate,
-  setIsUpdate,
-  selectLoading,
-  selectError 
-} from './StudentSlice';
-import { useAuthToken } from '../../../hooks/useAuthToken';
+import { selectIsUpdate } from './StudentSlice';
+import { useGetStudentProfileQuery } from './studentsApi';
 import LoadingState from '../../common/LoadingState';
 import ErrorState from '../../common/ErrorState';
 import EmptyState from '../../common/EmptyState';
 
 export default function SingleStudent() {
-  const dispatch = useDispatch();
-  const { authState } = useAuthToken();
   const { id } = useParams();
-  
-  const student = useSelector(selectStudentProfile);
-  const isUpdate = useSelector(selectIsUpdate);
-  const loading = useSelector(selectLoading);
-  const error = useSelector(selectError);
 
-  useEffect(() => {
-    if (authState?.isAuthenticated && id) {
-      dispatch(fetchStudentProfile({ id }));
-    }
-  }, [authState, id, dispatch]);
+  const {
+    data: student,
+    isLoading: loading,
+    isError,
+    error,
+  } = useGetStudentProfileQuery(id, { skip: !id });
+  const isUpdate = useSelector(selectIsUpdate);
 
   if (loading) {
     return <LoadingState message="Loading student profile..." />;
   }
 
-  if (error) {
+  if (isError) {
     return <ErrorState error={error} title="Error loading student profile" />;
   }
 

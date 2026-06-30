@@ -1,14 +1,19 @@
+# syntax=docker/dockerfile:1
 # Use a lightweight Node.js image as the base
-FROM node:14-alpine as build
+FROM node:22-alpine as build
 
 # Set the working directory
 WORKDIR /app
 
-# Copy package.json and package-lock.json
+# Copy package.json, package-lock.json and the GH Packages registry config
 COPY package*.json ./
+COPY .npmrc ./
 
-# Install dependencies
-RUN npm install
+# Install dependencies (auth to GitHub Packages for the private @ntjohns1/react-oidc
+# via a BuildKit secret; .npmrc references ${NODE_AUTH_TOKEN}, never baked into a layer)
+RUN --mount=type=secret,id=gh_token \
+    NODE_AUTH_TOKEN="$(cat /run/secrets/gh_token 2>/dev/null)" \
+    npm install
 
 # Copy the rest of the application files
 COPY ./ /app/
@@ -17,8 +22,9 @@ COPY ./ /app/
 ARG ISSUER
 ARG CLIENT_ID
 ARG VITE_STRIPE_PUBLISHABLE_KEY
-ENV REACT_APP_ISSUER=$ISSUER
-ENV REACT_APP_CLIENT_ID=$CLIENT_ID
+# vite.config.js reads these bare names from process.env (and throws if unset)
+ENV ISSUER=$ISSUER
+ENV CLIENT_ID=$CLIENT_ID
 ENV VITE_STRIPE_PUBLISHABLE_KEY=$VITE_STRIPE_PUBLISHABLE_KEY
 
 # Build the application

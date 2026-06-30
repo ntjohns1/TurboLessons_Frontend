@@ -1,10 +1,11 @@
 import React, { useEffect, useMemo } from 'react';
 import { Button, Card, Container, Form } from "react-bootstrap";
-import { useOktaAuth } from '@okta/okta-react';
+import { useOktaAuth } from '@ntjohns1/react-oidc/okta-compat';
 import { setAccessToken } from '../../../service/axiosConfig';
 import DatePicker from "react-datepicker";
 import { useSelector, useDispatch } from 'react-redux';
 import { setValidated, setFormField, setInitialFormState, setUpdate } from './LessonSlice';
+import useStudentData from '../Students/useStudentData';
 import { parseISO } from "date-fns";
 import "react-datepicker/dist/react-datepicker.css";
 
@@ -24,7 +25,7 @@ const LessonForm = ({ onHide, onCreate, onUpdate }) => {
   const selectedEvent = useSelector((state) => state.lessons.selectedEvent);
   const dateClick = useSelector((state) => state.lessons.dateClick);
   const isValidated = useSelector((state) => state.lessons.validated);
-  const students = useSelector((state) => state.students.studentsByTeacher);
+  const { students } = useStudentData();
 
   useEffect(() => {
     const teacherName = authState && authState.idToken && authState.idToken.claims.name;

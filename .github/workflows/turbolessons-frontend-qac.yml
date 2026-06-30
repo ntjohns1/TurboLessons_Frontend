@@ -1,0 +1,53 @@
+name: turbolessons-frontend-qac
+
+# QAC environment pipeline (Git Flow: release/* -> QAC, main -> prod).
+# Build runs on a GitHub-hosted runner; deploy runs on the self-hosted
+# runner (server_8, label `qac`) which redeploys the qac compose stack locally.
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - 'release/**'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4.1.7
+
+      - name: Docker Setup Buildx
+        uses: docker/setup-buildx-action@v3.6.1
+
+      - name: Docker Login
+        uses: docker/login-action@v3.3.0
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_TOKEN }}
+
+      - name: Build and push turbolessons-frontend (qac)
+        uses: docker/build-push-action@v6.5.0
+        with:
+          context: ./turbolessons-frontend
+          push: true
+          provenance: false
+          tags: noslenj/turbolessons-frontend:qac
+          build-args: |
+            ISSUER=${{ secrets.ISSUER_QAC }}
+            CLIENT_ID=${{ secrets.CLIENT_ID_QAC }}
+            VITE_STRIPE_PUBLISHABLE_KEY=${{ secrets.VITE_STRIPE_PUBLISHABLE_KEY_QAC }}
+          secrets: |
+            gh_token=${{ secrets.GH_PACKAGES_TOKEN }}
+
+  deploy:
+    needs: build
+    runs-on: [self-hosted, qac]
+    concurrency:
+      group: qac-deploy
+      cancel-in-progress: false
+    steps:
+      - name: Deploy turbolessons-frontend on the QAC host
+        run: |
+          cd ~/turbolessons-qac
+          docker-compose pull turbolessons-frontend
+          docker-compose up -d --force-recreate turbolessons-frontend

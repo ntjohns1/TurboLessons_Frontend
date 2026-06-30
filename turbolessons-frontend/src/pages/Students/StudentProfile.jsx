@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useOktaAuth } from '@okta/okta-react';
+import { useOktaAuth } from '@ntjohns1/react-oidc/okta-compat';
 import { Card, Container, Row, Col, CardImg } from 'react-bootstrap';
 import EditProfile from '../../components/StudentComponents/Profile/EditProfile';
 import ProfileDetail from '../../components/StudentComponents/Profile/ProfileDetail';

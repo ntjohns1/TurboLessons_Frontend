@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useOktaAuth } from '@okta/okta-react';
+import { useOktaAuth } from '@ntjohns1/react-oidc/okta-compat';
 import { Form } from "react-bootstrap";
 import { fetchStudentData, setTeachers, extractTeachers } from '../Dashboard/StudentDashboardSlice';
 import { setSelectedUser, selectSelectedUser } from '../Messages/StudentMessageSlice';

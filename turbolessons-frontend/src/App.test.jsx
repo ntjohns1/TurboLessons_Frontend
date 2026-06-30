@@ -4,7 +4,7 @@ import { MemoryRouter } from 'react-router-dom';
 import { act } from 'react-dom/test-utils';
 
 // Mock Okta so auth state is deterministic and no real redirect/PKCE runs.
-jest.mock('@okta/okta-react', () => ({
+jest.mock('@ntjohns1/react-oidc/okta-compat', () => ({
   Security: ({ children }) => children,
   LoginCallback: () => null,
   useOktaAuth: () => ({

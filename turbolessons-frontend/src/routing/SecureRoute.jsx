@@ -1,34 +1,27 @@
-import React from 'react';
-import { useOktaAuth } from '@okta/okta-react';
-import { toRelativeUrl } from '@okta/okta-auth-js';
+import React, { useEffect } from 'react';
+import { useAuth } from '@ntjohns1/react-oidc';
 import { Navigate, Outlet, useLocation } from 'react-router-dom';
 
 import LoadingSpinner from '../components/common/LoadingSpinner';
 
 export const RequiredAuth = ({ requiredRoles = [] }) => {
-  const { oktaAuth, authState } = useOktaAuth();
+  const { isAuthenticated, isLoading, login, hasRole } = useAuth();
   const location = useLocation();
 
-  if (!authState) return <LoadingSpinner />;
+  // Kick off an interactive login once we know the user is unauthenticated.
+  useEffect(() => {
+    if (!isLoading && !isAuthenticated) {
+      const returnTo = window.location.pathname + window.location.search;
+      login(returnTo);
+    }
+  }, [isLoading, isAuthenticated, login]);
 
-  if (!authState.isAuthenticated) {
-    const originalUri = toRelativeUrl(window.location.href, window.location.origin);
-    oktaAuth.setOriginalUri(originalUri);
-    oktaAuth.signInWithRedirect();
-    return <LoadingSpinner />;
-  }
+  if (isLoading || !isAuthenticated) return <LoadingSpinner />;
 
-  // Role-based access control
+  // Role-based access control (roles/groups resolved from the configured claim).
   if (requiredRoles && requiredRoles.length > 0) {
-    // Get user's groups from the token claims
-    const userGroups = authState.accessToken?.claims?.groups || [];
-    console.log('User groups:', userGroups);
-    
-    // Check if user has at least one of the required roles
-    const hasRequiredRole = requiredRoles.some(role => userGroups.includes(role));
-    
+    const hasRequiredRole = requiredRoles.some((role) => hasRole(role));
     if (!hasRequiredRole) {
-      // User doesn't have the required role, redirect to unauthorized page
       return <Navigate to="/unauthorized" state={{ from: location }} replace />;
     }
   }

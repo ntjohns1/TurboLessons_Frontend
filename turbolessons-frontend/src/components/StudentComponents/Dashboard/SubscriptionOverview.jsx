@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { useOktaAuth } from "@okta/okta-react";
+import { useOktaAuth } from "@ntjohns1/react-oidc/okta-compat";
 import { setAccessToken } from "../../../service/axiosConfig";
 import { useDispatch, useSelector } from "react-redux";
 import { searchCustomersBySysIdThunk, fetchOneSubscriptionThunk } from "../Payments/PaymentsSlice";
