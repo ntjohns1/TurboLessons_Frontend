@@ -16,7 +16,9 @@ import {
  */
 export default function useStudentData() {
   const { claims } = useAuth();
-  const teacher = claims.name;
+  // Cohort groups are keyed by USERNAME (active_student_<preferred_username>),
+  // not the display name — so query the roster by preferred_username.
+  const teacher = claims.preferred_username || claims.name;
 
   const {
     data: students = [],
